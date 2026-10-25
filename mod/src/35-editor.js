@@ -1,5 +1,5 @@
 // ===================== Editor de counters (dentro da aba da loja) =====================
-// Escolhe um herói, edita os itens que counteram ele (peso 1–4 + motivo), salva, compartilha por
+// Escolhe um herói, edita os itens que counteram ele (peso 1 a 4 + motivo), salva, compartilha por
 // código curto (DU1:...) ou importa um código colado. O salvamento usa o armazenamento da ponte
 // (navegador embutido); se não houver, as mudanças valem até fechar o jogo.
 

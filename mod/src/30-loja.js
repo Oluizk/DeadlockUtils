@@ -2,7 +2,7 @@
 // Botão a mais na barra lateral de abas (#ShopNavigation) + painel por cima da lista de itens
 // (#ShopModListsContainer). A loja marca a aba ativa com uma classe na raiz (showingWeapon…).
 // Ao abrir a nossa, tiramos essa classe. Se o jogador clicar numa OUTRA aba, o jogo recoloca a
-// classe e fechamos a nossa. Se clicar na MESMA aba de antes, o jogo não muda nada — por isso
+// classe e fechamos a nossa. Se clicar na MESMA aba de antes, o jogo não muda nada, por isso
 // pomos uma "captura" invisível sobre ela, que fecha a nossa e devolve a classe.
 
 var ABAS_JOGO = {
@@ -10,7 +10,6 @@ var ABAS_JOGO = {
   showingWeapon: "WeaponNav", showingTech: "TechNav", showingArmor: "ArmorNav", showingFilters: "",
 };
 var loja = { ativa: false, classeAnterior: "", falhou: false, vista: "recs" };
-var NOME_FASE_CURTO = { inicio: "início", meio: "meio do jogo", fim: "fim do jogo" };
 
 function montarAbaLoja() {
   if (loja.falhou) return false;
@@ -32,7 +31,7 @@ function montarAbaLoja() {
   }
   mostrarPainel(c, false);
   evento(b, "onmouseactivate", function () { ativarAba(!loja.ativa); });
-  dica(b, "Deadlock Utils: build e counters da partida");
+  dica(b, T("dica.botaoNav"));
 
   loja.botao = b;
   loja.conteudo = c;
@@ -40,11 +39,23 @@ function montarAbaLoja() {
   loja.heroi = achar(c, "DUAbaHeroi");
   loja.ameacas = achar(c, "DUAmeacas");
   loja.build = achar(c, "DUBuild");
-  loja.tituloBuild = achar(c, "DUTituloBuild");
   loja.counters = achar(c, "DUCounters");
   loja.detalhe = achar(c, "DUDetalhe");
   loja.vistaRecs = achar(c, "DUVistaRecs");
   loja.vistaEditor = achar(c, "DUVistaEditor");
+  // Cartazes (componente em 15-cartaz.js): o cabeçalho e um por seção, com texto traduzível.
+  var topo = achar(c, "DUAbaTopo");
+  loja.cTopo = cartaz(topo, { titulo: "Deadlock Utils", sub: T("cartaz.topo.sub"), tema: "vermelho", tamanho: "grande" });
+  if (loja.cTopo) { loja.cTopo.painel.AddClass("DUCartazComHeroi"); try { topo.MoveChildBefore(loja.cTopo.painel, filhos(topo)[0]); } catch (e) {} }
+  loja.cPerigo = cartaz(achar(c, "DUCabPerigo"), { titulo: T("cartaz.perigo"), sub: T("cartaz.perigo.sub"), tema: "escuro",
+    icone: "s2r://panorama/images/icons/icon_eye.vsvg" });
+  loja.cBuild = cartaz(achar(c, "DUCabBuild"), { titulo: T("cartaz.build"), sub: T("cartaz.build.semHeroi"), tema: "teal",
+    icone: "s2r://panorama/images/shop/catalog/catalog_shop_tab_icon_builds_psd.vtex" });
+  loja.cCounters = cartaz(achar(c, "DUCabCounters"), { titulo: T("cartaz.counters"), sub: T("cartaz.counters.sub"), tema: "arma",
+    icone: "s2r://panorama/images/shop/catalog/catalog_shop_tab_icon_weapon_psd.vtex" });
+  achar(c, "DUBotaoRecsTexto").text = T("botao.recomendados");
+  achar(c, "DUBotaoEditarTexto").text = T("botao.editar");
+  loja.detalhe.text = T("detalhe.inicial");
   aoClicar(achar(c, "DUBotaoRecs"), function () { trocarVista("recs"); });
   aoClicar(achar(c, "DUBotaoEditar"), function () { trocarVista("editor"); });
   log("aba da loja criada (layout ok: " + [loja.status, loja.ameacas, loja.build, loja.counters, loja.detalhe].every(valido) + ")");
@@ -126,6 +137,7 @@ function pickDaBuild(rec) {
 }
 
 // Um item na aba: de preferência o painel NATIVO da loja (tooltip/compra do jogo); senão, nosso cartão.
+// Itens que você já tem continuam na página (o painel nativo mostra "comprado" do jeito do jogo).
 function slotItem(pai, rec, tipo) {
   var slot = criar("Panel", pai, "", "DUSlot");
   var nativo = loja.ativa && CONFIG.itensNativos !== false ? emprestarNativo(rec.item.id, slot) : null;
@@ -138,10 +150,10 @@ function slotItem(pai, rec, tipo) {
     var alvos = alvosDoCounter(rec);
     if (alvos.length) {
       imagem(leg, "DUSlotHeroi", imagemHeroi(alvos[0]));
-      rotulo(leg, "DUSlotTexto", "vs " + esc(alvos[0]) + (alvos.length > 1 ? " +" + (alvos.length - 1) : ""));
-    } else rotulo(leg, "DUSlotTexto", "counter");
+      rotulo(leg, "DUSlotTexto", esc(T("legenda.vs", alvos[0])) + (alvos.length > 1 ? " +" + (alvos.length - 1) : ""));
+    } else rotulo(leg, "DUSlotTexto", T("legenda.counter"));
   } else {
-    rotulo(leg, "DUSlotTexto DUSlotBuild", "build " + pickDaBuild(rec));
+    rotulo(leg, "DUSlotTexto DUSlotBuild", esc(T("legenda.build", pickDaBuild(rec))));
   }
   evento(slot, "onmouseover", function () {
     loja.detalhe.text = "<b>" + esc(nomeItem(rec.item)) + "</b><br>" + motivoTexto(rec);
@@ -152,7 +164,7 @@ function slotItem(pai, rec, tipo) {
 }
 
 function comprarComAviso(it) {
-  loja.detalhe.text = "Comprando <b>" + esc(nomeItem(it)) + "</b>…";
+  loja.detalhe.text = esc(T("comprando", nomeItem(it)));
   comprarItem(it.id, function (ok, msg) { loja.detalhe.text = "<b>" + esc(nomeItem(it)) + "</b>: " + esc(msg); });
 }
 
@@ -168,50 +180,64 @@ function desenharTiers(alvo, lista, porTier, vazio, tipo) {
     var linha = criar("Panel", alvo, "", "DUTierLinha DUTier" + tier);
     var preco = criar("Panel", linha, "", "DUTierPreco");
     criar("Panel", preco, "", "DUTierEtiqueta");
-    dica(preco, String(custos[tier]) + " almas");
+    dica(preco, T("almas", custos[tier]));
     var cartas = criar("Panel", linha, "", "DUTierCartas");
     recs.forEach(function (rec) { slotItem(cartas, rec, tipo); });
   });
-  if (!algum) rotulo(alvo, "DUAbaVazio", vazio);
+  if (!algum) rotulo(alvo, "DUAbaVazio", esc(vazio));
 }
 
-function desenharAba(r, leitura) {
-  if (!valido(loja.conteudo) || !valido(loja.ameacas) || !valido(loja.build)) return;
-  var lidos = leitura.inimigos.filter(function (j) { return j.heroi; }).length;
-  loja.status.text = !leitura.emPartida ? "Fora de partida: build e counters aparecem quando a partida começar." :
-    (leitura.eu ? esc(leitura.eu) + "  ·  " : "Herói não detectado  ·  ") + NOME_FASE_CURTO[r.fase] +
-    (leitura.segundos != null ? " (" + relogio(leitura.segundos) + ")" : "") + "  ·  " + lidos + "/6 inimigos lidos";
-
-  loja.ameacas.RemoveAndDeleteChildren();
-  if (r.alertas.length === 0) rotulo(loja.ameacas, "DUAbaVazio", "Nenhum item perigoso nos inimigos (ainda).");
-  r.alertas.slice(0, 8).forEach(function (a) {
-    var it = dados.itensPorId[a.itemId];
-    var bloco = criar("Panel", loja.ameacas, "", "DUAmeaca DUPerigo" + a.perigo);
-    if (it) imagem(bloco, "DUAmeacaIcone", iconeItem(it));
-    var txt = criar("Panel", bloco, "", "DUAmeacaTextos");
-    rotulo(txt, "DUAmeacaNome", "<b>" + esc(a.nomeItem) + "</b>");
-    rotulo(txt, "DUAmeacaHeroi", esc(a.heroi) + "  ·  " + ["", "atenção", "perigoso", "muito perigoso"][a.perigo]);
-    evento(bloco, "onmouseover", function () {
-      loja.detalhe.text = "<b>" + esc(a.nomeItem) + " (" + esc(a.heroi) + ")</b>: " + esc(a.alerta) + "<br>Dica: " + esc(a.dica);
-    });
-  });
-
-  var img = leitura.eu ? imagemHeroi(leitura.eu) : "";
-  mostrarPainel(loja.heroi, !!img);
-  if (img && loja.heroiAtual !== img) { loja.heroiAtual = img; try { loja.heroi.SetImage(img); } catch (e) {} }
-  loja.tituloBuild.text = leitura.eu ? "Build de " + esc(leitura.eu) + " — " + NOME_FASE_CURTO[r.fase] : "Build do seu herói";
-  devolverNativos(); // antes de limpar: os painéis nativos emprestados não podem ser apagados
-  varrerNativos(true);
-  loja.status.text += "<br><font color='#3d3a30'>" + esc(resumoNativos()) + "</font>";
-  desenharTiers(loja.build, r.build, 6, leitura.eu ? "Sem dados de build para este herói." : "Seu herói ainda não foi detectado.", "build");
-  // counters: sem repetir itens que já estão na build
+// Itens das listas da página: 6 por custo na build; counters sem repetir o que já está na build.
+function listasDaPagina(r) {
   var naBuild = {}, porTier = {};
   r.build.forEach(function (x) {
     porTier[x.item.tier] = (porTier[x.item.tier] || 0) + 1;
     if (porTier[x.item.tier] <= 6) naBuild[x.item.id] = true;
   });
-  var counters = r.counters.filter(function (x) { return !naBuild[x.item.id]; });
-  desenharTiers(loja.counters, counters, 6, "Aguardando os heróis inimigos aparecerem no placar…", "counter");
+  return { build: r.build, counters: r.counters.filter(function (x) { return !naBuild[x.item.id]; }) };
+}
+
+function desenharAba(r, leitura) {
+  if (!valido(loja.conteudo) || !valido(loja.ameacas) || !valido(loja.build)) return;
+  var rp = ultimoResultadoPagina || r; // a página usa o resultado que mantém os itens comprados
+  var fase = T("fase." + rp.fase);
+  var lidos = leitura.inimigos.filter(function (j) { return j.heroi; }).length;
+  loja.status.text = !leitura.emPartida ? esc(T("status.foraDePartida")) :
+    esc(leitura.eu || T("status.semHeroi")) + "  ·  " + esc(fase) +
+    (leitura.segundos != null ? " (" + relogio(leitura.segundos) + ")" : "") + "  ·  " + esc(T("status.inimigosLidos", lidos));
+  if (nativos.contagem && !nativos.mapeados) loja.status.text += "  ·  " + esc(resumoNativos()); // só quando há problema
+
+  var img = leitura.eu ? imagemHeroi(leitura.eu) : "";
+  mostrarPainel(loja.heroi, !!img);
+  if (img && loja.heroiAtual !== img) { loja.heroiAtual = img; try { loja.heroi.SetImage(img); } catch (e) {} }
+  textoCartaz(loja.cBuild, null, leitura.eu ? T("cartaz.build.sub", leitura.eu, fase) : T("cartaz.build.semHeroi"));
+
+  // Só refaz as listas quando o conteúdo muda. Refazer devolve e pega de novo os painéis nativos da loja,
+  // o que pesa e faz a rolagem voltar ao topo. Comprar um item não muda a página.
+  var l = listasDaPagina(rp);
+  var ids = function (lista) { return lista.map(function (x) { return x.item ? x.item.id : x.itemId + "@" + x.heroi; }).join(","); };
+  var assinatura = [ids(rp.alertas), ids(l.build), ids(l.counters), leitura.eu || ""].join("|");
+  if (assinatura === loja.assinatura && nativos.emprestados.length) return;
+  loja.assinatura = assinatura;
+
+  loja.ameacas.RemoveAndDeleteChildren();
+  if (rp.alertas.length === 0) rotulo(loja.ameacas, "DUAbaVazio", esc(T("vazio.perigo")));
+  rp.alertas.slice(0, 8).forEach(function (a) {
+    var it = dados.itensPorId[a.itemId];
+    var bloco = criar("Panel", loja.ameacas, "", "DUAmeaca DUPerigo" + a.perigo);
+    if (it) imagem(bloco, "DUAmeacaIcone", iconeItem(it));
+    var txt = criar("Panel", bloco, "", "DUAmeacaTextos");
+    rotulo(txt, "DUAmeacaNome", "<b>" + esc(a.nomeItem) + "</b>");
+    rotulo(txt, "DUAmeacaHeroi", esc(a.heroi) + "  ·  " + esc(T("perigo." + a.perigo)));
+    evento(bloco, "onmouseover", function () {
+      loja.detalhe.text = "<b>" + esc(a.nomeItem) + " (" + esc(a.heroi) + ")</b>: " + esc(a.alerta) + "<br>" + esc(T("detalhe.dica", a.dica));
+    });
+  });
+
+  devolverNativos(); // antes de limpar: os painéis nativos emprestados não podem ser apagados
+  varrerNativos(true);
+  desenharTiers(loja.build, l.build, 6, leitura.eu ? T("vazio.build") : T("vazio.buildSemHeroi"), "build");
+  desenharTiers(loja.counters, l.counters, 6, T("vazio.counters"), "counter");
 }
 aoMudarResultado(function (r, l) { if (loja.ativa && loja.vista === "recs") desenharAba(r, l); });
 

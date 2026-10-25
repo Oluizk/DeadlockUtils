@@ -3,7 +3,7 @@
 //   - counters: itens contra o time inimigo (regras por tag, por herói e por item comprado)
 //   - recomendacoes: as duas listas somadas
 //   - alertas:  itens perigosos que os inimigos compraram
-// Não mexe em UI — roda no navegador (app/) e dentro do jogo (mod/, V8 do Panorama).
+// Não mexe em UI: roda no navegador (app/) e dentro do jogo (mod/, V8 do Panorama).
 // Evite sintaxe muito nova (??, ?., flatMap, spread de objeto): o V8 do jogo pode não ter.
 (function (global) {
   "use strict";

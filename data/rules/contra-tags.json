@@ -18,8 +18,10 @@
       "titulo": "Inimigos que curam aliados",
       "quando": { "inimigos_tag": "healer" },
       "recomendar": [
-        { "item": "healbane", "peso": 2, "meu_heroi_tag": "spirit", "motivo": "Reduz a cura que o suporte inimigo aplica nos alvos que você acerta." },
-        { "item": "toxic-bullets", "peso": 2, "meu_heroi_tag": "gun", "motivo": "Corta a cura que o suporte joga no alvo que você está focando." },
+        { "item": "healbane", "peso": 3, "meu_heroi_tag": "spirit", "motivo": "Reduz a cura que o suporte inimigo aplica nos alvos que você acerta." },
+        { "item": "toxic-bullets", "peso": 3, "meu_heroi_tag": "gun", "motivo": "Corta a cura que o suporte joga no alvo que você está focando." },
+        { "item": "decay", "peso": 2, "meu_heroi_tag": "spirit", "motivo": "Ativo: -50% de cura recebida no alvo que o suporte está salvando." },
+        { "item": "inhibitor", "peso": 1, "meu_heroi_tag": "gun", "motivo": "Tiros acumulam -40% de cura recebida." },
         { "item": "silence-wave", "peso": 2, "motivo": "Silenciar o suporte numa luta corta toda a cura do time inimigo." },
         { "item": "focus-lens", "peso": 2, "motivo": "Silence de 4,5s num alvo: ótimo para travar o curador." },
         { "item": "cursed-relic", "peso": 2, "motivo": "Interrompe, silencia e desarma o suporte (e remove buffs)." }
@@ -78,7 +80,7 @@
         { "item": "witchmail", "peso": 2, "motivo": "+22% resistência spirit e reduz seus cooldowns quando você leva burst." },
         { "item": "spellbreaker", "peso": 2, "motivo": "Corta 65% do próximo grande hit de spirit." },
         { "item": "silencer", "peso": 2, "meu_heroi_tag": "gun", "motivo": "Suas balas reduzem 25% do dano spirit do alvo e acumulam silence." },
-        { "item": "suppressor", "peso": 1, "meu_heroi_tag": "spirit", "motivo": "Dá resistência a bala e reduz cadência do alvo — bom se você também é spirit." }
+        { "item": "suppressor", "peso": 1, "meu_heroi_tag": "spirit", "motivo": "Dá resistência a bala e reduz cadência do alvo: bom se você também é spirit." }
       ]
     },
     {

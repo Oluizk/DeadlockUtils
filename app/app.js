@@ -78,7 +78,7 @@
   // ---------- partes que não mudam ----------
   function opcoesHerois(selecionado) {
     const nomes = Object.keys(dados.herois).sort((a, b) => a.localeCompare(b));
-    return [el("option", { value: "" }, "— vazio —"),
+    return [el("option", { value: "" }, "(vazio)"),
       ...nomes.map((n) => el("option", { value: n, selected: n === selecionado }, n))];
   }
 
@@ -183,7 +183,7 @@
     $("#alertas").replaceChildren(...(r.alertas.length ? r.alertas.map((a) =>
       el("div", { class: `alerta perigo-${a.perigo}` },
         el("div", { class: "alerta-cab" },
-          el("strong", {}, a.nomeItem), el("span", { class: "quem" }, ` — ${a.heroi}`),
+          el("strong", {}, a.nomeItem), el("span", { class: "quem" }, ` (${a.heroi})`),
           el("span", { class: "nivel" }, NOMES_PERIGO[a.perigo])),
         el("p", {}, a.alerta),
         el("p", { class: "dica" }, "💡 ", a.dica))) :

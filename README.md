@@ -5,16 +5,16 @@ Mod de HUD para o **Deadlock** (Valve), feito em Panorama (a UI do próprio jogo
 | Função | Como usar |
 |---|---|
 | **Aba "Deadlock Utils" na loja** | Abra a loja (B): nova aba na barra lateral. Mostra itens perigosos dos inimigos, a **build do seu herói** para a fase atual (dados de popularidade do próprio jogo) e os **counters** contra o time inimigo, nos cartões da loja. Passe o mouse para ver o porquê. |
-| **Editor de counters** | Na aba, botão **Editar counters**: escolha o herói inimigo, adicione/remova itens, peso 1–4 e motivo. **Copiar código** gera um código curto `DU1:...` (de um herói ou de tudo que você editou) para colar no grupo; quem recebe cola no campo e clica **Importar**. |
+| **Editor de counters** | Na aba, botão **Editar counters**: escolha o herói inimigo, adicione/remova itens, peso 1 a 4 e motivo. **Copiar código** gera um código curto `DU1:...` (de um herói ou de tudo que você editou) para colar no grupo; quem recebe cola no campo e clica **Importar**. |
 | **Itens no Tab** | Segurando Tab, acima dos três círculos de investimento: duas seções, **Counters** (com o retrato de contra quem) e **Recomendados** (build do seu herói). Só aparecem itens que você **ainda não tem e pode pagar agora**. Hover mostra o porquê; clique compra (perto da loja). |
-| **Mapa em tela cheia** | Tecla **M**: o minimapa do jogo fica grande no centro, com o placar aberto — clique para sinalizar, cursor livre, o herói continua andando. Mostra relógio, **próximo buff da ponte** e **chefe do meio**, e **pontos de interesse com filtros**: lanches de cura, estátuas douradas, caixas (normais e resistentes), buffs da ponte, véus cósmicos, sinos, fendas, plataformas de salto, dutos de vapor, cordas, teleportes, lojas, urna, sentinelas, acampamentos (T1/T2/T3/cofres) e os **túneis do Rem** (caminho pontilhado + entradas, tirados do próprio mapa do jogo). Passe o mouse num ícone para ver o que é; **clique para marcar** o local — a marca continua no minimapa pequeno por 60 s depois de fechar (só para você: o jogo não permite que mods mandem ping ao time). Dados: `data/mapa.json` (`tools\atualizar-mapa.ps1`). Abrir a loja ou ESC fecha o mapa. |
+| **Mapa em tela cheia** | Tecla **M**: o minimapa do jogo fica grande no centro, com o placar aberto: clique para sinalizar, cursor livre, o herói continua andando. Mostra relógio, **próximo buff da ponte** e **chefe do meio**, e **pontos de interesse com filtros**: lanches de cura, estátuas douradas, caixas (normais e resistentes), buffs da ponte, véus cósmicos, sinos, fendas, plataformas de salto, dutos de vapor, cordas, teleportes, lojas, urna, sentinelas, acampamentos (T1/T2/T3/cofres) e os **túneis do Rem** (caminho pontilhado + entradas, tirados do próprio mapa do jogo). Passe o mouse num ícone para ver o que é; **clique para marcar** o local: a marca continua no minimapa pequeno por 60 s depois de fechar (só para você: o jogo não permite que mods mandem ping ao time). Dados: `data/mapa.json` (`tools\atualizar-mapa.ps1`). Abrir a loja ou ESC fecha o mapa. |
 | **Tracker** | Tecla **F6** ou botão **Tracker** no menu ESC. Para cada jogador: rank, heróis mais jogados, desempenho com o herói atual e se você já jogou **com/contra** ele (e o resultado). Dados do [deadlock-api.com](https://deadlock-api.com). |
 | **Aviso de item perigoso** | Quando um inimigo compra Knockdown, Cursed Relic, Refresher etc., aparece um aviso no topo da tela. |
 
 ## Instalar / remover
 
 1. Feche o Deadlock.
-2. **`instalar-mod.bat`** — compila, habilita a pasta de addons no `gameinfo.gi` (com backup) e copia `pak42_dir.vpk` para `game\citadel\addons\`.
+2. **`instalar-mod.bat`**: compila, habilita a pasta de addons no `gameinfo.gi` (com backup) e copia `pak42_dir.vpk` para `game\citadel\addons\`.
 3. Abra o jogo. As teclas **M** e **F6** são criadas pelo próprio mod na primeira vez que ele carrega.
 
 **`desinstalar-mod.bat`** remove o mod, as teclas que ele criou e volta o `gameinfo.gi` ao original (se não houver outros mods).
@@ -40,11 +40,12 @@ O navegador embutido do Deadlock só abre páginas **HTTPS** publicadas na inter
 4. Depois de ~1 minuto a página fica em `https://SEU-USUARIO.github.io/deadlock-utils/ponte.html` (abra no navegador para conferir: deve aparecer uma página em branco com o título `DU_BOOT`).
 5. Coloque essa URL em `data/config.json`, campo `"urlPonte"`, e rode `instalar-mod.bat` de novo.
 
-### Configuração — `data/config.json`
+### Configuração: `data/config.json`
 
 - `teclas.mapa` / `teclas.tracker`: teclas criadas pelo mod (`""` para não criar). **Alt+T não é usado** porque T é o Push-to-Talk do jogo: Alt+T abriria o microfone junto.
 - `urlPonte`: endereço **HTTPS** onde `mod/pagina/ponte.html` está publicado (ex.: GitHub Pages do repositório). O navegador embutido do jogo só abre páginas HTTPS (build de out/2026); sem isso o tracker e o salvamento dos counters editados ficam desligados (o resto funciona).
 - `accountId`: seu id Steam (SteamID3). Se ficar `null`, o build detecta pela pasta `Steam\userdata`. O tracker usa isso para achar sua partida ao vivo e o histórico com cada jogador.
+- `idioma`: `"pt"`, `"en"` ou `"es"`. Se ficar vazio, o mod usa o idioma do jogo.
 - `itensPorSecao` (itens em cada seção do Tab), `segundosMarcaMapa` (quanto tempo a marca do mapa fica no minimapa), `buffPonteInicio`/`buffPonteIntervalo` (segundos), `segundosAviso`.
 
 ### Avisos
@@ -78,9 +79,10 @@ mod/estilo.css          estilos (medidas/texturas copiadas da loja original)
 mod/pagina/ponte.js     código que roda no navegador embutido (API + armazenamento)
 mod/vendor/hud.xml      hud.xml original do jogo (versão em hud.versao.txt)
 app/engine.js           motor de recomendação (mod e app web)
-data/                   itens, heróis, builds, regras e config — é aqui que a comunidade contribui
+data/                   itens, heróis, builds, regras e config: é aqui que a comunidade contribui
 tools/build-mod.ps1     compila o VPK (sem ferramentas da Valve)
 tools/atualizar-builds.ps1  regenera data/builds.json a partir do heroes.vdata do jogo
+data/textos.json        textos da interface por idioma (traduções da comunidade)
 tools/atualizar-mapa.ps1    regenera data/mapa.json (deadlock-api + túneis do Rem lidos do mapa com o Source2Viewer)
 tools/bin/s2v/          Source2Viewer CLI (não vai para o git; baixe em github.com/ValveResourceFormat/ValveResourceFormat/releases, arquivo cli-windows-x64.zip)
 test/hud-simulado.html  simula o HUD no navegador para testar o script sem abrir o jogo

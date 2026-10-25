@@ -1,7 +1,7 @@
 // ===================== Itens NATIVOS da loja =====================
 // A loja do jogo já cria um CitadelShopMod para cada item (com tooltip, clique para comprar e as
 // classes canAffordMod / owned atualizadas pelo C++). Não dá para criar um desses pelo JS e dizer
-// qual item ele mostra — mas dá para:
+// qual item ele mostra, mas dá para:
 //   1) achar o painel nativo de cada item e LER se dá para comprar / se você já tem;
 //   2) pedir a compra a ele (várias formas; a que funcionar fica guardada);
 //   3) EMPRESTAR o painel para a nossa aba (SetParent) e devolver quando ela fecha.
@@ -74,6 +74,15 @@ function varrerNativos(forcar) {
   }
 }
 
+// Loja aberta (a cada 2s): barato. Só confere "owned" nos painéis já identificados; a varredura completa
+// (que lê o nome de ~300 painéis) só roda quando o mapa ficou velho (o jogo recriou os painéis da aba).
+function atualizarNativos() {
+  if (!mapaNativoOk()) { varrerNativos("sempre"); return; }
+  for (var id in nativos.porItem) {
+    var p = nativos.porItem[id];
+    if (valido(p) && temClasse(p, "owned")) possuidos[id] = true;
+  }
+}
 function resumoNativos() {
   return "itens da loja: " + nativos.mapeados + " reconhecidos de " + nativos.contagem +
     (nativos.mapeados ? "" : " · " + nativos.amostra + " · tipos: " + nativos.tipos);

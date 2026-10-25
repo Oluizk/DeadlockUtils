@@ -3,21 +3,25 @@
 // aceita clique para sinalizar, menu radial e desenho, o cursor fica livre e o herói continua andando.
 //
 // Tamanho: a classe DUMapaAberto na raiz do HUD aumenta #minimap_container E o próprio #hud_minimap
-// (o painel que desenha o mapa — ele tem 360px fixos no CSS do jogo). O minimapa é declarado no
+// (o painel que desenha o mapa: ele tem 360px fixos no CSS do jogo). O minimapa é declarado no
 // hud.xml, onde o nosso CSS vale, então tirar a classe devolve sempre o tamanho original.
 //
 // Pontos de interesse (data/mapa.json, do deadlock-api + túneis do Rem tirados do próprio mapa):
-// cada ponto tem posição RELATIVA (0..1) na imagem do minimapa — a mesma imagem que o jogo desenha
+// cada ponto tem posição RELATIVA (0..1) na imagem do minimapa: a mesma imagem que o jogo desenha
 // preenchendo o #hud_minimap. As nossas camadas são FILHAS do #hud_minimap: herdam o tamanho e a
 // inversão do mapa (para um dos times o jogo vira o minimapa com scaleX(-1) scaleY(-1)); só os ícones
 // são "desvirados" para ficarem de pé.
 
-var mapa = { aberto: false, painel: null, falhou: false, abertoEm: 0, jogador: [], jogadorEm: 0 };
+var mapa = { aberto: false, painel: null, falhou: false, abertoEm: 0, jogador: [], jogadorEm: 0, semPlacar: {} };
 var DADOS_MAPA = DU_DATA.mapa || { camadas: [], imagens: [] };
 var TAM_MAPA = 820; // tem que bater com .DUMapaAberto #hud_minimap no estilo.css
 // O indicador do jogador local no CSS do jogo é 15% do minimapa (54px no mapa pequeno, enorme no grande).
+// Painéis do hud.xml que expandem com o placar (GlobalClassListener gScoreboardOpen) e cobririam o mapa.
+var PAINEIS_SEM_PLACAR = ["TopBar", "AbilitiesContainer", "StatsAndModsContainer"];
 var TAM_JOGADOR_MAPA = "4.5%";
-var pontos = { painel: null, criadas: {}, filtros: null };
+var ESCALA_HEROIS_MAPA = "0.5"; // os outros heróis, com o mapa grande
+// manual: camadas que o jogador ligou/desligou (não seguem mais o padrão por herói, ex.: túneis só para o Rem)
+var pontos = { painel: null, criadas: {}, filtros: null, manual: {} };
 // Marcações: clicar num ícone marca o local; a marca continua no minimapa pequeno por um tempo depois de fechar.
 var marcas = { painel: null, lista: {}, ate: 0, tam: 0 };
 
@@ -34,12 +38,19 @@ function carregarFiltros() {
     if (!ok || !valor) return;
     try {
       var salvo = JSON.parse(valor);
-      Object.keys(salvo).forEach(function (k) { if (k in pontos.filtros) pontos.filtros[k] = !!salvo[k]; });
+      Object.keys(salvo).forEach(function (k) { if (k in pontos.filtros) { pontos.filtros[k] = !!salvo[k]; pontos.manual[k] = true; } });
       if (mapa.aberto) { aplicarFiltros(); desenharFiltros(); }
     } catch (e) {}
   });
 }
+// Camadas com padrão por herói (data/mapa.json "padraoHeroi"): ligadas só quando você joga com ele.
+function filtrosDoHeroi(eu) {
+  DADOS_MAPA.camadas.forEach(function (c) {
+    if (c.padraoHeroi && !pontos.manual[c.id]) pontos.filtros[c.id] = !!c.padrao || eu === c.padraoHeroi;
+  });
+}
 function alternarFiltro(id) {
+  pontos.manual[id] = true;
   pontos.filtros[id] = !pontos.filtros[id];
   aplicarFiltros();
   desenharFiltros();
@@ -229,24 +240,36 @@ function vigiarMarcas() {
   desenharMarcas(false);
 }
 
-// ---------- indicador do jogador (menor com o mapa grande) ----------
+// ---------- ícones dos heróis (menores com o mapa grande) ----------
+// Você: largura em % (o CSS do jogo usa 15%). Os outros heróis têm o tamanho definido pelo próprio jogo
+// (citadel_minimap_player_width), então encolhem por pre-transform-scale2d, que o jogo não mexe.
 function ajustarJogador(abrir) {
   if (abrir) {
-    // O painel pode ser recriado (morte/renascer): procura de novo a cada segundo.
+    // Os painéis aparecem/somem (visão, morte, renascer): procura de novo a cada segundo.
     if (Date.now() - mapa.jogadorEm < 1000) return;
     mapa.jogadorEm = Date.now();
-    porClasse(minimapa(), "localplayer").forEach(function (p) {
+    porClasse(minimapa(), "player").forEach(function (p) {
       if (mapa.jogador.indexOf(p) < 0 && temClasse(p, "map_button")) mapa.jogador.push(p);
     });
   }
   mapa.jogador = mapa.jogador.filter(valido);
   mapa.jogador.forEach(function (p) {
+    var eu = temClasse(p, "localplayer");
     try {
-      if (abrir) { p.style.width = TAM_JOGADOR_MAPA; p.style.height = TAM_JOGADOR_MAPA; return; }
-      p.style.width = null;
-      p.style.height = null;
-      // Se o Panorama não aceitar null, volta ao valor do CSS do jogo (hud_minimap.css: 15%).
-      if (String(p.style.width || "").indexOf("4.5") >= 0) { p.style.width = "15%"; p.style.height = "15%"; }
+      if (abrir) {
+        if (eu) { p.style.width = TAM_JOGADOR_MAPA; p.style.height = TAM_JOGADOR_MAPA; }
+        else p.style.preTransformScale2d = ESCALA_HEROIS_MAPA;
+        return;
+      }
+      if (eu) {
+        p.style.width = null;
+        p.style.height = null;
+        // Se o Panorama não aceitar null, volta ao valor do CSS do jogo (hud_minimap.css: 15%).
+        if (String(p.style.width || "").indexOf("4.5") >= 0) { p.style.width = "15%"; p.style.height = "15%"; }
+      } else {
+        p.style.preTransformScale2d = null;
+        if (String(p.style.preTransformScale2d || "").indexOf("0.5") >= 0) p.style.preTransformScale2d = "1";
+      }
     } catch (e) {}
   });
   if (!abrir) mapa.jogador = [];
@@ -289,6 +312,7 @@ function abrirMapa() {
   if (tracker.aberto) fecharTracker();
   montarPainelMapa();
   if (!pontos.filtros) carregarFiltros();
+  filtrosDoHeroi(l.eu);
   mapa.aberto = true;
   mapa.abertoEm = Date.now();
   mapa.jogadorEm = 0;
@@ -345,8 +369,8 @@ function atualizarPainelMapa(l) {
   var s = l.segundos;
   mapa.relogio.text = relogio(s);
   var p = proximoBuffPonte(s);
-  mapa.ponte.text = p == null ? "—" : relogio(p);
-  mapa.midboss.text = l.textoMidboss ? esc(l.textoMidboss) : "—";
+  mapa.ponte.text = p == null ? "-" : relogio(p);
+  mapa.midboss.text = l.textoMidboss ? esc(l.textoMidboss) : "-";
 }
 
 // Chamado pelo loop rápido: fecha quando a loja abre ou o jogador saiu do placar por fora.
@@ -354,6 +378,13 @@ function vigiarMapa(estado) {
   vigiarMarcas();
   if (!mapa.aberto) return;
   ajustarJogador(true);
+  // O mapa usa o placar por baixo (clique/ping no minimapa), mas a HUD não deve expandir como no Tab
+  // (detalhes dos heróis no topo, níveis das habilidades embaixo): tira a classe só desses painéis.
+  // Ao soltar o placar o jogo tira de todo mundo mesmo.
+  PAINEIS_SEM_PLACAR.forEach(function (id) {
+    if (!valido(mapa.semPlacar[id])) mapa.semPlacar[id] = achar(hud, id);
+    if (temClasse(mapa.semPlacar[id], "gScoreboardOpen")) mapa.semPlacar[id].RemoveClass("gScoreboardOpen");
+  });
   if (estado.lojaAberta || estado.escAberto) { fecharMapa(); return; }
   // Se o jogador soltou um Tab manual, o placar fecha: fecha o mapa também (depois de 1s de graça).
   if (!estado.placarAberto && Date.now() - mapa.abertoEm > 1000) fecharMapa();

@@ -1,4 +1,4 @@
-/* Deadlock Utils — estilos. Medidas e texturas copiadas da loja do jogo
+/* Deadlock Utils: estilos. Medidas e texturas copiadas da loja do jogo
    (citadel_hud_hero_shop.css, citadel_shop_mod_view.css).
    Panorama NÃO aceita: seletores de irmão (+ ~), ::, :not(), :nth-*. O build recusa esses casos. */
 
@@ -134,55 +134,6 @@
     overflow: noclip;
     background-color: #FFEFD795;
 }
-.DUAbaCabFundo
-{
-    width: 100%;
-    height: 100%;
-    ignore-parent-flow: true;
-    background-image: url("s2r://panorama/images/shop/catalog/catalog_shop_top_recommendations_header_psd.vtex");
-    background-size: cover;
-}
-.DUAbaHeroiCaixa
-{
-    width: 60px;
-    height: 60px;
-    margin-left: 30px;
-    margin-right: 12px;
-    vertical-align: middle;
-}
-.DUAbaHeroiBrilho
-{
-    width: 90%;
-    height: 90%;
-    horizontal-align: center;
-    vertical-align: middle;
-    background-size: cover;
-    brightness: 1.2;
-    saturation: 0;
-    opacity: 0.3;
-    background-image: url("s2r://panorama/images/shop/catalog/catalog_tooltip_header_weapon_psd.vtex");
-    opacity-mask: url("s2r://panorama/images/shop/catalog/backer_star_test_png.vtex");
-    animation-name: DUBrilhoHeroi;
-    animation-duration: 5s;
-    animation-iteration-count: infinite;
-}
-.DUAbaHeroi
-{
-    width: 46px;
-    height: 46px;
-    horizontal-align: center;
-    vertical-align: middle;
-    border-radius: 50%;
-}
-@keyframes 'DUBrilhoHeroi'
-{
-    0% { transform: rotateZ(0deg) skew(22deg); pre-transform-scale2d: 1; }
-    20% { pre-transform-scale2d: 0.9; }
-    40% { pre-transform-scale2d: 1.05; }
-    60% { pre-transform-scale2d: 0.9; transform: skew(2deg); }
-    80% { pre-transform-scale2d: 1.05; }
-    100% { transform: rotateZ(0deg) skew(22deg); pre-transform-scale2d: 1; }
-}
 .DUAbaCabTextos
 {
     flow-children: down;
@@ -208,6 +159,148 @@
     vertical-align: center;
     margin-right: 20px;
 }
+/* cabeçalho da nossa aba: cartaz grande + retrato do herói + botões por cima */
+.DUAbaTopo
+{
+    width: 100%;
+    height: 104px;
+    overflow: noclip;
+}
+.DUAbaTopoLinha
+{
+    width: 100%;
+    height: 96px;
+    flow-children: right;
+}
+.DUAbaHeroiCaixa
+{
+    width: 72px;
+    height: 72px;
+    margin-left: 22px;
+    vertical-align: center;
+    border-radius: 50%;
+    background-color: #10130Dcc;
+    border: 3px solid #FFEFD7;
+    box-shadow: 0px 0px 6px #000000aa;
+}
+.DUAbaHeroi
+{
+    width: 62px;
+    height: 62px;
+    horizontal-align: center;
+    vertical-align: center;
+    border-radius: 50%;
+}
+.DUAbaTopoEspaco
+{
+    width: fill-parent-flow(1.0);
+}
+.DUAbaStatus
+{
+    margin: 2px 0px 0px 18px;
+    font-size: 14px;
+    color: #10130Dcc;
+}
+.DUSecaoCab
+{
+    width: 100%;
+}
+
+/* ---------------- componente: cartaz (15-cartaz.js) ----------------
+   Visual dos cartazes da loja ("POPULAR ITEMS", "WEAPON"), mas com texto de verdade:
+   faixa de papel rasgado do jogo tingida (catalog_shop_builds_header_bg + wash-color), pinceladas da
+   categoria (catalog_tooltip_header_*), título na fonte pulp do jogo (alias block = VALVE Pulp) e
+   subtítulo inclinado em Retail Demo, como os "Stock up!" / "Big deal!". */
+.DUCartaz
+{
+    width: 100%;
+    height: 62px;
+    margin: 16px 0px 8px 0px;
+    overflow: noclip;
+}
+.DUCartaz_grande
+{
+    height: 96px;
+    margin: 0px;
+}
+.DUCartazFundo
+{
+    width: 100%;
+    height: 100%;
+    background-image: url("s2r://panorama/images/shop/catalog/catalog_shop_builds_header_bg_psd.vtex");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    box-shadow: 0px 3px 6px #00000066;
+}
+.DUCartazPinceladas
+{
+    width: 70%;
+    height: 100%;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    opacity: 0.55;
+}
+.DUCartazConteudo
+{
+    height: 100%;
+    flow-children: right;
+    margin-left: 22px;
+}
+.DUCartazComHeroi .DUCartazConteudo
+{
+    margin-left: 112px;
+}
+.DUCartazIcone
+{
+    width: 34px;
+    height: 34px;
+    margin-right: 10px;
+    vertical-align: center;
+    wash-color: #FFEFD7;
+}
+.DUCartazTitulo
+{
+    vertical-align: center;
+    font-family: block;
+    font-size: 40px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #FFEFD7;
+    text-shadow: 3px 3px 0px #10130Dd0;
+}
+.DUCartaz_grande .DUCartazTitulo
+{
+    font-size: 58px;
+}
+.DUCartazSub
+{
+    vertical-align: top;
+    margin: 6px 0px 0px 14px;
+    font-family: "Retail Demo";
+    font-style: italic;
+    font-weight: bold;
+    font-size: 20px;
+    color: #10130Dd9;
+    transform: rotateZ(-5deg);
+}
+.DUCartaz_grande .DUCartazSub
+{
+    font-size: 26px;
+    margin-top: 10px;
+}
+/* temas: a faixa base é azul-esverdeada; wash-color tinge com a cor do tema */
+.DUCartaz_vermelho .DUCartazFundo { wash-color: #d8452f; }
+.DUCartaz_vermelho .DUCartazPinceladas { background-image: url("s2r://panorama/images/shop/catalog/catalog_tooltip_header_weapon_psd.vtex"); }
+.DUCartaz_arma .DUCartazFundo { wash-color: #e08a2c; }
+.DUCartaz_arma .DUCartazPinceladas { background-image: url("s2r://panorama/images/shop/catalog/catalog_tooltip_header_weapon_psd.vtex"); }
+.DUCartaz_espirito .DUCartazFundo { wash-color: #8f5fc7; }
+.DUCartaz_espirito .DUCartazPinceladas { background-image: url("s2r://panorama/images/shop/catalog/catalog_tooltip_header_spirit_psd.vtex"); }
+.DUCartaz_vitalidade .DUCartazFundo { wash-color: #74b52a; }
+.DUCartaz_vitalidade .DUCartazPinceladas { background-image: url("s2r://panorama/images/shop/catalog/catalog_tooltip_header_vitality_psd.vtex"); }
+.DUCartaz_teal .DUCartazPinceladas { background-image: url("s2r://panorama/images/shop/catalog/catalog_tooltip_header_vitality_psd.vtex"); opacity: 0.35; }
+.DUCartaz_escuro .DUCartazFundo { wash-color: #5a2a24; }
+.DUCartaz_escuro .DUCartazPinceladas { background-image: url("s2r://panorama/images/shop/catalog/catalog_tooltip_header_weapon_psd.vtex"); opacity: 0.4; }
+.DUCartaz_escuro .DUCartazSub { color: #FFEFD7cc; }
 .DUAbaLinha
 {
     width: 100%;
@@ -751,6 +844,16 @@
     height: 54px;
     horizontal-align: center;
     vertical-align: center;
+}
+/* Tab: não dá para comprar agora (sem almas ou longe da loja), igual à loja do jogo com item caro */
+.DUIcone.DUIndisponivel
+{
+    opacity: 0.45;
+    saturation: 0.3;
+}
+.DUIcone.DUIndisponivel:hover
+{
+    opacity: 0.8;
 }
 .DUIconeHeroi
 {

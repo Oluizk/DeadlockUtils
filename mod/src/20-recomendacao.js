@@ -2,7 +2,8 @@
 
 var overrides = { herois: {} };   // counters editados no jogo (aba Counters > Editar)
 var ultimaLeitura = null;
-var ultimoResultado = null;
+var ultimoResultado = null;        // para o Tab: sem os itens que você já tem
+var ultimoResultadoPagina = null;  // para a aba da loja: COM os itens que você já tem (eles continuam lá)
 var ouvintesResultado = [];       // módulos de UI que redesenham quando o resultado muda
 
 function aoMudarResultado(fn) { ouvintesResultado.push(fn); }
@@ -18,7 +19,10 @@ function calcular(leitura) {
     fase: DeadlockEngine.faseDoTempo(leitura.segundos),
     overrides: overrides,
   };
-  return { estado: estado, r: DeadlockEngine.recomendar(dados, estado) };
+  var estadoPagina = {};
+  for (var k in estado) estadoPagina[k] = estado[k];
+  estadoPagina.meusItens = [];
+  return { estado: estado, r: DeadlockEngine.recomendar(dados, estado), rPagina: DeadlockEngine.recomendar(dados, estadoPagina) };
 }
 
 var assinaturaAnterior = "";
@@ -29,6 +33,7 @@ function atualizarRecomendacoes(leitura, forcar) {
   if (!forcar && assinatura === assinaturaAnterior) return false;
   assinaturaAnterior = assinatura;
   ultimoResultado = c.r;
+  ultimoResultadoPagina = c.rPagina;
   ouvintesResultado.forEach(function (fn) { try { fn(c.r, leitura); } catch (e) { log("erro ao desenhar: " + e + (e.stack ? "\n" + e.stack : "")); } });
   return true;
 }
@@ -65,7 +70,7 @@ function lerCodigo(codigo) {
 
 function salvarOverrides() {
   ponteSalvar("du_counters_v1", JSON.stringify(overrides), function (ok) {
-    if (!ok) log("não consegui salvar os counters editados (sem armazenamento) — use Compartilhar para guardar o código.");
+    if (!ok) log("não consegui salvar os counters editados (sem armazenamento): use Compartilhar para guardar o código.");
   });
 }
 function carregarOverrides() {

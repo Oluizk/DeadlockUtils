@@ -30,6 +30,12 @@ function coletarImagens(p, prof, saida) {
   }
 }
 
+// Placar (Tab) aberto: #minimap_persp também recebe gScoreboardOpen (GlobalClassListener no hud.xml).
+// Não dá para olhar só o #TopBar: com o mapa grande aberto o mod tira a classe dele (ver 50-mapa.js).
+function placarAberto() {
+  if (!valido(cacheLeitura.persp)) cacheLeitura.persp = achar(hud, "minimap_persp");
+  return temClasse(topBar(), "gScoreboardOpen") || temClasse(cacheLeitura.persp, "gScoreboardOpen");
+}
 function topBar() {
   if (!valido(cacheLeitura.topBar)) cacheLeitura.topBar = achar(hud, "TopBar");
   return cacheLeitura.topBar;
@@ -165,7 +171,7 @@ function lerPartida() {
     textoMidboss: textoDe(achar(tb, "MidbossTimerLabel")),
     emPartida: timeA.length + timeB.length > 0,
     lojaAberta: temClasse(tb, "gShopOpen"),
-    placarAberto: temClasse(tb, "gScoreboardOpen"),
+    placarAberto: placarAberto(),
   };
 }
 

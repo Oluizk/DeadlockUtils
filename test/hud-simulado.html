@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<title>HUD simulado — Deadlock Utils</title>
+<title>HUD simulado: Deadlock Utils</title>
 <style>
   :root { color-scheme: dark; }
   body { margin: 0; background: #0b0a09; color: #ddd; font: 13px/1.35 "Segoe UI", sans-serif; }
@@ -23,7 +23,41 @@
   .DUNav { height: 46px; background: #b0843a; cursor: pointer; } .DUNav.DUNavAtiva { height: 110px; background: #ffde96; }
   .DUNavIcone::after { content: "👁"; }
   .listasSim { position: relative; flex: 1; background: #4a4136; }
-  .DUAba { position: absolute; inset: 0; background: #b9a684; color: #2b2219; display: flex; flex-direction: column; }
+  /* prévia com as fontes e texturas reais do jogo (test/fontes e test/icones, fora do git) */
+  @font-face { font-family: Pulp; src: url(fontes/valvepulp-bold.ttf); }
+  @font-face { font-family: Retail; src: url(fontes/retaildemo-bolditalic.otf); }
+  @font-face { font-family: Oracle; src: url(fontes/valveoracle-semibold.ttf); }
+  @font-face { font-family: OracleI; src: url(fontes/valveoracle-semibolditalic.ttf); }
+  .DUAba { position: absolute; inset: 0; background: #b9a684 url(icones/catalog_shop_generic_bg2_psd.png) 0 0 / 100% 100% no-repeat; color: #10130D; display: flex; flex-direction: column; font-family: Oracle, sans-serif; }
+  .DUAbaTopo { position: relative; height: 104px; flex: none; }
+  .DUAbaTopoLinha { position: absolute; inset: 0 0 8px 0; display: flex; align-items: center; }
+  .DUAbaHeroiCaixa { width: 72px; height: 72px; margin-left: 22px; border-radius: 50%; background: #10130Dcc; border: 3px solid #FFEFD7; box-shadow: 0 0 6px #000a; display: flex; align-items: center; justify-content: center; box-sizing: border-box; }
+  .DUAbaHeroi { width: 62px; height: 62px; border-radius: 50%; background-size: cover; }
+  .DUAbaTopoEspaco { flex: 1; }
+  .DUAbaCabAcoes { display: flex; margin-right: 20px; }
+  .DUAbaStatus { display: block; margin: 2px 0 0 18px; font-size: 13px; color: #10130Dcc; }
+  .DUCartaz { position: relative; height: 62px; margin: 16px 0 8px; --c: #d8452f; }
+  .DUCartaz_grande { position: absolute; inset: 0 0 8px 0; height: auto; margin: 0; }
+  .DUCartazFundo { position: absolute; inset: 0; background: url(icones/catalog_shop_builds_header_bg_psd.png) 0 0 / 100% 100%, var(--c); background-blend-mode: luminosity; -webkit-mask: url(icones/catalog_shop_builds_header_bg_psd.png) 0 0 / 100% 100%; filter: drop-shadow(0 3px 4px #0006); }
+  .DUCartazPinceladas { position: absolute; left: 0; top: 0; width: 70%; height: 100%; background-size: 100% 100%; opacity: .55; }
+  .DUCartazConteudo { position: absolute; inset: 0; display: flex; align-items: center; padding-left: 22px; }
+  .DUCartazComHeroi .DUCartazConteudo { padding-left: 112px; }
+  .DUCartazIcone { width: 34px; height: 34px; margin-right: 10px; background-size: contain; background-repeat: no-repeat; filter: brightness(0) invert(.95); }
+  .DUCartazTitulo { font-family: Pulp; font-size: 40px; text-transform: uppercase; letter-spacing: 1px; color: #FFEFD7; text-shadow: 3px 3px 0 #10130Dd0; line-height: 1; }
+  .DUCartaz_grande .DUCartazTitulo { font-size: 58px; }
+  .DUCartazSub { font-family: Retail; font-style: italic; font-weight: bold; font-size: 20px; color: #10130Dd9; transform: rotate(-5deg); align-self: flex-start; margin: 8px 0 0 14px; }
+  .DUCartaz_grande .DUCartazSub { font-size: 26px; margin-top: 14px; }
+  .DUCartaz_vermelho { --c: #d8452f; } .DUCartaz_vermelho .DUCartazPinceladas, .DUCartaz_arma .DUCartazPinceladas, .DUCartaz_escuro .DUCartazPinceladas { background-image: url(icones/catalog_tooltip_header_weapon_psd.png); }
+  .DUCartaz_arma { --c: #e08a2c; } .DUCartaz_espirito { --c: #8f5fc7; } .DUCartaz_vitalidade { --c: #74b52a; } .DUCartaz_teal { --c: #3fa7b5; } .DUCartaz_escuro { --c: #5a2a24; }
+  .DUCartaz_teal .DUCartazPinceladas { background-image: url(icones/catalog_tooltip_header_vitality_psd.png); opacity: .35; }
+  .DUCartaz_escuro .DUCartazPinceladas { opacity: .4; } .DUCartaz_escuro .DUCartazSub { color: #FFEFD7cc; }
+  .DUTierLinha { border-top: 2px solid #10130D90; padding: 10px 0 4px; }
+  .DUTierPreco { width: 112px; height: 60px; }
+  .DUTierEtiqueta { width: 100px; height: 45px; margin-top: 6px; background-size: contain; background-repeat: no-repeat; background-position: center; }
+  .DUTier1 .DUTierEtiqueta { background-image: url(icones/pricetag_tier1_psd.png); transform: rotate(-2deg); }
+  .DUTier2 .DUTierEtiqueta { background-image: url(icones/pricetag_tier2_psd.png); transform: rotate(5deg); }
+  .DUTier3 .DUTierEtiqueta { background-image: url(icones/pricetag_tier3_psd.png); height: 55px; transform: rotate(-3deg); }
+  .DUTier4 .DUTierEtiqueta { background-image: url(icones/pricetag_tier4_psd.png); height: 55px; }
   .DUAbaCab { display: flex; gap: 12px; padding: 14px 22px 6px; align-items: center; }
   .DUAbaCabTextos { flex: 1; display: flex; flex-direction: column; }
   .DUAbaTitulo { font-size: 24px; font-weight: bold; text-transform: uppercase; }
@@ -77,6 +111,7 @@
   .p-Panel, .p-Image, .p-Label { pointer-events: auto; }
   .semFilhos * { pointer-events: none !important; }
   .map_button.localplayer { position: absolute; left: 55%; top: 60%; width: 15%; height: 15%; background: url(icones/player_marker_self_psd.png) center / 100% 100%; transform: translate(-50%, -50%) scale(1.3); }
+  .DUIcone.DUIndisponivel { opacity: .45; filter: saturate(.3); }
   .DUPontoAtivo:hover { transform: scale(1.35); filter: brightness(1.8); z-index: 10; }
   .DUInvertido .DUPontoAtivo:hover { transform: scale(-1.35, -1.35); }
   .DUMarcaAnel { position: absolute; left: -40%; top: -40%; width: 180%; height: 180%; border-radius: 50%; box-sizing: border-box; animation: pulso 1.2s ease-out infinite; }
@@ -291,7 +326,7 @@ function jogador(cont, heroi, nome, icones) {
   return p;
 }
 function comprar(p, k) { el("Image", el("Panel", el("Panel", p._icones, "", "CitadelModIcon"), "mod_icon_background"), "ModIconImage", "", { src: "s2r://panorama/images/" + k + "_psd.vtex" }); }
-// ?trocado=1: como no jogo quando você está no time 3 — o SEU time fica no painel #TeamEnemy.
+// ?trocado=1: como no jogo quando você está no time 3, o SEU time fica no painel #TeamEnemy.
 const TROCADO = location.search.indexOf("trocado=1") >= 0;
 const amigos = el("Panel", el("Panel", times, TROCADO ? "TeamEnemy" : "TeamFriendly"), "PlayersContainer");
 [["Wraith", "_zyul", ["items/weapon/toxic_bullets"]], ["Kelvin", "Bot1", []], ["Vindicta", "Bot2", []], ["Infernus", "Bot3", []], ["Warden", "Bot4", []], ["McGinnis", "Bot5", []]]
@@ -310,6 +345,7 @@ const hudMinimap = real(el("Panel", el("Panel", mmCont, "HudMinimapContainer"), 
 if (location.search.indexOf("invertido=1") >= 0) hudMinimap.AddClass("invert_map");
 // indicador do jogador local como no jogo (hud_minimap.css: .map_button.localplayer.friend = 15%)
 real(el("Panel", hudMinimap, "", "map_button player localplayer friend"));
+real(el("Panel", hudMinimap, "", "map_button player enemy"));
 // menu ESC
 const esc = real(el("Panel", raiz, "EscapeMenu"), "sim");
 const menuEsc = real(el("Panel", esc, "Menu"));

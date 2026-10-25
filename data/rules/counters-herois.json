@@ -5,17 +5,33 @@
       { "item": "knockdown", "peso": 3, "motivo": "Stun interrompe a Storm Cloud (o próprio jogo marca Nocaute como counter do Seven).", "fonte": "jogo" }
     ],
     "Vindicta": [
-      { "item": "knockdown", "peso": 2, "motivo": "Ela passa muito tempo voando — Nocaute é mais forte em alvos no ar (counter oficial do jogo).", "fonte": "jogo" },
-      { "item": "extra-health", "peso": 1, "motivo": "O Assassinate executa alvos com pouca vida — vida extra tira você da faixa de execução." }
+      { "item": "knockdown", "peso": 2, "motivo": "Ela passa muito tempo voando: Nocaute é mais forte em alvos no ar (counter oficial do jogo).", "fonte": "jogo" },
+      { "item": "extra-health", "peso": 1, "motivo": "O Assassinate executa alvos com pouca vida: vida extra tira você da faixa de execução." }
     ],
     "Deadman Danny": [
       { "item": "knockdown", "peso": 2, "motivo": "Voa de jetpack: Nocaute é mais forte contra alvos no ar (counter oficial do jogo).", "fonte": "jogo" }
     ],
-    "McGinnis": [
+    "Paige": [
+      { "item": "healbane", "peso": 3, "meu_heroi_tag": "spirit", "motivo": "Paige cura e protege o time: seu dano spirit corta 35% da cura dela nos alvos." },
+      { "item": "toxic-bullets", "peso": 3, "meu_heroi_tag": "gun", "motivo": "Corta a cura que a Paige joga no alvo que você está focando." },
+      { "item": "decay", "peso": 2, "meu_heroi_tag": "spirit", "motivo": "-50% de cura recebida no alvo que a Paige está salvando." },
+      { "item": "inhibitor", "peso": 1, "meu_heroi_tag": "gun", "motivo": "-40% de cura recebida no alvo que você acerta." }
+    ],
+    "Nurse Harrow": [
+      { "item": "healbane", "peso": 3, "meu_heroi_tag": "spirit", "motivo": "Nurse Harrow vive de cura: seu dano spirit corta 35% da cura no alvo." },
+      { "item": "toxic-bullets", "peso": 3, "meu_heroi_tag": "gun", "motivo": "Sangramento + corte de cura contra a cura da Nurse." },
+      { "item": "decay", "peso": 2, "meu_heroi_tag": "spirit", "motivo": "-50% de cura recebida: segura a cura dela e dos aliados que ela cura." },
+      { "item": "inhibitor", "peso": 1, "meu_heroi_tag": "gun", "motivo": "-40% de cura recebida no alvo que você acerta." }
+    ],
+    "Rem": [
+      { "item": "healbane", "peso": 3, "meu_heroi_tag": "spirit", "motivo": "Rem gruda em aliados para curar: corte a cura no alvo que ele está segurando." },
+      { "item": "toxic-bullets", "peso": 3, "meu_heroi_tag": "gun", "motivo": "Corta a cura do Rem no aliado que você está focando." },
+      { "item": "decay", "peso": 2, "meu_heroi_tag": "spirit", "motivo": "-50% de cura recebida no aliado que o Rem está curando." }
+    ],    "McGinnis": [
       { "item": "healbane", "peso": 2, "motivo": "Corta a cura das torretas/espectros de cura (counter oficial do jogo).", "fonte": "jogo" }
     ],
     "Haze": [
-      { "item": "metal-skin", "peso": 2, "motivo": "O Bullet Dance é dano de bala — Metal Skin anula a ultimate." },
+      { "item": "metal-skin", "peso": 2, "motivo": "O Bullet Dance é dano de bala: Metal Skin anula a ultimate." },
       { "item": "plated-armor", "peso": 1, "motivo": "Desvia parte das balas do Bullet Dance." }
     ],
     "Wraith": [

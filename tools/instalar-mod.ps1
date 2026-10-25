@@ -1,5 +1,5 @@
 ﻿# Instala (ou remove, com -Remover) o mod no Deadlock.
-#  - habilita a pasta de addons no gameinfo.gi (com backup; atualizações do jogo desfazem isso — é só rodar de novo)
+#  - habilita a pasta de addons no gameinfo.gi (com backup; atualizações do jogo desfazem isso, é só rodar de novo)
 #  - copia build\pakNN_dir.vpk para game\citadel\addons\
 param(
   [string]$Jogo,
@@ -44,7 +44,7 @@ if ($Remover) {
     [IO.File]::WriteAllText($gameinfo, $novo)
     Write-Host "gameinfo.gi voltou ao original (não há outros mods instalados)."
   } elseif ($outros.Count -gt 0) {
-    Write-Host "Há outros mods em addons\ — mantive a pasta de addons habilitada no gameinfo.gi."
+    Write-Host "Há outros mods em addons\: mantive a pasta de addons habilitada no gameinfo.gi."
   }
   # Teclas criadas pelo mod (bind ... panorama_dispatch_event DeadlockUtils_*): remove só essas linhas.
   $steam = (Get-ItemProperty "HKCU:\Software\Valve\Steam" -ErrorAction SilentlyContinue).SteamPath

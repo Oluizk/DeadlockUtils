@@ -10,7 +10,7 @@ powershell -ExecutionPolicy Bypass -File tools\validar.ps1
 
 E teste abrindo o `iniciar.bat`.
 
-## 1. Itens — `data/items.json`
+## 1. Itens: `data/items.json`
 
 ```json
 { "id": "toxic-bullets", "nome": "Toxic Bullets", "categoria": "weapon", "tier": 3 }
@@ -19,10 +19,10 @@ E teste abrindo o `iniciar.bat`.
 - `id`: nome em minúsculas com hífens, sem apóstrofo (`Diviner's Kevlar` → `diviners-kevlar`). As regras usam o id.
 - `categoria`: `weapon`, `vitality` ou `spirit`. `tier`: 1 a 4. `"ativo": true` se o item tem ativação.
 - `nome_pt`: nome do item no jogo em português (vem de `citadel_gc_mod_names_brazilian.txt`).
-- `classes`: id interno do item no jogo (`upgrade_...`). `icones`: caminhos das imagens do item (de `scripts/abilities.vdata`, campos `m_strAbilityImage` e `m_strShopIconLarge`). **O mod usa os ícones para reconhecer os itens no placar** — se um item novo não for reconhecido, o console mostra `[ShopAdvisor] ícones sem item mapeado: ...`; adicione o caminho em `icones`.
+- `classes`: id interno do item no jogo (`upgrade_...`). `icones`: caminhos das imagens do item (de `scripts/abilities.vdata`, campos `m_strAbilityImage` e `m_strShopIconLarge`). **O mod usa os ícones para reconhecer os itens no placar**: se um item novo não for reconhecido, o console mostra `[ShopAdvisor] ícones sem item mapeado: ...`; adicione o caminho em `icones`.
 - Item renomeado no patch? Mude o `nome` e mantenha o `id`. Item removido? Apague e corrija as regras que o citam (o validador aponta).
 
-## 2. Heróis e tags — `data/heroes.json`
+## 2. Heróis e tags: `data/heroes.json`
 
 ```json
 "Haze": { "tags": ["gun","burst","stealth","stun","channel-ult"], "nota": "…", "confianca": "alta" }
@@ -53,9 +53,9 @@ As tags descrevem o que o herói **faz**. Use só estas:
 
 Quer uma tag nova? Adicione em `tools/validar.ps1` (`$tagsValidas`), nesta tabela, e crie a regra que a usa.
 
-`confianca`: `alta` (kit conferido), `media`, `baixa` (precisa de revisão — aparece "dados a revisar" na interface).
+`confianca`: `alta` (kit conferido), `media`, `baixa` (precisa de revisão: aparece "dados a revisar" na interface).
 
-## 3. Regras — `data/rules/contra-tags.json` e `composicao-time.json`
+## 3. Regras: `data/rules/contra-tags.json` e `composicao-time.json`
 
 ```json
 {
@@ -84,10 +84,10 @@ Quer uma tag nova? Adicione em `tools/validar.ps1` (`$tagsValidas`), nesta tabel
 
 - `item`: id do item.
 - `peso`: 1 = situacional, 2 = bom, 3 = forte, 4 = quase obrigatório.
-- `motivo`: frase curta explicando **por que** — é o que o jogador lê.
+- `motivo`: frase curta explicando **por que** (é o que o jogador lê).
 - `meu_heroi_tag` (opcional): só recomenda se o seu herói tiver essa tag. Use para separar versões de arma e spirit do mesmo counter (Toxic Bullets × Healbane).
 
-## 4. Itens perigosos do inimigo — `data/rules/itens-inimigos.json`
+## 4. Itens perigosos do inimigo: `data/rules/itens-inimigos.json`
 
 ```json
 {
@@ -100,7 +100,7 @@ Quer uma tag nova? Adicione em `tools/validar.ps1` (`$tagsValidas`), nesta tabel
 
 `perigo`: 1 = atenção, 2 = perigoso, 3 = muito perigoso. `counters` pode ser vazio (`[]`) quando a resposta é de jogabilidade, não de compra (ex.: "não use CC no Unstoppable").
 
-## 5. Counters por herói — `data/rules/counters-herois.json`
+## 5. Counters por herói: `data/rules/counters-herois.json`
 
 ```json
 "Haze": [ { "item": "metal-skin", "peso": 2, "motivo": "O Bullet Dance é dano de bala." } ]
@@ -108,12 +108,16 @@ Quer uma tag nova? Adicione em `tools/validar.ps1` (`$tagsValidas`), nesta tabel
 
 Vale quando o herói está no time inimigo. Também dá para editar **dentro do jogo** (aba Deadlock Utils > Editar counters) e mandar o código `DU1:...` para alguém incluir aqui.
 
-## 6. Builds — `data/builds.json` (gerado)
+## 6. Builds: `data/builds.json` (gerado)
 
-Gerado por `tools\atualizar-builds.ps1` a partir dos dados de popularidade que o próprio jogo traz (`m_PopularItems` em `scripts/heroes.vdata`): para cada herói e fase (`inicio`/`meio`/`fim`), `[item, % de escolha, % de vitória]`. Não edite à mão — rode o script depois de um patch.
+Gerado por `tools\atualizar-builds.ps1` a partir dos dados de popularidade que o próprio jogo traz (`m_PopularItems` em `scripts/heroes.vdata`): para cada herói e fase (`inicio`/`meio`/`fim`), `[item, % de escolha, % de vitória]`. Não edite à mão: rode o script depois de um patch.
+
+## 7. Traduções: `data/textos.json`
+
+Cada idioma é um bloco (`"pt"`, `"en"`, `"es"`...) com as mesmas chaves. Para traduzir, copie o bloco `"pt"`, troque o nome pelo código do idioma e traduza os valores. `{1}` e `{2}` são trocados pelo herói, a fase etc. Chave que faltar usa o texto em português. Os títulos dos cartazes da aba (`cartaz.*`) ficam melhores curtos: são escritos em letras grandes.
 
 ## Boas práticas
 
-- Um PR por assunto ("anti-cura revisado para o patch X"), dizendo **o porquê** — idealmente com link de patch notes ou da wiki.
+- Um PR por assunto ("anti-cura revisado para o patch X"), dizendo **o porquê**, idealmente com link de patch notes ou da wiki.
 - Prefira motivos curtos e concretos, com números quando ajudar ("-35% de cura por 8s").
-- Não aumente pesos só porque o item é forte em geral — o advisor é sobre **counters à partida atual**, não tier list.
+- Não aumente pesos só porque o item é forte em geral: o advisor é sobre **counters à partida atual**, não tier list.

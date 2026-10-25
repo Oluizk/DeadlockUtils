@@ -6,7 +6,7 @@
       "titulo": "Seu time não tem stun e o inimigo tem ultimate canalizada",
       "quando": { "aliados_sem_tag": "stun", "inimigos_tag": "channel-ult" },
       "recomendar": [
-        { "item": "knockdown", "peso": 2, "motivo": "Alguém precisa interromper as ultimates — seu time não tem stun." },
+        { "item": "knockdown", "peso": 2, "motivo": "Alguém precisa interromper as ultimates: seu time não tem stun." },
         { "item": "silence-wave", "peso": 2, "motivo": "Seu time não tem como cortar canalizações." }
       ]
     },
@@ -15,8 +15,8 @@
       "titulo": "Seu time não tem suporte que cura",
       "quando": { "aliados_sem_tag": "healer" },
       "recomendar": [
-        { "item": "healing-nova", "peso": 1, "motivo": "Cura em área para o time — ninguém mais cura." },
-        { "item": "rescue-beam", "peso": 1, "motivo": "Salva um aliado (cura + puxa) — seu time não tem suporte." }
+        { "item": "healing-nova", "peso": 1, "motivo": "Cura em área para o time: ninguém mais cura." },
+        { "item": "rescue-beam", "peso": 1, "motivo": "Salva um aliado (cura + puxa): seu time não tem suporte." }
       ]
     },
     {

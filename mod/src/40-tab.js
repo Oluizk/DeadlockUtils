@@ -21,20 +21,27 @@ function montarFaixa() {
   mostrarPainel(faixa.painel, false);
 }
 
-// Só o que faz sentido comprar AGORA: não tenho e posso pagar.
-// Pagar: o painel nativo da loja diz (canAffordMod); sem ele, usa as almas lidas do placar.
-function compravelAgora(it) {
-  if (jaTem(it.id)) return false;
+// Item que já tenho some. Os outros aparecem sempre; ficam meio transparentes quando não dá para
+// comprar agora: sem almas (canAffordMod do painel nativo, ou as almas do placar) ou longe da loja.
+function temAlmas(it) {
   var pode = podeComprar(it.id);
   if (pode !== null) return pode;
   var almas = ultimaLeitura ? ultimaLeitura.almas : null;
   return almas == null || it.custo <= almas;
 }
+// O jogo marca a loja com shopClosed/purchasingDisabled quando você está fora da área de compra.
+function longeDaLoja() {
+  var s = valido(loja.shop) ? loja.shop : achar(hud, "CitadelHudHeroShop");
+  if (!valido(s)) return false;
+  if (temClasse(s, "shopClosed") || temClasse(s, "purchasingDisabled")) return true;
+  try { return s.BAscendantHasClass("shopClosed") || s.BAscendantHasClass("purchasingDisabled"); } catch (e) { return false; }
+}
+function compravelAgora(it) { return !jaTem(it.id) && temAlmas(it) && !longeDaLoja(); }
 function selecionar(lista, n, jaUsados) {
   var out = [];
   for (var i = 0; i < lista.length && out.length < n; i++) {
     var rec = lista[i];
-    if (jaUsados[rec.item.id] || !compravelAgora(rec.item)) continue;
+    if (jaUsados[rec.item.id] || jaTem(rec.item.id)) continue;
     jaUsados[rec.item.id] = true;
     out.push(rec);
   }
@@ -45,7 +52,7 @@ function desenharLinha(alvo, recs, tipo) {
   alvo.RemoveAndDeleteChildren();
   recs.forEach(function (rec) {
     var it = rec.item;
-    var c = criar("Panel", alvo, "", "DUIcone DUIcone_" + it.categoria);
+    var c = criar("Panel", alvo, "", "DUIcone DUIcone_" + it.categoria + (compravelAgora(it) ? "" : " DUIndisponivel"));
     imagem(c, "DUIconeImagem", iconeItem(it));
     if (tipo === "counter") {
       var alvos = alvosDoCounter(rec);
@@ -87,7 +94,7 @@ function mostrarPorque(html) {
   mostrarPainel(faixa.porque, true);
 }
 
-// Duas seções (Counters e Recomendados). Só redesenha se a lista mudou — o Tab aparece na hora
+// Duas seções (Counters e Recomendados). Só redesenha se a lista mudou: o Tab aparece na hora
 // porque os ícones já estão prontos; o loop rápido só troca a visibilidade.
 function atualizarFaixa(forcar) {
   montarFaixa();
@@ -95,7 +102,8 @@ function atualizarFaixa(forcar) {
   var n = CONFIG.itensPorSecao || 4, usados = {};
   var counters = selecionar(ultimoResultado.counters, n, usados);
   var build = selecionar(ultimoResultado.build, n, usados);
-  var assinatura = counters.map(function (x) { return x.item.id; }).join(",") + "|" + build.map(function (x) { return x.item.id; }).join(",");
+  var chave = function (x) { return x.item.id + (compravelAgora(x.item) ? "" : "~"); };
+  var assinatura = counters.map(chave).join(",") + "|" + build.map(chave).join(",");
   if (!forcar && assinatura === faixa.assinatura) return;
   faixa.assinatura = assinatura;
   desenharLinha(faixa.counters, counters, "counter");
@@ -106,7 +114,7 @@ function atualizarFaixa(forcar) {
 aoMudarResultado(function (r) { varrerNativos(false); atualizarFaixa(false); checarNovasAmeacas(r); });
 
 // ---------- tooltip nativo do jogo ----------
-// CitadelShowModTooltip(painel, id) — "Show the tooltip of an Ability by ID" (client.dll). O id é o hash
+// CitadelShowModTooltip(painel, id): "Show the tooltip of an Ability by ID" (client.dll). O id é o hash
 // do nome da classe do item (DU_DATA.idsJogo, gerado no build; confere com o deadlock-api).
 var tooltipNativo = { funciona: null, ancora: null };
 function abrirTooltipNativo(ancora, it) {
@@ -158,8 +166,9 @@ function mostrarDica(rec, tipo, ancora, statusExtra) {
   var pode = podeComprar(it.id);
   dicaItem.DUDicaCusto.text = String(it.custo);
   dicaItem.painel.SetHasClass("DUSemAlmas", pode === false);
-  dicaItem.DUDicaStatus.text = statusExtra ? esc(statusExtra) : jaTem(it.id) ? "Comprado" : "";
-  mostrarPainel(dicaItem.DUDicaStatus, !!(statusExtra || jaTem(it.id)));
+  var estado = statusExtra ? esc(statusExtra) : jaTem(it.id) ? T("comprado") : longeDaLoja() ? T("longeDaLoja") : "";
+  dicaItem.DUDicaStatus.text = estado;
+  mostrarPainel(dicaItem.DUDicaStatus, !!estado);
   var alvos = tipo === "counter" ? alvosDoCounter(rec) : [];
   mostrarPainel(dicaItem.DUDicaContra, alvos.length > 0);
   if (alvos.length) {

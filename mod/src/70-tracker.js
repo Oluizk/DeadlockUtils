@@ -73,7 +73,7 @@ function infoDoJogador(j) {
   var classe = (dados.herois[j.heroi] || {}).classe;
   return tracker.dados.jogadores.filter(function (x) { return x.classe === classe && x.time === j.time; })[0] || null;
 }
-function pct(v, t) { return t ? Math.round(100 * v / t) + "%" : "—"; }
+function pct(v, t) { return t ? Math.round(100 * v / t) + "%" : "-"; }
 function heroiDaClasse(c) { return classeParaHeroi[c] || c || "?"; }
 
 function desenharTracker() {
@@ -139,8 +139,8 @@ function desenharDetalheTracker(jogadores) {
   });
   var hist = [];
   if (CONFIG.accountId && info.id === CONFIG.accountId) hist.push("Este é você.");
-  else if (info.contra) hist.push("Contra você: " + info.contra[0] + " partida(s) — você venceu " + info.contra[1] + " e perdeu " + (info.contra[0] - info.contra[1]) + ".");
-  if (info.com && !(CONFIG.accountId && info.id === CONFIG.accountId)) hist.push("Junto com você: " + info.com[0] + " partida(s) — venceram " + info.com[1] + " e perderam " + (info.com[0] - info.com[1]) + ".");
+  else if (info.contra) hist.push("Contra você: " + info.contra[0] + " partida(s), você venceu " + info.contra[1] + " e perdeu " + (info.contra[0] - info.contra[1]) + ".");
+  if (info.com && !(CONFIG.accountId && info.id === CONFIG.accountId)) hist.push("Junto com você: " + info.com[0] + " partida(s), venceram " + info.com[1] + " e perderam " + (info.com[0] - info.com[1]) + ".");
   if (!hist.length) hist.push(CONFIG.accountId ? "Vocês nunca se encontraram (nas partidas registradas)." : "Configure seu id Steam para ver o histórico com este jogador.");
   bloco("Histórico com você", hist);
 }

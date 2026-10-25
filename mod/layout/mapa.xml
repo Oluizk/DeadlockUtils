@@ -15,7 +15,7 @@
 			</Panel>
 			<Panel class="DUMapaLinha">
 				<Label class="DUMapaRotulo" text="Chefe do meio" />
-				<Label id="DUMapaMidboss" class="DUMapaValor" html="true" text="—" />
+				<Label id="DUMapaMidboss" class="DUMapaValor" html="true" text="-" />
 			</Panel>
 			<Label class="DUMapaSubtitulo" text="Mostrar no mapa" />
 			<Panel id="DUMapaFiltros" class="DUMapaFiltros" />

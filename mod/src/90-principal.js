@@ -1,8 +1,8 @@
 // ===================== Principal: teclas, loops, liga/desliga =====================
 // Dois loops:
-//   rápido (50 ms) — só checagens baratas de classe: Tab (fileira aparece na hora), ESC (fecha mapa e
+//   rápido (50 ms), só checagens baratas de classe: Tab (fileira aparece na hora), ESC (fecha mapa e
 //                    tracker), loja abrindo (fecha mapa), aba da loja.
-//   lento (1 s)    — leitura do placar e recomendações (o trabalho pesado).
+//   lento (1 s), leitura do placar e recomendações (o trabalho pesado).
 
 var modLigado = true;
 
@@ -59,7 +59,7 @@ function estadoRapido() {
   if (!valido(rapido.escMenu)) rapido.escMenu = achar(hud, "EscapeMenu");
   var esc = temClasse(hud, "ShowEscapeMenu");
   if (!esc && valido(rapido.escMenu)) { try { esc = rapido.escMenu.BAscendantHasClass("ShowEscapeMenu"); } catch (e) {} }
-  var e = { lojaAberta: temClasse(tb, "gShopOpen"), placarAberto: temClasse(tb, "gScoreboardOpen"), escAberto: esc, escAbriu: esc && !rapido.esc };
+  var e = { lojaAberta: temClasse(tb, "gShopOpen"), placarAberto: placarAberto(), escAberto: esc, escAbriu: esc && !rapido.esc };
   rapido.esc = esc;
   return e;
 }
@@ -77,7 +77,7 @@ function verificarRapido() {
     // Loja aberta: as abas trocam os painéis nativos; varre a cada 2s para saber o que dá para comprar/já tem.
     if (e.lojaAberta && Date.now() - ultimaVarreduraLoja > 2000) {
       ultimaVarreduraLoja = Date.now();
-      varrerNativos("sempre");
+      atualizarNativos();
     }
   } catch (err) { ultimoErro = String(err); }
 }
@@ -109,6 +109,7 @@ function tick() {
       if (l.segundos != null) ultimosSegundos = l.segundos;
       l.meusItens.forEach(marcarPossuido);
       atualizarRecomendacoes(l, false);
+      if (faixa.visivel) atualizarFaixa(false); // almas e distância da loja mudam sem a recomendação mudar
       if (!valido(loja.botao)) montarAbaLoja();
       montarFaixa();
       atualizarPainelMapa(l);
@@ -140,7 +141,7 @@ function mostrarDiagnosticoNaTela(l) {
 }
 
 function diagnosticoInicial() {
-  log("carregado v" + DU_DATA.versao + " (jogo " + DU_DATA.versaoJogo + ") — " + dados.itens.length + " itens, " +
+  log("carregado v" + DU_DATA.versao + " (jogo " + DU_DATA.versaoJogo + "): " + dados.itens.length + " itens, " +
     dados.regras.length + " regras, builds de " + Object.keys(dados.builds).length + " heróis, conta=" + (CONFIG.accountId || "não configurada") +
     ", ponte=" + (CONFIG.urlPonte || "não configurada"));
 }

@@ -15,7 +15,7 @@
     {
       "item": "cursed-relic", "perigo": 3,
       "alerta": "Curse: interrompe, silencia, desarma e remove seus buffs por ~3s.",
-      "dica": "Não use seus ativos defensivos primeiro se o portador estiver perto — eles podem ser removidos. Espere o Curse sair.",
+      "dica": "Não use seus ativos defensivos primeiro se o portador estiver perto: eles podem ser removidos. Espere o Curse sair.",
       "counters": [
         { "item": "counterspell", "peso": 2, "motivo": "Parry bloqueia itens e habilidades inimigas." },
         { "item": "debuff-reducer", "peso": 2, "motivo": "Curse dura menos." },
@@ -26,7 +26,7 @@
     {
       "item": "silence-wave", "perigo": 2,
       "alerta": "Projétil em área que silencia por 3s.",
-      "dica": "Projétil que se expande — não fiquem amontoados. Desvie pela lateral.",
+      "dica": "Projétil que se expande: não fiquem amontoados. Desvie pela lateral.",
       "counters": [
         { "item": "debuff-reducer", "peso": 2, "motivo": "Silence mais curto." },
         { "item": "reactive-barrier", "peso": 1, "motivo": "Barreira ao ser silenciado." },
@@ -36,7 +36,7 @@
     {
       "item": "focus-lens", "perigo": 2,
       "alerta": "Silence de 4,5s em um alvo + parte do dano volta quando o silence acaba.",
-      "dica": "Normalmente é usado em quem tem ultimate forte — guarde distância do portador.",
+      "dica": "Normalmente é usado em quem tem ultimate forte: guarde distância do portador.",
       "counters": [
         { "item": "debuff-reducer", "peso": 2, "motivo": "Silence mais curto." },
         { "item": "dispel-magic", "peso": 1, "motivo": "Remove o silence." },
@@ -46,7 +46,7 @@
     {
       "item": "phantom-strike", "perigo": 2,
       "alerta": "Teleporta até você, te puxa pro chão e desarma.",
-      "dica": "Alvos isolados são presa fácil — fique perto do time quando o portador estiver vivo.",
+      "dica": "Alvos isolados são presa fácil: fique perto do time quando o portador estiver vivo.",
       "counters": [
         { "item": "debuff-reducer", "peso": 1, "motivo": "Disarm mais curto." },
         { "item": "counterspell", "peso": 1, "motivo": "Parry na hora do teleporte." }
@@ -55,7 +55,7 @@
     {
       "item": "capacitor", "perigo": 2,
       "alerta": "Slow forte + silencia seus itens de movimento.",
-      "dica": "Warp Stone / Majestic Leap / Fleetfoot não salvam você enquanto estiver afetado — saia antes.",
+      "dica": "Warp Stone / Majestic Leap / Fleetfoot não salvam você enquanto estiver afetado: saia antes.",
       "counters": [
         { "item": "debuff-reducer", "peso": 1, "motivo": "Slow e silence mais curtos." },
         { "item": "dispel-magic", "peso": 1, "motivo": "Limpa o slow e o silence de itens." }
@@ -80,7 +80,7 @@
     },
     {
       "item": "vortex-web", "perigo": 3,
-      "alerta": "Granada que puxa todo mundo junto e aplica slow — prepara combo de ultimate em área.",
+      "alerta": "Granada que puxa todo mundo junto e aplica slow: prepara combo de ultimate em área.",
       "dica": "Espalhem-se. Se for puxado, use ativo defensivo imediatamente (ultimate inimiga vem em seguida).",
       "counters": [
         { "item": "unstoppable", "peso": 1, "motivo": "Ignora o CC que vem depois." },
@@ -98,7 +98,7 @@
     },
     {
       "item": "echo-shard", "perigo": 2,
-      "alerta": "Repete uma habilidade (não-ultimate) — espere dois stuns/combos seguidos.",
+      "alerta": "Repete uma habilidade (não-ultimate): espere dois stuns/combos seguidos.",
       "dica": "Depois que o inimigo usar a habilidade principal, ela pode vir de novo imediatamente.",
       "counters": []
     },
@@ -138,7 +138,7 @@
     {
       "item": "cheat-death", "perigo": 2,
       "alerta": "Não morre por 4,5s ao levar dano letal (com dano/cura reduzidos).",
-      "dica": "Não gaste ult em quem acabou de ativar Cheat Death — espere os 4,5s e finalize depois.",
+      "dica": "Não gaste ult em quem acabou de ativar Cheat Death: espere os 4,5s e finalize depois.",
       "counters": []
     },
     {
@@ -201,7 +201,7 @@
     {
       "item": "silencer", "perigo": 2,
       "alerta": "As balas dele reduzem seu dano spirit em 25% e acumulam silence em você.",
-      "dica": "Se você é de spirit, não troque tiro longo com ele — entre, use combo e saia.",
+      "dica": "Se você é de spirit, não troque tiro longo com ele: entre, use combo e saia.",
       "counters": [
         { "item": "plated-armor", "peso": 2, "motivo": "Chance de anular efeitos on-hit (inclui o acúmulo)." },
         { "item": "metal-skin", "peso": 2, "motivo": "Sem bala, sem silence." },
@@ -225,7 +225,7 @@
     },
     {
       "item": "shadow-weave", "perigo": 1,
-      "alerta": "Fica invisível por até 13s — emboscada vindo.",
+      "alerta": "Fica invisível por até 13s: emboscada vindo.",
       "dica": "Fique perto do time e preste atenção em sons. Dano revela brevemente.",
       "counters": []
     },
@@ -258,7 +258,7 @@
     {
       "item": "escalating-exposure", "perigo": 1,
       "alerta": "Reduz sua resistência spirit ao longo da luta.",
-      "dica": "Lutas longas contra ele são ruins — entre e saia.",
+      "dica": "Lutas longas contra ele são ruins: entre e saia.",
       "counters": [
         { "item": "spirit-resilience", "peso": 1, "motivo": "Compensa a redução de resistência." }
       ]

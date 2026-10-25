@@ -12,7 +12,7 @@ param(
 )
 . (Join-Path $PSScriptRoot "jogo.ps1")
 
-$VersaoMod = "0.7.0"
+$VersaoMod = "0.8.0"
 $Nome = "deadlock_utils"
 $utf8 = New-Object Text.UTF8Encoding $false
 function Ler([string]$rel) { [IO.File]::ReadAllText((Join-Path $Raiz $rel), [Text.Encoding]::UTF8).TrimStart([char]0xFEFF) }
@@ -129,7 +129,7 @@ $modulos = (Get-ChildItem (Join-Path $Raiz "mod\src") -Filter "*.js" | Sort-Obje
   "// ---------- mod/src/$($_.Name) ----------`n" + (Ler "mod\src\$($_.Name)")
 }) -join "`n"
 $js = @"
-// Deadlock Utils v$VersaoMod — gerado por tools/build-mod.ps1. NÃO edite: edite mod/src/*.js e data/.
+// Deadlock Utils v$VersaoMod, gerado por tools/build-mod.ps1. NÃO edite: edite mod/src/*.js e data/.
 var DU_DATA = {
 versao: "$VersaoMod",
 versaoJogo: "$versaoJogo",
@@ -138,6 +138,7 @@ items: $(Ler "data\items.json"),
 heroes: $(Ler "data\heroes.json"),
 builds: $(Ler "data\builds.json"),
 mapa: $(Ler "data\mapa.json"),
+textos: $(Ler "data\textos.json"),
 countersHerois: $(Ler "data\rules\counters-herois.json"),
 ameacas: $(Ler "data\rules\itens-inimigos.json"),
 regrasArquivos: [
