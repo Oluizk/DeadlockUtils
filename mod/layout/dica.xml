@@ -1,0 +1,32 @@
+<root>
+	<styles>
+		<include src="s2r://panorama/styles/deadlock_utils.vcss_c" />
+	</styles>
+	<!-- Mesma estrutura do tooltip de item do jogo (tooltips/citadel_tooltip_mod_details.xml):
+	     fundo com máscara da categoria, cabeçalho com textura da categoria, ícone, nome, custo e corpo. -->
+	<Panel class="DUDica" hittest="false" hittestchildren="false">
+		<Panel id="DUDicaFundo" class="DUDicaFundo">
+			<Panel class="DUDicaCab">
+				<Panel class="DUDicaCabConteudo">
+					<Image id="DUDicaIcone" class="DUDicaIcone" />
+					<Panel class="DUDicaCabTextos">
+						<Label id="DUDicaNome" class="DUDicaNome" text=" " />
+						<Panel id="DUDicaCustoLinha" class="DUDicaCustoLinha">
+							<Panel class="DUDicaAlma" />
+							<Label id="DUDicaCusto" class="DUDicaCusto" text=" " />
+						</Panel>
+						<Label id="DUDicaStatus" class="DUDicaStatus" html="true" text=" " />
+					</Panel>
+				</Panel>
+			</Panel>
+			<Panel class="DUDicaCorpo">
+				<Panel id="DUDicaContra" class="DUDicaContra">
+					<Image id="DUDicaHeroi" class="DUDicaHeroi" />
+					<Label id="DUDicaContraTexto" class="DUDicaContraTexto" html="true" text=" " />
+				</Panel>
+				<Label id="DUDicaMotivos" class="DUDicaMotivos" html="true" text=" " />
+				<Label id="DUDicaRodape" class="DUDicaRodape" text="Clique para comprar (perto da loja)" />
+			</Panel>
+		</Panel>
+	</Panel>
+</root>

@@ -1,0 +1,8 @@
+build/
+.claude/settings.local.json
+Thumbs.db
+desktop.ini
+test/*.png
+tools/bin/
+test/icones/
+exceptions.txt

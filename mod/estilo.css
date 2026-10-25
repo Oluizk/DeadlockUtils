@@ -1,0 +1,1433 @@
+/* Deadlock Utils — estilos. Medidas e texturas copiadas da loja do jogo
+   (citadel_hud_hero_shop.css, citadel_shop_mod_view.css).
+   Panorama NÃO aceita: seletores de irmão (+ ~), ::, :not(), :nth-*. O build recusa esses casos. */
+
+/* ---------------- comuns ---------------- */
+.DUBotao, .DUAbaModo
+{
+    padding: 6px 14px;
+    margin: 0px 6px 0px 0px;
+    background-color: #3b3426;
+    border-radius: 3px;
+    box-shadow: 1px 1px 4px #0006;
+    transition-property: brightness, background-color;
+    transition-duration: 0.08s;
+}
+.DUBotao:hover, .DUAbaModo:hover
+{
+    brightness: 1.35;
+}
+.DUBotao Label, .DUAbaModo Label
+{
+    font-size: 15px;
+    font-weight: bold;
+    color: #f2e4c4;
+}
+.DUBotaoPrimario, .DUAbaModoAtivo, .DUSelecionado.DUPeso
+{
+    background-color: #d9b26a;
+}
+.DUBotaoPrimario Label, .DUAbaModoAtivo Label, .DUSelecionado.DUPeso Label
+{
+    color: #2b2219;
+}
+.DUTexto
+{
+    height: 34px;
+    padding: 6px 8px;
+    font-size: 15px;
+    color: #2b2219;
+    background-color: #fffaf0dd;
+    border: 1px solid #8a7656;
+    border-radius: 3px;
+}
+.DUSelo_build
+{
+    color: #1f5d52;
+}
+.DUSelo_counter
+{
+    color: #8a3d12;
+}
+
+/* ---------------- botão da aba na loja ---------------- */
+.DUNav
+{
+    horizontal-align: right;
+    height: 75px;
+    width: 70px;
+    margin-bottom: 8px;
+    overflow: noclip;
+    transition-property: height;
+    transition-duration: 0.2s;
+    transition-timing-function: ease-in-out;
+}
+.DUNav .DUNavFundo
+{
+    width: 75px;
+    height: 75px;
+    background-image: url("s2r://panorama/images/shop/catalog/catalog_shop_tab_shape_psd.vtex");
+    background-size: 72px 230px;
+    border-bottom-left-radius: 12px;
+    opacity-brush: gradient( linear, 85% 0%, 100% 0%, from( rgb(217, 178, 106) ), to( rgb(176, 132, 58) ) );
+    transition-property: opacity-brush, height;
+    transition-duration: 0.16s;
+}
+.DUNav:hover .DUNavFundo
+{
+    opacity-brush: gradient( linear, 80% 0%, 100% 0%, from( rgb(255, 222, 150) ), to( rgb(220, 170, 80) ) );
+}
+.DUNav .DUNavBorda
+{
+    width: 100%;
+    height: 75px;
+    background-image: url("s2r://panorama/images/shop/catalog/catalog_shop_tab_edge_overlay_psd.vtex");
+    transition-property: height;
+    transition-duration: 0.16s;
+}
+.DUNav .DUNavIcone
+{
+    width: 46px;
+    height: 75px;
+    horizontal-align: right;
+    margin-right: 10px;
+    background-image: url("s2r://panorama/images/icons/icon_eye.vsvg");
+    background-size: 38px 38px;
+    background-repeat: no-repeat;
+    background-position: center;
+    wash-color: #2b2219;
+    z-index: 2;
+    transition-property: height;
+    transition-duration: 0.16s;
+}
+.DUNav.DUNavAtiva, .DUNav.DUNavAtiva .DUNavFundo, .DUNav.DUNavAtiva .DUNavBorda, .DUNav.DUNavAtiva .DUNavIcone
+{
+    height: 200px;
+    z-index: 2;
+}
+.DUNav.DUNavAtiva .DUNavFundo
+{
+    opacity-brush: gradient( linear, 80% 0%, 100% 0%, from( rgb(255, 222, 150) ), to( rgb(217, 178, 106) ) );
+}
+
+/* ---------------- painel da aba: cópia da aba "Populares" da loja ----------------
+   Fonte: panorama/styles/citadel_shop_mods_recommended.css e citadel_hud_hero_shop.css (Source2Viewer).
+   #PopularItemsHeader -> .DUAbaCab, #HeroContainer -> .DUAbaHeroiCaixa, .tierRow/.CostSticker -> .DUTierLinha/.DUTierEtiqueta.
+   Fundo = o da aba Favoritos (catalog_shop_generic_bg2). offBlack = #10130D, offWhite = #FFEFD7. */
+.DUAba
+{
+    width: 100%;
+    height: 100%;
+    flow-children: down;
+    background-color: #b9a684;
+    background-image: url("s2r://panorama/images/shop/catalog/catalog_shop_generic_bg2_psd.vtex");
+    background-position: 0px 0px;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    z-index: 50;
+}
+.DUAbaCab
+{
+    width: 100%;
+    height: 80px;
+    flow-children: right;
+    overflow: noclip;
+    background-color: #FFEFD795;
+}
+.DUAbaCabFundo
+{
+    width: 100%;
+    height: 100%;
+    ignore-parent-flow: true;
+    background-image: url("s2r://panorama/images/shop/catalog/catalog_shop_top_recommendations_header_psd.vtex");
+    background-size: cover;
+}
+.DUAbaHeroiCaixa
+{
+    width: 60px;
+    height: 60px;
+    margin-left: 30px;
+    margin-right: 12px;
+    vertical-align: middle;
+}
+.DUAbaHeroiBrilho
+{
+    width: 90%;
+    height: 90%;
+    horizontal-align: center;
+    vertical-align: middle;
+    background-size: cover;
+    brightness: 1.2;
+    saturation: 0;
+    opacity: 0.3;
+    background-image: url("s2r://panorama/images/shop/catalog/catalog_tooltip_header_weapon_psd.vtex");
+    opacity-mask: url("s2r://panorama/images/shop/catalog/backer_star_test_png.vtex");
+    animation-name: DUBrilhoHeroi;
+    animation-duration: 5s;
+    animation-iteration-count: infinite;
+}
+.DUAbaHeroi
+{
+    width: 46px;
+    height: 46px;
+    horizontal-align: center;
+    vertical-align: middle;
+    border-radius: 50%;
+}
+@keyframes 'DUBrilhoHeroi'
+{
+    0% { transform: rotateZ(0deg) skew(22deg); pre-transform-scale2d: 1; }
+    20% { pre-transform-scale2d: 0.9; }
+    40% { pre-transform-scale2d: 1.05; }
+    60% { pre-transform-scale2d: 0.9; transform: skew(2deg); }
+    80% { pre-transform-scale2d: 1.05; }
+    100% { transform: rotateZ(0deg) skew(22deg); pre-transform-scale2d: 1; }
+}
+.DUAbaCabTextos
+{
+    flow-children: down;
+    vertical-align: center;
+    width: fill-parent-flow(1.0);
+}
+.DUAbaTitulo
+{
+    font-family: oracle;
+    font-size: 30px;
+    font-style: italic;
+    font-weight: bold;
+    color: #10130D;
+}
+.DUAbaSub
+{
+    font-size: 14px;
+    color: #10130Dcc;
+}
+.DUAbaCabAcoes
+{
+    flow-children: right;
+    vertical-align: center;
+    margin-right: 20px;
+}
+.DUAbaLinha
+{
+    width: 100%;
+    height: 2px;
+    margin: 0px 26px;
+    background-color: #10130D90;
+}
+.DUAbaCorpo
+{
+    width: 100%;
+    height: fill-parent-flow(1.0);
+    flow-children: down;
+    overflow: squish scroll;
+    padding: 4px 24px 10px 12px;
+}
+.DUAbaCorpo VerticalScrollBar .ScrollThumb
+{
+    background-color: #5FE69E80;
+}
+.DUAbaSecao
+{
+    margin: 14px 0px 4px 16px;
+    font-family: oracle;
+    font-size: 24px;
+    font-style: italic;
+    font-weight: bold;
+    color: #10130D;
+}
+.DUAbaVazio
+{
+    margin-left: 16px;
+    font-size: 16px;
+    color: #10130Dcc;
+}
+.DUDetalhe
+{
+    width: 100%;
+    min-height: 72px;
+    padding: 10px 26px;
+    font-size: 16px;
+    line-height: 135%;
+    color: #CDCDCD;
+    background-color: #10130De6;
+    border-top: 2px solid #EC971999;
+}
+
+.DUAmeacas
+{
+    width: 100%;
+    flow-children: right-wrap;
+    margin-left: 12px;
+}
+.DUAmeaca
+{
+    width: 250px;
+    height: 64px;
+    margin: 0px 8px 8px 0px;
+    padding: 6px;
+    flow-children: right;
+    background-color: #10130De0;
+    border-left: 4px solid #c9a94a;
+    border-radius: 3px;
+    box-shadow: 2px 2px 8px #0007;
+}
+.DUAmeaca:hover
+{
+    brightness: 1.3;
+}
+.DUAmeaca.DUPerigo2
+{
+    border-left: 4px solid #e0773a;
+}
+.DUAmeaca.DUPerigo3
+{
+    border-left: 4px solid #e04848;
+    background-color: #3a1a16e6;
+}
+.DUAmeacaIcone
+{
+    width: 52px;
+    height: 52px;
+    margin-right: 8px;
+    border-radius: 3px;
+}
+.DUAmeacaTextos
+{
+    width: fill-parent-flow(1.0);
+    flow-children: down;
+    vertical-align: center;
+}
+.DUAmeacaNome
+{
+    font-size: 15px;
+    color: #FFEFD7;
+}
+.DUAmeacaHeroi
+{
+    font-size: 13px;
+    color: #CDCDCD;
+}
+
+.DUTiers
+{
+    width: 100%;
+    flow-children: down;
+}
+/* fileira por custo: a borda de cima é a mesma do #ModLists do jogo */
+.DUTierLinha
+{
+    width: 100%;
+    flow-children: right;
+    padding: 10px 0px 4px 0px;
+    border-top: 2px solid #10130D90;
+}
+.DUTierPreco
+{
+    width: 112px;
+    height: 60px;
+    vertical-align: top;
+}
+.DUTierEtiqueta
+{
+    width: 100px;
+    height: 45px;
+    margin-top: 6px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.DUTier1 .DUTierEtiqueta
+{
+    background-image: url("s2r://panorama/images/shop/catalog/pricetag_tier1_psd.vtex");
+    transform: rotateZ(-2deg);
+}
+.DUTier2 .DUTierEtiqueta
+{
+    background-image: url("s2r://panorama/images/shop/catalog/pricetag_tier2_psd.vtex");
+    transform: rotateZ(5deg);
+}
+.DUTier3 .DUTierEtiqueta
+{
+    background-image: url("s2r://panorama/images/shop/catalog/pricetag_tier3_psd.vtex");
+    height: 55px;
+    transform: rotateZ(-3deg);
+}
+.DUTier4 .DUTierEtiqueta
+{
+    background-image: url("s2r://panorama/images/shop/catalog/pricetag_tier4_psd.vtex");
+    height: 55px;
+}
+.DUTierCartas
+{
+    flow-children: right-wrap;
+    width: fill-parent-flow(1.0);
+}
+/* cartão no formato do CitadelShopMod (76x114) */
+.DUCartao
+{
+    width: 76px;
+    height: 114px;
+    margin: 3px;
+    flow-children: down;
+    border-radius: 2px;
+    box-shadow: 2px 2px 12px #0007;
+    transition-property: pre-transform-scale2d, brightness;
+    transition-duration: 0.05s;
+}
+.DUCartao:hover
+{
+    pre-transform-scale2d: 1.06;
+    brightness: 1.15;
+}
+.DUCartaoIcone
+{
+    width: 66px;
+    height: 66px;
+    horizontal-align: center;
+    margin-top: 4px;
+}
+.DUCartaoNome
+{
+    width: 100%;
+    max-height: 30px;
+    font-family: oracle;
+    font-size: 13px;
+    font-weight: bold;
+    line-height: 92%;
+    text-align: center;
+    text-overflow: shrink;
+    color: #2a241d;
+    horizontal-align: center;
+}
+.DUCartaoAtivo
+{
+    font-size: 9px;
+    letter-spacing: 1px;
+    color: #f2e4c4;
+    background-color: #000000aa;
+    padding: 0px 3px;
+    horizontal-align: center;
+}
+.DUCartaoSelo
+{
+    font-size: 9px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    horizontal-align: center;
+}
+
+/* slot da aba: item (nativo da loja ou nosso cartão) + legenda de contra quem / build */
+.DUSlot
+{
+    width: 82px;
+    margin: 0px 3px 6px 0px;
+    flow-children: down;
+}
+.DUSlotLegenda
+{
+    width: 100%;
+    height: 22px;
+    margin-top: 2px;
+    flow-children: right;
+    background-color: #10130Dcc;
+    border-radius: 3px;
+}
+.DUSlotHeroi
+{
+    width: 20px;
+    height: 20px;
+    margin: 1px 2px 1px 1px;
+    border-radius: 10px;
+}
+.DUSlotTexto
+{
+    width: fill-parent-flow(1.0);
+    vertical-align: center;
+    font-size: 11px;
+    font-weight: bold;
+    text-overflow: shrink;
+    color: #EC9719;
+    padding: 0px 2px;
+}
+.DUSlotBuild
+{
+    color: #99FFD6;
+    text-align: center;
+}
+
+/* ---------------- editor de counters ---------------- */
+.DUEditor
+{
+    width: 100%;
+    height: 100%;
+    flow-children: right;
+}
+.DUEditorHerois
+{
+    width: 330px;
+    height: 100%;
+    flow-children: down;
+    overflow: squish scroll;
+    margin-right: 18px;
+}
+.DUGradeHerois
+{
+    width: 100%;
+    flow-children: right-wrap;
+}
+.DUHeroiBotao
+{
+    width: 74px;
+    height: 92px;
+    margin: 2px;
+    flow-children: down;
+    background-color: #2b221933;
+    border-radius: 3px;
+}
+.DUHeroiBotao:hover
+{
+    background-color: #2b221966;
+}
+.DUHeroiBotao.DUSelecionado
+{
+    background-color: #d9b26a;
+}
+.DUHeroiFoto
+{
+    width: 60px;
+    height: 60px;
+    horizontal-align: center;
+    margin-top: 3px;
+}
+.DUHeroiNome
+{
+    width: 100%;
+    font-size: 11px;
+    text-align: center;
+    text-overflow: shrink;
+    color: #2b2219;
+}
+.DUHeroiEditado
+{
+    font-size: 9px;
+    horizontal-align: center;
+    color: #8a3d12;
+}
+.DUEditorDireita
+{
+    width: fill-parent-flow(1.0);
+    height: 100%;
+    flow-children: down;
+    overflow: squish scroll;
+}
+#DUVistaEditor
+{
+    overflow: clip;
+}
+.DUEditorCab
+{
+    flow-children: right;
+}
+.DUEditorFoto
+{
+    width: 64px;
+    height: 64px;
+    margin-right: 12px;
+}
+.DUEditorCabTextos
+{
+    flow-children: down;
+    vertical-align: center;
+}
+.DUEditorLista
+{
+    width: 100%;
+    flow-children: down;
+    margin-top: 6px;
+}
+.DUEditorLinha
+{
+    width: 100%;
+    height: 52px;
+    flow-children: right;
+    margin-bottom: 4px;
+    padding: 4px 6px;
+    background-color: #241e18e6;
+    border-left: 4px solid #3a352d;
+    border-radius: 3px;
+}
+.DUCat_weapon
+{
+    border-left: 4px solid #e08a3c;
+}
+.DUCat_vitality
+{
+    border-left: 4px solid #7cc35a;
+}
+.DUCat_spirit
+{
+    border-left: 4px solid #b27cf0;
+}
+.DUEditorIcone
+{
+    width: 44px;
+    height: 44px;
+    margin-right: 8px;
+}
+.DUEditorItemNome
+{
+    width: 170px;
+    vertical-align: center;
+    font-size: 15px;
+    color: #f2e4c4;
+}
+.DUPesos
+{
+    flow-children: right;
+    vertical-align: center;
+    margin-right: 8px;
+}
+.DUPeso
+{
+    width: 32px;
+    padding: 4px 0px;
+    margin-right: 3px;
+}
+.DUPeso Label
+{
+    horizontal-align: center;
+}
+.DUMotivo
+{
+    width: fill-parent-flow(1.0);
+    vertical-align: center;
+}
+.DURemover
+{
+    vertical-align: center;
+    margin-left: 6px;
+    background-color: #6b2a20;
+}
+.DUEditorAcoes
+{
+    flow-children: right-wrap;
+    margin-top: 8px;
+}
+.DUEscolhaItem
+{
+    width: 100%;
+    flow-children: down;
+    margin-top: 8px;
+    padding: 8px;
+    background-color: #2b221933;
+    border-radius: 4px;
+}
+.DUEscolhaTitulo
+{
+    font-size: 15px;
+    font-weight: bold;
+    color: #2b2219;
+    padding-left: 6px;
+    margin-top: 4px;
+}
+.DUEscolhaGrade
+{
+    width: 100%;
+    flow-children: right-wrap;
+}
+.DUEscolhaBotao
+{
+    width: 44px;
+    height: 44px;
+    margin: 2px;
+    border-radius: 3px;
+    background-color: #00000033;
+}
+.DUEscolhaBotao:hover
+{
+    brightness: 1.4;
+    pre-transform-scale2d: 1.08;
+}
+.DUEscolhaBotao.DUSelecionado
+{
+    opacity: 0.35;
+}
+.DUEscolhaIcone
+{
+    width: 42px;
+    height: 42px;
+}
+.DUCompartilhar
+{
+    width: 100%;
+    flow-children: down;
+    margin-top: 14px;
+}
+.DUCodigo
+{
+    width: 100%;
+    margin-top: 6px;
+}
+.DUEditorMsg
+{
+    margin-top: 6px;
+    font-size: 15px;
+    color: #1f5d52;
+}
+
+/* ---------------- faixa do Tab (acima dos investimentos) ---------------- */
+/* Só os ícones, no estilo dos slots de item do jogo (canto inferior esquerdo). */
+.DUFaixa
+{
+    horizontal-align: left;
+    vertical-align: bottom;
+    margin-left: 26px;
+    margin-bottom: 455px;
+    flow-children: down;
+}
+.DUFaixaSecao
+{
+    flow-children: down;
+    margin-bottom: 6px;
+}
+.DUFaixaTitulo
+{
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #d9b26a;
+    text-shadow: 1px 1px 2px #000000;
+    margin-bottom: 3px;
+}
+.DUFaixaCartas
+{
+    flow-children: right;
+}
+.DUComprando
+{
+    opacity: 0.4;
+    pre-transform-scale2d: 0.92;
+}
+.DUFaixaVazio
+{
+    font-size: 13px;
+    color: #a89f8e;
+}
+.DUIcone
+{
+    width: 58px;
+    height: 58px;
+    margin-right: 6px;
+    border-radius: 4px;
+    background-color: #1a1714e6;
+    border: 2px solid #d9b26a99;
+    box-shadow: 0px 2px 6px #000000aa;
+    transition-property: pre-transform-scale2d, opacity, brightness;
+    transition-duration: 0.08s;
+}
+.DUIcone_weapon
+{
+    background-color: #5a3a17e6;
+}
+.DUIcone_vitality
+{
+    background-color: #2f4a1de6;
+}
+.DUIcone_spirit
+{
+    background-color: #3d2457e6;
+}
+.DUIcone:hover
+{
+    pre-transform-scale2d: 1.08;
+    brightness: 1.2;
+    border: 2px solid #ffe2a0;
+}
+.DUIconeImagem
+{
+    width: 54px;
+    height: 54px;
+    horizontal-align: center;
+    vertical-align: center;
+}
+.DUIconeHeroi
+{
+    width: 24px;
+    height: 24px;
+    horizontal-align: right;
+    vertical-align: top;
+    margin: -6px -6px 0px 0px;
+    border-radius: 12px;
+    border: 2px solid #e04848;
+    background-color: #1a1714;
+}
+.DUFaixaPorque
+{
+    max-width: 760px;
+    margin-top: 6px;
+    padding: 6px 10px;
+    font-size: 15px;
+    color: #CDCDCD;
+    background-color: #10130De6;
+    border-left: 3px solid #EC9719;
+    border-radius: 3px;
+}
+.DUFaixaMotivo
+{
+    max-width: 760px;
+    margin-top: 6px;
+    padding: 6px 8px;
+    font-size: 12px;
+    color: #ece4d4;
+    background-color: #12100ee0;
+    border-radius: 4px;
+}
+
+/* ---------------- tooltip: cópia do tooltip de item do jogo ----------------
+   Fonte: panorama/styles/tooltips/citadel_tooltip_mod_details.css (lido com o Source2Viewer).
+   #ModTooltipContainer -> .DUDicaFundo, .HeaderContainer -> .DUDicaCab, .AttributesContainer -> .DUDicaCorpo,
+   .ModName/.ModCost/.ModInfoLabel -> .DUDicaNome/.DUDicaCusto/.DUDicaMotivos. Cores = @define do jogo. */
+.DUDica
+{
+    width: 450px;
+    z-index: 300;
+}
+.DUDicaFundo
+{
+    width: 450px;
+    flow-children: down;
+    padding-bottom: 30px;
+    img-shadow: 0px 0px 10px 3.0 #000000;
+    background-size: 100% 100%;
+}
+.DUDica_weapon .DUDicaFundo
+{
+    background-image: url("s2r://panorama/images/tooltips/items/tooltip_backer_weapon_psd.vtex");
+    opacity-mask: url("s2r://panorama/images/tooltips/items/tooltip_backer_weapon_mask_psd.vtex");
+}
+.DUDica_vitality .DUDicaFundo
+{
+    background-image: url("s2r://panorama/images/tooltips/items/tooltip_backer_vitality_psd.vtex");
+    opacity-mask: url("s2r://panorama/images/tooltips/items/tooltip_backer_vitality_mask_psd.vtex");
+}
+.DUDica_spirit .DUDicaFundo
+{
+    background-image: url("s2r://panorama/images/tooltips/items/tooltip_backer_spirit_psd.vtex");
+    opacity-mask: url("s2r://panorama/images/tooltips/items/tooltip_backer_spirit_mask_psd.vtex");
+}
+.DUDicaCab
+{
+    width: 100%;
+    min-height: 96px;
+    height: fit-children;
+    padding: 20px 25px;
+    background-size: 100% 100%;
+}
+.DUDica_weapon .DUDicaCab
+{
+    background-image: url("s2r://panorama/images/shop/catalog/catalog_tooltip_header_weapon_psd.vtex");
+}
+.DUDica_vitality .DUDicaCab
+{
+    background-image: url("s2r://panorama/images/shop/catalog/catalog_tooltip_header_vitality_psd.vtex");
+}
+.DUDica_spirit .DUDicaCab
+{
+    background-image: url("s2r://panorama/images/shop/catalog/catalog_tooltip_header_spirit_psd.vtex");
+}
+.DUDicaCabConteudo
+{
+    width: 100%;
+    flow-children: right;
+    vertical-align: middle;
+}
+.DUDicaIcone
+{
+    width: 60px;
+    height: 60px;
+    margin-right: 14px;
+    vertical-align: middle;
+}
+.DUDicaCabTextos
+{
+    width: fill-parent-flow(1.0);
+    flow-children: down;
+    vertical-align: center;
+}
+.DUDicaNome
+{
+    font-family: oracle;
+    font-weight: bold;
+    font-size: 36px;
+    color: #FFEFD7;
+    text-shadow: 2px 2px 0px #00000030;
+    text-overflow: shrink;
+}
+.DUDicaCustoLinha
+{
+    flow-children: right;
+}
+.DUDicaAlma
+{
+    width: 16px;
+    height: 22px;
+    margin-top: 3px;
+    margin-right: 4px;
+    vertical-align: middle;
+    background-image: url("s2r://panorama/images/hud/icons/icon_soul.vsvg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    wash-color: #99FFD6;
+}
+.DUDicaCusto
+{
+    font-family: numericBlock;
+    font-weight: bold;
+    font-size: 20px;
+    color: #99FFD6;
+    vertical-align: middle;
+}
+.DUSemAlmas .DUDicaCusto
+{
+    color: #ffa1a1;
+}
+.DUSemAlmas .DUDicaAlma
+{
+    wash-color: #ffa1a1;
+}
+.DUDicaStatus
+{
+    font-weight: bold;
+    font-size: 18px;
+    color: #99FFD6e6;
+}
+.DUDicaCorpo
+{
+    width: 100%;
+    flow-children: down;
+    padding: 10px 20px 0px 20px;
+}
+.DUDicaContra
+{
+    width: 100%;
+    flow-children: right;
+    margin-bottom: 8px;
+    padding: 4px 8px;
+    background-color: #00000055;
+    border-radius: 3px;
+}
+.DUDicaHeroi
+{
+    width: 30px;
+    height: 30px;
+    margin-right: 8px;
+    border-radius: 15px;
+}
+.DUDicaContraTexto
+{
+    vertical-align: center;
+    font-size: 18px;
+    color: #EC9719;
+}
+.DUDicaMotivos
+{
+    width: 100%;
+    font-size: 18px;
+    line-height: 135%;
+    font-weight: medium;
+    color: #CDCDCD;
+}
+.DUDicaMotivos .highlight_weapon
+{
+    color: #EC9719;
+    font-weight: bold;
+}
+.DUDicaMotivos .highlight_spirit
+{
+    color: #CE90FF;
+    font-weight: bold;
+}
+.DUDicaRodape
+{
+    margin-top: 10px;
+    font-size: 15px;
+    font-style: italic;
+    font-weight: semi-bold;
+    color: #bfbbb090;
+}
+/* tooltip dos pontos do mapa: sem categoria de item */
+.DUDica_mapa
+{
+    width: 360px;
+}
+.DUDica_mapa .DUDicaFundo
+{
+    width: 360px;
+    padding-bottom: 14px;
+    background-color: #1a1612f2;
+    border: 1px solid #c9a46a66;
+    border-radius: 4px;
+}
+.DUDica_mapa .DUDicaCab
+{
+    min-height: 0px;
+    padding: 14px 18px 4px 18px;
+}
+.DUDica_mapa .DUDicaIcone
+{
+    width: 40px;
+    height: 40px;
+}
+.DUDica_mapa .DUDicaNome
+{
+    font-size: 26px;
+}
+.DUDica_mapa .DUDicaCorpo
+{
+    padding: 4px 18px 0px 18px;
+}
+/* ---------------- aviso de item perigoso ---------------- */
+.DUAviso
+{
+    width: 540px;
+    horizontal-align: center;
+    vertical-align: top;
+    margin-top: 150px;
+    padding: 10px 16px;
+    flow-children: down;
+    background-color: #1c1714ee;
+    border: 1px solid #e0773a;
+    border-radius: 8px;
+}
+.DUAviso.DUPerigo3
+{
+    border: 2px solid #e04848;
+    background-color: #2a1412ee;
+}
+.DUAvisoTitulo
+{
+    horizontal-align: center;
+    font-size: 19px;
+    color: #ece4d4;
+}
+.DUAvisoTexto
+{
+    horizontal-align: center;
+    text-align: center;
+    margin-top: 3px;
+    font-size: 15px;
+    color: #c9bfae;
+}
+
+/* ---------------- mapa (M) ---------------- */
+/* O minimapa é declarado no hud.xml, onde este CSS vale: tirar a classe DUMapaAberto da raiz do HUD
+   devolve SEMPRE o tamanho original. O #hud_minimap (que desenha o mapa) tem 360px no CSS do jogo e
+   380px com placar aberto; os seletores aqui têm 2 ids para vencer os do jogo. 820 = TAM_MAPA no JS.
+   Fica encostado no topo para a barra de habilidades (embaixo) cobrir o mínimo possível. */
+.DUMapaAberto #minimap_persp
+{
+    width: 900px;
+    height: 900px;
+    horizontal-align: center;
+    vertical-align: top;
+    margin-top: 10px;
+    margin-bottom: 0px;
+    margin-right: 0px;
+    z-index: 50;
+}
+.DUMapaAberto #minimap_persp #minimap_container
+{
+    width: 860px;
+    height: 860px;
+    margin-top: 20px;
+}
+.DUMapaAberto #minimap_persp #minimap_frame
+{
+    width: 860px;
+    height: 860px;
+}
+.DUMapaAberto #minimap_container #hud_minimap
+{
+    width: 820px;
+    height: 820px;
+}
+.DUMapaAberto #minimap_persp #minimap_hints
+{
+    visibility: collapse;
+}
+
+/* camada de pontos: filha do #hud_minimap (herda tamanho e inversão do mapa) */
+.DUPontos
+{
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+}
+.DUCamada
+{
+    width: 100%;
+    height: 100%;
+}
+.DUCamadaImagem
+{
+    width: 100%;
+    height: 100%;
+    opacity: 0.85;
+}
+/* marcadores (estilo deadlocklabs): bolinha colorida ou ícone dentro de círculo com borda colorida */
+.DUBolinha
+{
+    border-radius: 50%;
+    border: 1px solid #00000099;
+    opacity: 0.95;
+}
+.DUBadge
+{
+    border-radius: 50%;
+    background-color: #12161ce8;
+    box-shadow: 0px 0px 4px #000000cc;
+}
+.DUBadgeIcone
+{
+    width: 68%;
+    height: 68%;
+    horizontal-align: center;
+    vertical-align: center;
+}
+/* para um dos times o jogo vira o minimapa (scaleX(-1) scaleY(-1)); os ícones voltam a ficar de pé */
+.DUInvertido .DUPonto
+{
+    transform: scaleX(-1) scaleY(-1);
+}
+/* hover igual ao dos ícones do jogo (.enlarge_entry do minimapa): cresce e acende */
+.DUPontoAtivo
+{
+    transition-property: pre-transform-scale2d, brightness;
+    transition-duration: 0.08s;
+}
+.DUPontoAtivo:hover
+{
+    pre-transform-scale2d: 1.35;
+    brightness: 1.8;
+    z-index: 10;
+}
+/* marcações: o ícone com um anel pulsando em volta (também no minimapa pequeno) */
+.DUMarcas
+{
+    z-index: 6;
+}
+.DUMarca
+{
+    overflow: noclip;
+    brightness: 1.4;
+}
+.DUMarcaAnel
+{
+    width: 180%;
+    height: 180%;
+    horizontal-align: center;
+    vertical-align: center;
+    border-radius: 50%;
+    animation-name: DUPulso;
+    animation-duration: 1.2s;
+    animation-timing-function: ease-out;
+    animation-iteration-count: infinite;
+}
+@keyframes 'DUPulso'
+{
+    0% { opacity: 1; pre-transform-scale2d: 0.6; }
+    100% { opacity: 0; pre-transform-scale2d: 1.3; }
+}
+
+/* painel lateral (à esquerda: o lado direito costuma ter o painel de testes do jogo) */
+.DUMapa
+{
+    width: 100%;
+    height: 100%;
+}
+.DUMapaCaixa
+{
+    width: 300px;
+    max-height: 900px;
+    horizontal-align: left;
+    vertical-align: center;
+    margin-left: 40px;
+    padding: 14px 16px;
+    flow-children: down;
+    background-color: #b9a684;
+    background-image: url("s2r://panorama/images/shop/catalog/catalog_shop_generic_bg2_psd.vtex");
+    background-size: 100% 100%;
+    border-radius: 4px;
+    box-shadow: #000000aa 0px 4px 16px 0px;
+}
+.DUMapaTitulo
+{
+    font-family: oracle;
+    font-size: 26px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #2b2219;
+    margin-bottom: 6px;
+}
+.DUMapaLinha
+{
+    width: 100%;
+    flow-children: right;
+    margin-bottom: 4px;
+}
+.DUMapaRotulo
+{
+    width: fill-parent-flow(1.0);
+    font-size: 15px;
+    color: #4f402d;
+}
+.DUMapaValor
+{
+    font-size: 18px;
+    font-weight: bold;
+    color: #1f5d52;
+}
+.DUMapaSubtitulo
+{
+    margin-top: 10px;
+    margin-bottom: 4px;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #6b4417;
+}
+.DUMapaFiltros
+{
+    width: 100%;
+    max-height: 560px;
+    flow-children: down;
+    overflow: squish scroll;
+}
+.DUFiltro
+{
+    width: 100%;
+    height: 26px;
+    flow-children: right;
+    margin-bottom: 2px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    background-color: #2b221922;
+    opacity: 0.5;
+}
+.DUFiltro:hover
+{
+    background-color: #2b221944;
+}
+.DUFiltro.DUFiltroOn
+{
+    opacity: 1;
+    background-color: #2b221955;
+}
+.DUFiltroIcone
+{
+    width: 20px;
+    height: 20px;
+    vertical-align: center;
+    margin-right: 8px;
+}
+.DUFiltroIcone.DUBolinha
+{
+    width: 10px;
+    height: 10px;
+    margin: 0px 13px 0px 5px;
+}
+.DUFiltroNome
+{
+    width: fill-parent-flow(1.0);
+    vertical-align: center;
+    font-size: 14px;
+    color: #2b2219;
+}
+.DUFiltroQtd
+{
+    vertical-align: center;
+    font-size: 12px;
+    color: #6b5a44;
+}
+.DUMapaDica
+{
+    margin-top: 8px;
+    font-size: 13px;
+    color: #4f402d;
+}
+
+/* ---------------- tracker ---------------- */
+.DUTracker
+{
+    width: 100%;
+    height: 100%;
+    background-color: #000000b0;
+    z-index: 200;
+}
+.DUTrackerJanela
+{
+    width: 1500px;
+    height: 900px;
+    horizontal-align: center;
+    vertical-align: center;
+    flow-children: down;
+    background-color: #b9a684;
+    background-image: url("s2r://panorama/images/shop/catalog/catalog_shop_generic_bg2_psd.vtex");
+    background-size: 100% 100%;
+    border-radius: 4px;
+    box-shadow: #000000cc 0px 6px 30px 0px;
+}
+.DUTrackerCabIcone
+{
+    width: 46px;
+    height: 46px;
+    vertical-align: center;
+    margin-right: 14px;
+    background-image: url("s2r://panorama/images/icons/icon_graph.vsvg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    wash-color: #3a2c1c;
+}
+.DUTrackerCorpo
+{
+    width: 100%;
+    height: fill-parent-flow(1.0);
+    flow-children: right;
+    padding: 6px 26px;
+}
+.DUTrackerTimes
+{
+    width: 520px;
+    height: 100%;
+    flow-children: down;
+    overflow: squish scroll;
+    margin-right: 20px;
+}
+.DUTrackerLista
+{
+    width: 100%;
+    flow-children: down;
+}
+.DUTrackerJogador
+{
+    width: 100%;
+    height: 62px;
+    flow-children: right;
+    margin-bottom: 4px;
+    padding: 5px 8px;
+    background-color: #241e18e6;
+    border-left: 4px solid #7cc35a;
+    border-radius: 3px;
+}
+.DUTrackerJogador.DUInimigo
+{
+    border-left: 4px solid #e04848;
+}
+.DUTrackerJogador:hover
+{
+    brightness: 1.25;
+}
+.DUTrackerJogador.DUSelecionado
+{
+    background-color: #4a3b26f0;
+}
+.DUTrackerFoto
+{
+    width: 52px;
+    height: 52px;
+    margin-right: 10px;
+}
+.DUTrackerTextos
+{
+    width: fill-parent-flow(1.0);
+    flow-children: down;
+    vertical-align: center;
+}
+.DUTrackerNome
+{
+    font-size: 17px;
+    font-weight: bold;
+    color: #f2e4c4;
+}
+.DUTrackerResumo
+{
+    font-size: 14px;
+    color: #c9bba1;
+}
+.DUTrackerHistorico
+{
+    vertical-align: center;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 2px 6px;
+    color: #2b2219;
+    background-color: #d9b26a;
+    border-radius: 3px;
+}
+.DUTrackerDetalhe
+{
+    width: fill-parent-flow(1.0);
+    height: 100%;
+    flow-children: down;
+    overflow: squish scroll;
+}
+.DUTrackerDetCab
+{
+    flow-children: right;
+    margin-top: 10px;
+}
+.DUTrackerDetFoto
+{
+    width: 84px;
+    height: 84px;
+    margin-right: 14px;
+}
+.DUTrackerBloco
+{
+    width: 100%;
+    flow-children: down;
+    padding: 8px 12px;
+    background-color: #241e18e6;
+    border-radius: 3px;
+}
+.DUTrackerLinha
+{
+    font-size: 16px;
+    color: #f2e4c4;
+}
+.DUTrackerTops
+{
+    flow-children: right;
+}
+.DUTrackerTop
+{
+    width: 260px;
+    flow-children: right;
+    margin-right: 8px;
+    padding: 6px;
+    background-color: #241e18e6;
+    border-radius: 3px;
+}
+.DUTrackerTopFoto
+{
+    width: 48px;
+    height: 48px;
+    margin-right: 8px;
+}
+.DUTrackerRodape
+{
+    horizontal-align: right;
+    margin: 4px 26px 10px 0px;
+    font-size: 12px;
+    color: #4f402d;
+}
+
+/* Por último para vencer as regras acima */
+.DUEscondido
+{
+    opacity: 0;
+    visibility: collapse;
+}

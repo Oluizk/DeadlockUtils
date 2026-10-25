@@ -1,0 +1,194 @@
+{
+  "_info": "Regras disparadas pelas TAGS dos heróis inimigos. Formato em CONTRIBUTING.md. Peso: 1 = situacional, 2 = bom, 3 = forte, 4 = quase obrigatório.",
+  "regras": [
+    {
+      "id": "anti-cura",
+      "titulo": "Inimigos com muita cura própria",
+      "quando": { "inimigos_tag": "sustain" },
+      "recomendar": [
+        { "item": "toxic-bullets", "peso": 3, "meu_heroi_tag": "gun", "motivo": "Sangramento por % de vida + reduz cura recebida em 35% (enquanto sangra)." },
+        { "item": "healbane", "peso": 3, "meu_heroi_tag": "spirit", "motivo": "Seu dano spirit corta 35% da cura do alvo por 8s. Barato (T2)." },
+        { "item": "decay", "peso": 2, "meu_heroi_tag": "spirit", "motivo": "Ativo: dano contínuo e -50% de cura recebida no alvo." },
+        { "item": "spirit-burn", "peso": 2, "meu_heroi_tag": "spirit", "motivo": "Burst de spirit causa queimadura com -70% de cura recebida." },
+        { "item": "inhibitor", "peso": 2, "meu_heroi_tag": "gun", "motivo": "Tiros acumulam debuff: -30% dano causado e -40% cura recebida." }
+      ]
+    },
+    {
+      "id": "anti-suporte",
+      "titulo": "Inimigos que curam aliados",
+      "quando": { "inimigos_tag": "healer" },
+      "recomendar": [
+        { "item": "healbane", "peso": 2, "meu_heroi_tag": "spirit", "motivo": "Reduz a cura que o suporte inimigo aplica nos alvos que você acerta." },
+        { "item": "toxic-bullets", "peso": 2, "meu_heroi_tag": "gun", "motivo": "Corta a cura que o suporte joga no alvo que você está focando." },
+        { "item": "silence-wave", "peso": 2, "motivo": "Silenciar o suporte numa luta corta toda a cura do time inimigo." },
+        { "item": "focus-lens", "peso": 2, "motivo": "Silence de 4,5s num alvo: ótimo para travar o curador." },
+        { "item": "cursed-relic", "peso": 2, "motivo": "Interrompe, silencia e desarma o suporte (e remove buffs)." }
+      ]
+    },
+    {
+      "id": "anti-cc",
+      "titulo": "Inimigos com muito stun / CC",
+      "quando": { "inimigos_tag": "stun", "min": 2 },
+      "recomendar": [
+        { "item": "debuff-reducer", "peso": 3, "motivo": "Barato: -25% de duração em todos os debuffs (stun, slow, silence)." },
+        { "item": "reactive-barrier", "peso": 2, "motivo": "Ganha barreira automática quando é atordoado, silenciado ou imobilizado." },
+        { "item": "dispel-magic", "peso": 2, "motivo": "Ativo: remove efeitos negativos, cura e dá velocidade." },
+        { "item": "unstoppable", "peso": 2, "motivo": "5,5s imune a stun/silence/sleep/root/disarm. Use antes de entrar." },
+        { "item": "spellbreaker", "peso": 2, "motivo": "+25% resistência a debuff e reduz grande dano spirit." },
+        { "item": "counterspell", "peso": 1, "motivo": "Parry bloqueia habilidades e itens inimigos se você acertar o timing." }
+      ]
+    },
+    {
+      "id": "anti-silence",
+      "titulo": "Inimigos que silenciam / desarmam",
+      "quando": { "inimigos_tag": "silence" },
+      "recomendar": [
+        { "item": "debuff-reducer", "peso": 2, "motivo": "Encurta silences e disarms." },
+        { "item": "reactive-barrier", "peso": 1, "motivo": "Barreira automática ao ser silenciado." },
+        { "item": "dispel-magic", "peso": 1, "motivo": "Remove o silence/disarm na hora." }
+      ]
+    },
+    {
+      "id": "anti-slow",
+      "titulo": "Inimigos com muitos slows",
+      "quando": { "inimigos_tag": "slow", "min": 3 },
+      "recomendar": [
+        { "item": "fleetfoot", "peso": 1, "meu_heroi_tag": "gun", "motivo": "Ativo: velocidade + resistência a slow." },
+        { "item": "debuff-reducer", "peso": 1, "motivo": "Slows duram menos." },
+        { "item": "magic-carpet", "peso": 1, "motivo": "Fuga voando e imune a slows durante o efeito." }
+      ]
+    },
+    {
+      "id": "anti-dot",
+      "titulo": "Inimigos com dano contínuo (DoT / sangramento)",
+      "quando": { "inimigos_tag": "dot", "min": 2 },
+      "recomendar": [
+        { "item": "debuff-reducer", "peso": 1, "motivo": "Efeitos negativos acabam mais rápido." },
+        { "item": "dispel-magic", "peso": 1, "motivo": "Limpa os DoTs ativos." },
+        { "item": "spirit-shielding", "peso": 1, "motivo": "Barreira contra dano spirit, que absorve a maioria dos DoTs." }
+      ]
+    },
+    {
+      "id": "anti-spirit",
+      "titulo": "Time inimigo com muito dano spirit",
+      "quando": { "inimigos_tag": "spirit", "min": 2 },
+      "recomendar": [
+        { "item": "spirit-shielding", "peso": 2, "motivo": "Barreira contra dano spirit, barata (T2)." },
+        { "item": "spirit-resilience", "peso": 3, "motivo": "Resistência a spirit sólida no T3." },
+        { "item": "witchmail", "peso": 2, "motivo": "+22% resistência spirit e reduz seus cooldowns quando você leva burst." },
+        { "item": "spellbreaker", "peso": 2, "motivo": "Corta 65% do próximo grande hit de spirit." },
+        { "item": "silencer", "peso": 2, "meu_heroi_tag": "gun", "motivo": "Suas balas reduzem 25% do dano spirit do alvo e acumulam silence." },
+        { "item": "suppressor", "peso": 1, "meu_heroi_tag": "spirit", "motivo": "Dá resistência a bala e reduz cadência do alvo — bom se você também é spirit." }
+      ]
+    },
+    {
+      "id": "anti-burst",
+      "titulo": "Inimigos de burst (explodem um alvo rápido)",
+      "quando": { "inimigos_tag": "burst", "min": 2 },
+      "recomendar": [
+        { "item": "spellbreaker", "peso": 1, "motivo": "Reduz o primeiro grande hit de spirit." },
+        { "item": "ethereal-shift", "peso": 2, "motivo": "4s invulnerável: anula o combo inteiro se usado na hora." },
+        { "item": "extra-health", "peso": 1, "motivo": "Vida extra barata deixa o combo inimigo sem matar." },
+        { "item": "divine-barrier", "peso": 1, "motivo": "Salva um aliado do burst (limpa debuffs + barreira)." }
+      ]
+    },
+    {
+      "id": "anti-arma",
+      "titulo": "Time inimigo com muito dano de arma",
+      "quando": { "inimigos_tag": "gun", "min": 3 },
+      "recomendar": [
+        { "item": "battle-vest", "peso": 2, "motivo": "Resistência a bala barata (T2)." },
+        { "item": "weapon-shielding", "peso": 1, "motivo": "Barreira contra dano de arma (T2)." },
+        { "item": "bullet-resilience", "peso": 3, "motivo": "Resistência a bala forte no T3." },
+        { "item": "metal-skin", "peso": 3, "motivo": "Ativo: 5s imune a balas. Ganha trocas e foge de focus." },
+        { "item": "plated-armor", "peso": 2, "motivo": "Chance de desviar balas e de anular efeitos on-hit." },
+        { "item": "return-fire", "peso": 1, "motivo": "Devolve as balas para quem está atirando em você." },
+        { "item": "rusted-barrel", "peso": 1, "meu_heroi_tag": "spirit", "motivo": "Ativo barato: reduz cadência e resistência a bala do alvo." },
+        { "item": "suppressor", "peso": 1, "meu_heroi_tag": "spirit", "motivo": "Seu dano spirit reduz a cadência de tiro do inimigo." },
+        { "item": "disarming-hex", "peso": 1, "motivo": "Desarma o carry de arma por 4,25s." }
+      ]
+    },
+    {
+      "id": "anti-melee",
+      "titulo": "Inimigos corpo a corpo",
+      "quando": { "inimigos_tag": "melee", "min": 2 },
+      "recomendar": [
+        { "item": "rebuttal", "peso": 2, "motivo": "Resistência melee, parry com menos cooldown e devolve o dano do parry." },
+        { "item": "slowing-bullets", "peso": 1, "meu_heroi_tag": "gun", "motivo": "Mantenha brigões longe de você." },
+        { "item": "cold-front", "peso": 1, "motivo": "Slow em área para kitar quem quer chegar perto." },
+        { "item": "torment-pulse", "peso": 1, "motivo": "Pune quem fica colado em você (+ resistência melee)." }
+      ]
+    },
+    {
+      "id": "anti-mobilidade",
+      "titulo": "Inimigos muito móveis",
+      "quando": { "inimigos_tag": "mobility", "min": 2 },
+      "recomendar": [
+        { "item": "slowing-hex", "peso": 2, "motivo": "Slow + silencia itens de movimento + aumenta gravidade." },
+        { "item": "capacitor", "peso": 1, "meu_heroi_tag": "gun", "motivo": "Slow forte e silencia itens de movimento." },
+        { "item": "slowing-bullets", "peso": 1, "meu_heroi_tag": "gun", "motivo": "Cada tiro deixa o alvo mais lento." },
+        { "item": "phantom-strike", "peso": 1, "motivo": "Teleporta até o alvo fugitivo e o puxa pro chão." }
+      ]
+    },
+    {
+      "id": "anti-aereo",
+      "titulo": "Inimigos que ficam muito no ar",
+      "quando": { "inimigos_tag": "airborne", "min": 1 },
+      "recomendar": [
+        { "item": "knockdown", "peso": 2, "motivo": "Stun mais forte contra alvos no ar." },
+        { "item": "slowing-hex", "peso": 1, "motivo": "Aumenta a gravidade do alvo e trava itens de movimento." }
+      ]
+    },
+    {
+      "id": "anti-canal",
+      "titulo": "Inimigos com ultimate canalizada",
+      "quando": { "inimigos_tag": "channel-ult" },
+      "recomendar": [
+        { "item": "knockdown", "peso": 2, "motivo": "Stun interrompe a ultimate canalizada." },
+        { "item": "silence-wave", "peso": 2, "motivo": "Silence em área corta a canalização." },
+        { "item": "cursed-relic", "peso": 2, "motivo": "Interrompe + silencia o alvo." },
+        { "item": "focus-lens", "peso": 1, "motivo": "Silencia um alvo por 4,5s." }
+      ]
+    },
+    {
+      "id": "anti-stealth",
+      "titulo": "Inimigos com invisibilidade",
+      "quando": { "inimigos_tag": "stealth" },
+      "recomendar": [
+        { "item": "torment-pulse", "peso": 1, "motivo": "Acerta automaticamente os inimigos mais próximos, mesmo quem chega escondido." },
+        { "item": "return-fire", "peso": 1, "motivo": "Revida automaticamente quando te emboscam com arma." }
+      ]
+    },
+    {
+      "id": "anti-invocacoes",
+      "titulo": "Inimigos com invocações / torretas",
+      "quando": { "inimigos_tag": "summons" },
+      "recomendar": [
+        { "item": "ricochet", "peso": 1, "meu_heroi_tag": "gun", "motivo": "Balas ricocheteiam e limpam invocações junto com heróis." },
+        { "item": "tesla-bullets", "peso": 1, "meu_heroi_tag": "gun", "motivo": "Dano em cadeia limpa grupos de unidades." },
+        { "item": "alchemical-fire", "peso": 1, "motivo": "Dano em área crescente." }
+      ]
+    },
+    {
+      "id": "anti-tanque",
+      "titulo": "Inimigos tanques",
+      "quando": { "inimigos_tag": "tank", "min": 1 },
+      "recomendar": [
+        { "item": "toxic-bullets", "peso": 1, "meu_heroi_tag": "gun", "motivo": "Sangramento por % da vida máxima." },
+        { "item": "armor-piercer", "peso": 2, "meu_heroi_tag": "gun", "motivo": "Balas com chance de ignorar resistência a bala." },
+        { "item": "tankbuster", "peso": 2, "meu_heroi_tag": "spirit", "motivo": "Dano extra por % da vida atual que ignora resistência spirit." },
+        { "item": "decay", "peso": 1, "meu_heroi_tag": "spirit", "motivo": "Dano baseado na vida atual do alvo." },
+        { "item": "escalating-exposure", "peso": 1, "meu_heroi_tag": "spirit", "motivo": "Reduz a resistência spirit do alvo com o tempo." },
+        { "item": "bullet-resist-shredder", "peso": 1, "motivo": "Reduz a resistência a bala do alvo (ajuda o time todo)." }
+      ]
+    },
+    {
+      "id": "anti-escudos",
+      "titulo": "Inimigos que dão barreiras / escudos",
+      "quando": { "inimigos_tag": "shield", "min": 2 },
+      "recomendar": [
+        { "item": "cursed-relic", "peso": 1, "motivo": "Remove buffs do alvo além de silenciar e desarmar." }
+      ]
+    }
+  ]
+}

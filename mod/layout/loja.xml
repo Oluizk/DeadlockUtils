@@ -1,0 +1,38 @@
+<root>
+	<styles>
+		<include src="s2r://panorama/styles/deadlock_utils.vcss_c" />
+	</styles>
+	<!-- Mesmo formato da aba "Populares" da loja (citadel_shop_mods_recommended.xml): cabeçalho de 80px
+	     com retrato do herói e fileiras por custo com as etiquetas de preço do jogo. -->
+	<Panel class="DUAba">
+		<Panel class="DUAbaCab">
+			<Panel class="DUAbaCabFundo" />
+			<Panel class="DUAbaHeroiCaixa">
+				<Panel class="DUAbaHeroiBrilho" />
+				<Image id="DUAbaHeroi" class="DUAbaHeroi" />
+			</Panel>
+			<Panel class="DUAbaCabTextos">
+				<Label class="DUAbaTitulo" text="Deadlock Utils" />
+				<Label id="DUStatusLoja" class="DUAbaSub" html="true" text=" " />
+			</Panel>
+			<Panel class="DUAbaCabAcoes">
+				<Button id="DUBotaoRecs" class="DUAbaModo DUAbaModoAtivo">
+					<Label text="Recomendados" />
+				</Button>
+				<Button id="DUBotaoEditar" class="DUAbaModo">
+					<Label text="Editar counters" />
+				</Button>
+			</Panel>
+		</Panel>
+		<Panel id="DUVistaRecs" class="DUAbaCorpo">
+			<Label class="DUAbaSecao" text="Itens perigosos dos inimigos" />
+			<Panel id="DUAmeacas" class="DUAmeacas" />
+			<Label id="DUTituloBuild" class="DUAbaSecao" text="Build do seu herói" />
+			<Panel id="DUBuild" class="DUTiers" />
+			<Label class="DUAbaSecao" text="Counters contra este time" />
+			<Panel id="DUCounters" class="DUTiers" />
+		</Panel>
+		<Panel id="DUVistaEditor" class="DUAbaCorpo DUEscondido" />
+		<Label id="DUDetalhe" class="DUDetalhe" html="true" text="Passe o mouse num item para ver o porquê." />
+	</Panel>
+</root>

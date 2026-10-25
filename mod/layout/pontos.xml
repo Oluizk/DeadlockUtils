@@ -1,0 +1,6 @@
+<root>
+	<styles>
+		<include src="s2r://panorama/styles/deadlock_utils.vcss_c" />
+	</styles>
+	<Panel class="DUPontos" hittest="false" />
+</root>

@@ -1,0 +1,19 @@
+{
+  "_info": "Configurações do Deadlock Utils. Depois de mudar, rode instalar-mod.bat de novo.",
+  "teclas": {
+    "_info": "Teclas do mod. Deixe vazio (\"\") para desativar. T não é usado porque é o Push-to-Talk do jogo.",
+    "mapa": "m",
+    "tracker": "F6",
+    "desligar": "F8"
+  },
+  "accountId": null,
+  "_accountId": "Seu id Steam (SteamID3). Se ficar null, o build detecta pela pasta Steam/userdata.",
+  "urlPonte": null,
+  "_urlPonte": "URL HTTPS onde mod/pagina/ponte.html está publicado (ex.: GitHub Pages). Necessário para o tracker e para salvar counters editados.",
+  "itensPorSecao": 4,
+  "_itensPorSecao": "Quantos itens em cada seção (Counters / Recomendados) ao segurar Tab.",
+  "segundosAviso": 7,
+  "segundosMarcaMapa": 60,
+  "buffPonteInicio": 300,
+  "buffPonteIntervalo": 300
+}

@@ -1,0 +1,142 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>DU_BOOT</title>
+<!--
+  Ponte do Deadlock Utils. Roda DENTRO do navegador embutido do jogo (CitadelHTMLPanel).
+  No build de out/2026 o painel só abre páginas HTTPS: hospede este arquivo (ex.: GitHub Pages)
+  e coloque a URL em data/config.json -> "urlPonte".
+  Pedidos chegam no fragmento da URL:  ponte.html#{"s":"sessao","id":1,"fn":"tracker","args":[...]}
+  Respostas saem pelo título:          DU|r|id|ok|parte|total|dados|#seq   (máx. ~4096 chars cada)
+  Mantenha ES2017 (Chromium antigo).
+-->
+<script>
+(function () {
+  var API = "https://api.deadlock-api.com";
+  var fila = [], enviando = false, seqMsg = 0, vistos = {};
+
+  function enviar(msg) { fila.push(msg); tick(); }
+  function tick() {
+    if (enviando) return;
+    var m = fila.shift();
+    if (m === undefined) return;
+    enviando = true;
+    seqMsg++;
+    document.title = m + "|#" + seqMsg;
+    setTimeout(function () { enviando = false; tick(); }, 270);
+  }
+  function responder(id, ok, texto) {
+    var t = String(texto == null ? "" : texto), TAM = 3600;
+    var n = Math.max(1, Math.ceil(t.length / TAM));
+    for (var i = 0; i < n; i++) enviar("DU|r|" + id + "|" + (ok ? 1 : 0) + "|" + i + "|" + n + "|" + t.substr(i * TAM, TAM));
+  }
+
+  function get(caminho) {
+    return fetch(caminho.indexOf("http") === 0 ? caminho : API + caminho).then(function (r) {
+      if (!r.ok) throw new Error("HTTP " + r.status + " em " + caminho);
+      return r.json();
+    });
+  }
+  function talvez(p) { return p.then(function (x) { return x; }, function () { return null; }); }
+
+  var cache = {};
+  function herois() {
+    if (!cache.herois) cache.herois = get("/v1/assets/heroes?only_active=true").then(function (lista) {
+      var m = {}; lista.forEach(function (h) { m[h.id] = h.class_name; }); return m;
+    });
+    return cache.herois;
+  }
+  function ranks() {
+    if (!cache.ranks) cache.ranks = get("/v1/assets/ranks").then(function (lista) {
+      var m = {}; lista.forEach(function (r) { m[r.tier] = r.name; }); return m;
+    });
+    return cache.ranks;
+  }
+
+  // eu: meu account_id (ou 0); nomes: [{nome, classe, time}] lidos do placar
+  function tracker(eu, nomes) {
+    var achados = {}, origem = "nenhuma";
+    var ativa = eu ? talvez(get("/v1/matches/active?account_id=" + eu)) : Promise.resolve(null);
+    return Promise.all([herois(), ranks(), ativa]).then(function (res) {
+      var mapaHerois = res[0], mapaRanks = res[1];
+      var partida = (res[2] || []).filter(function (m) {
+        return (m.players || []).some(function (p) { return p.account_id === eu; });
+      })[0];
+      if (partida) {
+        origem = "partida ao vivo";
+        partida.players.forEach(function (p) { achados[mapaHerois[p.hero_id]] = p.account_id; });
+      }
+      return Promise.all(nomes.map(function (j) {
+        if (achados[j.classe] || !j.nome) return null;
+        return talvez(get("/v1/players/steam-search?limit=1&min_matches_played_last_30d=1&search_query=" + encodeURIComponent(j.nome)))
+          .then(function (r) { if (r && r[0]) { j.porNome = true; achados[j.classe] = r[0].account_id; } });
+      })).then(function () {
+        var ids = nomes.map(function (j) { return achados[j.classe]; }).filter(Boolean);
+        if (!ids.length) return { origem: origem, jogadores: [] };
+        var lista = ids.join(",");
+        return Promise.all([
+          talvez(get("/v1/players/rank?account_ids=" + lista)),
+          talvez(get("/v1/players/hero-stats?account_ids=" + lista)),
+          eu ? talvez(get("/v1/players/" + eu + "/enemy-stats?min_matches_played=1")) : null,
+          eu ? talvez(get("/v1/players/" + eu + "/mate-stats?min_matches_played=1")) : null,
+        ]).then(function (r) {
+          var rank = {}, porConta = {}, contra = {}, com = {};
+          (r[0] || []).forEach(function (x) { rank[x.account_id] = x; });
+          (r[1] || []).forEach(function (x) { (porConta[x.account_id] = porConta[x.account_id] || []).push(x); });
+          (r[2] || []).forEach(function (x) { contra[x.enemy_id] = x; });
+          (r[3] || []).forEach(function (x) { com[x.mate_id] = x; });
+          return {
+            origem: origem,
+            jogadores: nomes.map(function (j) {
+              var id = achados[j.classe];
+              if (!id) return { nome: j.nome, classe: j.classe, time: j.time };
+              var hs = (porConta[id] || []).slice().sort(function (a, b) { return b.matches_played - a.matches_played; });
+              var atual = hs.filter(function (h) { return mapaHerois[h.hero_id] === j.classe; })[0];
+              var rk = rank[id];
+              return {
+                nome: j.nome, classe: j.classe, time: j.time, id: id, porNome: !!j.porNome,
+                rank: rk && rk.rank ? (mapaRanks[rk.rank] || ("Tier " + rk.rank)) + " " + rk.subrank : "Sem rank",
+                partidas: hs.reduce(function (s, h) { return s + h.matches_played; }, 0),
+                vitorias: hs.reduce(function (s, h) { return s + h.wins; }, 0),
+                top: hs.slice(0, 3).map(function (h) { return [mapaHerois[h.hero_id], h.matches_played, h.wins]; }),
+                atual: atual ? [atual.matches_played, atual.wins,
+                  Math.round(atual.kills / Math.max(1, atual.matches_played) * 10) / 10,
+                  Math.round(atual.deaths / Math.max(1, atual.matches_played) * 10) / 10] : null,
+                contra: contra[id] ? [contra[id].matches_played, contra[id].wins] : null,
+                com: com[id] ? [com[id].matches_played, com[id].wins] : null,
+              };
+            }),
+          };
+        });
+      });
+    });
+  }
+
+  var fn = {
+    info: function () {
+      var ls = "erro";
+      try { localStorage.setItem("du_teste", "1"); ls = localStorage.getItem("du_teste") === "1" ? "ok" : "falhou"; } catch (e) { ls = "erro: " + e.message; }
+      var visitas = 0;
+      try { visitas = parseInt(localStorage.getItem("du_visitas") || "0", 10) + 1; localStorage.setItem("du_visitas", String(visitas)); } catch (e) {}
+      return { fetch: typeof fetch, localStorage: ls, visitas: visitas, href: location.href.split("#")[0] };
+    },
+    get: get,
+    salvar: function (k, v) { localStorage.setItem(k, v); return "ok"; },
+    ler: function (k) { var v = localStorage.getItem(k); return v == null ? "" : v; },
+    tracker: tracker,
+  };
+
+  function tratar() {
+    var pedido;
+    try { pedido = JSON.parse(decodeURIComponent(location.hash.slice(1))); } catch (e) { return; }
+    if (!pedido || !fn[pedido.fn]) return;
+    var chave = pedido.s + ":" + pedido.id;
+    if (vistos[chave]) return;
+    vistos[chave] = true;
+    Promise.resolve().then(function () { return fn[pedido.fn].apply(null, pedido.args || []); })
+      .then(function (res) { responder(pedido.id, true, typeof res === "string" ? res : JSON.stringify(res)); },
+        function (e) { responder(pedido.id, false, (e && e.message) || String(e)); });
+  }
+  window.addEventListener("hashchange", tratar);
+  tratar();
+})();
+</script>

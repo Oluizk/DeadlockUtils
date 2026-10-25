@@ -1,0 +1,360 @@
+// ===================== Mapa em tela cheia (tecla M) + pontos de interesse =====================
+// Usa o próprio minimapa do jogo: com o placar aberto (+show_scoreboard, igual segurar Tab) ele
+// aceita clique para sinalizar, menu radial e desenho, o cursor fica livre e o herói continua andando.
+//
+// Tamanho: a classe DUMapaAberto na raiz do HUD aumenta #minimap_container E o próprio #hud_minimap
+// (o painel que desenha o mapa — ele tem 360px fixos no CSS do jogo). O minimapa é declarado no
+// hud.xml, onde o nosso CSS vale, então tirar a classe devolve sempre o tamanho original.
+//
+// Pontos de interesse (data/mapa.json, do deadlock-api + túneis do Rem tirados do próprio mapa):
+// cada ponto tem posição RELATIVA (0..1) na imagem do minimapa — a mesma imagem que o jogo desenha
+// preenchendo o #hud_minimap. As nossas camadas são FILHAS do #hud_minimap: herdam o tamanho e a
+// inversão do mapa (para um dos times o jogo vira o minimapa com scaleX(-1) scaleY(-1)); só os ícones
+// são "desvirados" para ficarem de pé.
+
+var mapa = { aberto: false, painel: null, falhou: false, abertoEm: 0, jogador: [], jogadorEm: 0 };
+var DADOS_MAPA = DU_DATA.mapa || { camadas: [], imagens: [] };
+var TAM_MAPA = 820; // tem que bater com .DUMapaAberto #hud_minimap no estilo.css
+// O indicador do jogador local no CSS do jogo é 15% do minimapa (54px no mapa pequeno, enorme no grande).
+var TAM_JOGADOR_MAPA = "4.5%";
+var pontos = { painel: null, criadas: {}, filtros: null };
+// Marcações: clicar num ícone marca o local; a marca continua no minimapa pequeno por um tempo depois de fechar.
+var marcas = { painel: null, lista: {}, ate: 0, tam: 0 };
+
+// ---------- filtros ----------
+function filtrosPadrao() {
+  var f = {};
+  DADOS_MAPA.camadas.concat(DADOS_MAPA.imagens).forEach(function (c) { f[c.id] = !!c.padrao; });
+  return f;
+}
+function carregarFiltros() {
+  pontos.filtros = filtrosPadrao();
+  if (!CONFIG.urlPonte) return;
+  ponteLer("du_mapa_filtros", function (ok, valor) {
+    if (!ok || !valor) return;
+    try {
+      var salvo = JSON.parse(valor);
+      Object.keys(salvo).forEach(function (k) { if (k in pontos.filtros) pontos.filtros[k] = !!salvo[k]; });
+      if (mapa.aberto) { aplicarFiltros(); desenharFiltros(); }
+    } catch (e) {}
+  });
+}
+function alternarFiltro(id) {
+  pontos.filtros[id] = !pontos.filtros[id];
+  aplicarFiltros();
+  desenharFiltros();
+  if (CONFIG.urlPonte) ponteSalvar("du_mapa_filtros", JSON.stringify(pontos.filtros));
+}
+
+// ---------- camadas (filhas do #hud_minimap) ----------
+function minimapa() { return achar(hud, "hud_minimap"); }
+function camadaNoMinimapa(atual, id, layout) {
+  var mm = minimapa();
+  if (!valido(mm)) return null;
+  var pai = null;
+  try { pai = valido(atual) ? atual.GetParent() : null; } catch (e) {}
+  if (valido(atual) && pai === mm) return atual;
+  return painelComLayout(mm, id, layout);
+}
+function montarPontos() {
+  var p = camadaNoMinimapa(pontos.painel, "DU_MapaPontos", "pontos");
+  if (p !== pontos.painel) { pontos.painel = p; pontos.criadas = {}; }
+  return !!pontos.painel;
+}
+function montarMarcas() {
+  var p = camadaNoMinimapa(marcas.painel, "DU_MapaMarcas", "marcas");
+  if (p !== marcas.painel) {
+    marcas.painel = p;
+    marcas.tam = 0;
+    Object.keys(marcas.lista).forEach(function (k) { marcas.lista[k].painel = null; });
+  }
+  return !!marcas.painel;
+}
+function iconePonto(c) { return c.icone ? "s2r://panorama/images/" + c.icone : ""; }
+function semClique(p) { try { p.hittest = false; } catch (e) {} }
+
+// Cria os pontos de uma camada só quando ela é ligada pela primeira vez (caixas = 423 pontos).
+function criarCamada(id) {
+  if (pontos.criadas[id]) return pontos.criadas[id];
+  var img = DADOS_MAPA.imagens.filter(function (i) { return i.id === id; })[0];
+  if (img) {
+    var i = criar("Image", pontos.painel, "", "DUCamadaImagem");
+    semClique(i);
+    try { i.SetImage("s2r://panorama/images/" + img.imagem); } catch (e) {}
+    try { pontos.painel.MoveChildBefore(i, filhos(pontos.painel)[0]); } catch (e) {} // imagens atrás dos ícones
+    pontos.criadas[id] = i;
+    return i;
+  }
+  var c = DADOS_MAPA.camadas.filter(function (x) { return x.id === id; })[0];
+  if (!c) return null;
+  // A camada cobre o mapa inteiro: não pode pegar clique, senão o jogo para de receber os pings.
+  var cam = criar("Panel", pontos.painel, "", "DUCamada");
+  semClique(cam);
+  // Linhas pontilhadas (túneis): o Panorama não desenha linhas, então são bolinhas a cada 9px.
+  (c.linhas || []).forEach(function (seg) {
+    var x1 = seg[0] * TAM_MAPA, y1 = seg[1] * TAM_MAPA, x2 = seg[2] * TAM_MAPA, y2 = seg[3] * TAM_MAPA;
+    var n = Math.max(1, Math.round(Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)) / 9));
+    for (var k = 0; k <= n; k++) semClique(marcador(cam, c, "linha", x1 + (x2 - x1) * k / n, y1 + (y2 - y1) * k / n, 4));
+  });
+  c.pontos.forEach(function (pt, i) {
+    var p = marcador(cam, c, c.estilo, pt[0] * TAM_MAPA, pt[1] * TAM_MAPA, c.tam);
+    if (!p) return;
+    p.AddClass("DUPontoAtivo");
+    evento(p, "onmouseover", function () { mostrarDicaMapa(c, pt, i); });
+    evento(p, "onmouseout", esconderDica);
+    evento(p, "onactivate", function () { alternarMarca(c, pt, i); mostrarDicaMapa(c, pt, i); });
+  });
+  pontos.criadas[id] = cam;
+  return cam;
+}
+
+// "ponto": bolinha na cor da camada. "icone": ícone nativo dentro de um círculo escuro com borda colorida.
+function marcador(pai, c, estilo, x, y, s) {
+  var p = criar("Panel", pai, "", "DUPonto " + (estilo === "icone" ? "DUBadge" : "DUBolinha"));
+  if (!p) return null;
+  try {
+    p.style.width = s + "px";
+    p.style.height = s + "px";
+    p.style.position = Math.round(x - s / 2) + "px " + Math.round(y - s / 2) + "px 0px";
+    if (estilo === "icone") p.style.border = "2px solid " + c.cor;
+    else p.style.backgroundColor = c.cor;
+  } catch (e) {}
+  if (estilo === "icone" && c.icone) {
+    var img = imagem(p, "DUBadgeIcone", iconePonto(c));
+    semClique(img);
+    if (img && !c.semCor) { try { img.style.washColor = c.cor; } catch (e) {} }
+  }
+  return p;
+}
+
+function aplicarFiltros() {
+  if (!valido(pontos.painel) || !pontos.filtros) return;
+  Object.keys(pontos.filtros).forEach(function (id) {
+    var on = pontos.filtros[id];
+    var cam = on ? criarCamada(id) : pontos.criadas[id];
+    if (cam) mostrarPainel(cam, on);
+  });
+}
+
+// ---------- tooltip dos pontos (o mesmo tooltip dos itens) ----------
+function mostrarDicaMapa(c, pt, i) {
+  if (!montarDica()) return;
+  ["weapon", "vitality", "spirit"].forEach(function (k) { dicaItem.painel.SetHasClass("DUDica_" + k, false); });
+  dicaItem.painel.AddClass("DUDica_mapa");
+  dicaItem.item = "mapa:" + c.id;
+  mostrarPainel(dicaItem.DUDicaIcone, !!c.icone);
+  if (c.icone) { try { dicaItem.DUDicaIcone.SetImage(iconePonto(c)); } catch (e) {} }
+  dicaItem.DUDicaNome.text = esc(c.nome);
+  mostrarPainel(dicaItem.DUDicaCustoLinha, false);
+  dicaItem.painel.RemoveClass("DUSemAlmas");
+  mostrarPainel(dicaItem.DUDicaStatus, true);
+  dicaItem.DUDicaStatus.text = "<font color='" + c.cor + "'>" + c.pontos.length + " no mapa</font>";
+  mostrarPainel(dicaItem.DUDicaContra, false);
+  dicaItem.DUDicaMotivos.text = esc(c.desc || "");
+  mostrarPainel(dicaItem.DUDicaMotivos, !!c.desc);
+  dicaItem.DUDicaRodape.text = marcas.lista[c.id + ":" + i] ? "Clique para desmarcar" : "Clique para marcar este local";
+  // Posição pela conta (não pela posição do ícone): funciona também com o mapa invertido.
+  try {
+    var mm = minimapa();
+    var pos = mm.GetPositionWithinWindow();
+    var escala = mm.actualuiscale_x || 1;
+    var inv = temClasse(mm, "invert_map");
+    var x = pos.x / escala + (inv ? 1 - pt[0] : pt[0]) * TAM_MAPA;
+    var y = pos.y / escala + (inv ? 1 - pt[1] : pt[1]) * TAM_MAPA;
+    var largura = (hud.actuallayoutwidth || 1920) / (hud.actualuiscale_x || 1);
+    var dx = x + 440 > largura ? x - 440 : x + 24;
+    dicaItem.painel.style.position = Math.round(dx) + "px " + Math.max(10, Math.round(y - 40)) + "px 0px";
+  } catch (e) {}
+  mostrarPainel(dicaItem.painel, true);
+}
+
+// ---------- marcações ----------
+function alternarMarca(c, pt, i) {
+  var k = c.id + ":" + i;
+  if (marcas.lista[k]) {
+    if (valido(marcas.lista[k].painel)) marcas.lista[k].painel.DeleteAsync(0);
+    delete marcas.lista[k];
+    som("UI.Button.Press");
+  } else {
+    marcas.lista[k] = { c: c, pt: pt, painel: null };
+    som("UI.Shop.Mod.Starred.Click");
+  }
+  desenharMarcas(true);
+}
+function tamanhoMinimapa(mm) {
+  if (mapa.aberto) return TAM_MAPA;
+  var t = 0;
+  try { t = mm.actuallayoutwidth / (mm.actualuiscale_x || 1); } catch (e) {}
+  return t > 50 ? Math.round(t) : 360;
+}
+// Reposiciona quando o minimapa muda de tamanho (abrir/fechar o mapa grande).
+function desenharMarcas(forcar) {
+  var chaves = Object.keys(marcas.lista);
+  if (!chaves.length) { if (valido(marcas.painel)) mostrarPainel(marcas.painel, false); return; }
+  if (!montarMarcas()) return;
+  var mm = minimapa();
+  var tam = tamanhoMinimapa(mm);
+  marcas.painel.SetHasClass("DUInvertido", temClasse(mm, "invert_map"));
+  marcas.painel.SetHasClass("DUMarcasPequenas", !mapa.aberto);
+  mostrarPainel(marcas.painel, true);
+  if (!forcar && tam === marcas.tam) return;
+  marcas.tam = tam;
+  chaves.forEach(function (k) {
+    var m = marcas.lista[k];
+    var s = mapa.aberto ? m.c.tam : Math.max(12, Math.round(m.c.tam * 0.6));
+    if (!valido(m.painel)) {
+      m.painel = marcador(marcas.painel, m.c, m.c.estilo === "icone" ? "icone" : "ponto", 0, 0, s);
+      if (!m.painel) return;
+      m.painel.AddClass("DUMarca");
+      var anel = criar("Panel", m.painel, "", "DUMarcaAnel");
+      if (anel) { try { anel.style.border = "3px solid " + m.c.cor; } catch (e) {} }
+    }
+    try {
+      m.painel.style.width = s + "px";
+      m.painel.style.height = s + "px";
+      m.painel.style.position = Math.round(m.pt[0] * tam - s / 2) + "px " + Math.round(m.pt[1] * tam - s / 2) + "px 0px";
+    } catch (e) {}
+  });
+}
+function limparMarcas() {
+  Object.keys(marcas.lista).forEach(function (k) { if (valido(marcas.lista[k].painel)) marcas.lista[k].painel.DeleteAsync(0); });
+  marcas.lista = {};
+  marcas.ate = 0;
+  if (valido(marcas.painel)) mostrarPainel(marcas.painel, false);
+}
+// Chamado pelo loop rápido: segue o tamanho do minimapa e apaga as marcas quando o tempo acaba.
+function vigiarMarcas() {
+  if (!Object.keys(marcas.lista).length) return;
+  if (!mapa.aberto && marcas.ate && Date.now() > marcas.ate) { limparMarcas(); return; }
+  desenharMarcas(false);
+}
+
+// ---------- indicador do jogador (menor com o mapa grande) ----------
+function ajustarJogador(abrir) {
+  if (abrir) {
+    // O painel pode ser recriado (morte/renascer): procura de novo a cada segundo.
+    if (Date.now() - mapa.jogadorEm < 1000) return;
+    mapa.jogadorEm = Date.now();
+    porClasse(minimapa(), "localplayer").forEach(function (p) {
+      if (mapa.jogador.indexOf(p) < 0 && temClasse(p, "map_button")) mapa.jogador.push(p);
+    });
+  }
+  mapa.jogador = mapa.jogador.filter(valido);
+  mapa.jogador.forEach(function (p) {
+    try {
+      if (abrir) { p.style.width = TAM_JOGADOR_MAPA; p.style.height = TAM_JOGADOR_MAPA; return; }
+      p.style.width = null;
+      p.style.height = null;
+      // Se o Panorama não aceitar null, volta ao valor do CSS do jogo (hud_minimap.css: 15%).
+      if (String(p.style.width || "").indexOf("4.5") >= 0) { p.style.width = "15%"; p.style.height = "15%"; }
+    } catch (e) {}
+  });
+  if (!abrir) mapa.jogador = [];
+}
+
+// ---------- painel lateral (timers + filtros) ----------
+function montarPainelMapa() {
+  if (mapa.falhou || valido(mapa.painel)) return;
+  mapa.painel = painelComLayout(hud, "DU_Mapa", "mapa");
+  if (!mapa.painel) { mapa.falhou = true; log("painel do mapa não carregou"); return; }
+  mapa.relogio = achar(mapa.painel, "DUMapaRelogio");
+  mapa.ponte = achar(mapa.painel, "DUMapaPonte");
+  mapa.midboss = achar(mapa.painel, "DUMapaMidboss");
+  mapa.filtros = achar(mapa.painel, "DUMapaFiltros");
+  mostrarPainel(mapa.painel, false);
+}
+
+function desenharFiltros() {
+  if (!valido(mapa.filtros) || !pontos.filtros) return;
+  mapa.filtros.RemoveAndDeleteChildren();
+  DADOS_MAPA.imagens.concat(DADOS_MAPA.camadas).forEach(function (c) {
+    var on = pontos.filtros[c.id];
+    var b = criar("Panel", mapa.filtros, "", "DUFiltro" + (on ? " DUFiltroOn" : ""));
+    // mesma aparência do marcador no mapa, em miniatura
+    var amostra = criar("Panel", b, "", "DUFiltroIcone " + (c.estilo === "icone" ? "DUBadge" : "DUBolinha"));
+    if (amostra) {
+      try { if (c.estilo === "icone") amostra.style.border = "2px solid " + c.cor; else amostra.style.backgroundColor = c.cor; } catch (e) {}
+      if (c.estilo === "icone" && c.icone) { var im = imagem(amostra, "DUBadgeIcone", iconePonto(c)); if (im && !c.semCor) { try { im.style.washColor = c.cor; } catch (e) {} } }
+    }
+    rotulo(b, "DUFiltroNome", esc(c.nome));
+    if (c.pontos) rotulo(b, "DUFiltroQtd", String(c.pontos.length));
+    aoClicar(b, function () { alternarFiltro(c.id); });
+  });
+}
+
+// ---------- abrir / fechar ----------
+function abrirMapa() {
+  var l = ultimaLeitura || lerPartida();
+  if (l.lojaAberta || !l.emPartida) return;
+  if (tracker.aberto) fecharTracker();
+  montarPainelMapa();
+  if (!pontos.filtros) carregarFiltros();
+  mapa.aberto = true;
+  mapa.abertoEm = Date.now();
+  mapa.jogadorEm = 0;
+  marcas.ate = 0; // com o mapa aberto as marcas não expiram
+  hud.AddClass("DUMapaAberto");
+  comando("+show_scoreboard");
+  comando("hud_free_cursor 1");
+  mostrarPainel(mapa.painel, true);
+  if (montarPontos()) {
+    pontos.painel.SetHasClass("DUInvertido", temClasse(minimapa(), "invert_map"));
+    aplicarFiltros();
+    mostrarPainel(pontos.painel, true);
+  }
+  ajustarJogador(true);
+  desenharMarcas(true);
+  desenharFiltros();
+  atualizarPainelMapa(l);
+  esconderDica();
+  som("UI.Shop.Mod.Starred.Click");
+}
+
+// Sempre seguro de chamar (mesmo se já fechado): desfaz tudo.
+function fecharMapa() {
+  var estava = mapa.aberto;
+  mapa.aberto = false;
+  hud.RemoveClass("DUMapaAberto");
+  mostrarPainel(mapa.painel, false);
+  mostrarPainel(pontos.painel, false);
+  ajustarJogador(false);
+  if (estava) {
+    if (dicaItem.item.indexOf("mapa:") === 0) esconderDica();
+    comando("-show_scoreboard");
+    comando("hud_free_cursor -1");
+    // As marcas ficam no minimapa pequeno por um tempo.
+    if (Object.keys(marcas.lista).length) {
+      marcas.ate = Date.now() + (CONFIG.segundosMarcaMapa || 60) * 1000;
+      desenharMarcas(true);
+    }
+  }
+}
+
+function alternarMapa() { if (mapa.aberto) fecharMapa(); else abrirMapa(); }
+
+function proximoBuffPonte(seg) {
+  // Buffs da ponte: aos 5:00 e depois a cada 5 minutos (deadlock.wiki). Ajustável em data/config.json.
+  var inicio = CONFIG.buffPonteInicio || 300, intervalo = CONFIG.buffPonteIntervalo || 300;
+  if (seg == null) return null;
+  if (seg < inicio) return inicio - seg;
+  return intervalo - ((seg - inicio) % intervalo);
+}
+
+function atualizarPainelMapa(l) {
+  if (!mapa.aberto || !valido(mapa.painel)) return;
+  var s = l.segundos;
+  mapa.relogio.text = relogio(s);
+  var p = proximoBuffPonte(s);
+  mapa.ponte.text = p == null ? "—" : relogio(p);
+  mapa.midboss.text = l.textoMidboss ? esc(l.textoMidboss) : "—";
+}
+
+// Chamado pelo loop rápido: fecha quando a loja abre ou o jogador saiu do placar por fora.
+function vigiarMapa(estado) {
+  vigiarMarcas();
+  if (!mapa.aberto) return;
+  ajustarJogador(true);
+  if (estado.lojaAberta || estado.escAberto) { fecharMapa(); return; }
+  // Se o jogador soltou um Tab manual, o placar fecha: fecha o mapa também (depois de 1s de graça).
+  if (!estado.placarAberto && Date.now() - mapa.abertoEm > 1000) fecharMapa();
+}

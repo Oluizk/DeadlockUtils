@@ -1,0 +1,25 @@
+<root>
+	<styles>
+		<include src="s2r://panorama/styles/deadlock_utils.vcss_c" />
+	</styles>
+	<Panel class="DUMapa" hittest="false">
+		<Panel class="DUMapaCaixa">
+			<Label class="DUMapaTitulo" text="Mapa" />
+			<Panel class="DUMapaLinha">
+				<Label class="DUMapaRotulo" text="Partida" />
+				<Label id="DUMapaRelogio" class="DUMapaValor" text="--:--" />
+			</Panel>
+			<Panel class="DUMapaLinha">
+				<Label class="DUMapaRotulo" text="Próximo buff da ponte" />
+				<Label id="DUMapaPonte" class="DUMapaValor" text="--:--" />
+			</Panel>
+			<Panel class="DUMapaLinha">
+				<Label class="DUMapaRotulo" text="Chefe do meio" />
+				<Label id="DUMapaMidboss" class="DUMapaValor" html="true" text="—" />
+			</Panel>
+			<Label class="DUMapaSubtitulo" text="Mostrar no mapa" />
+			<Panel id="DUMapaFiltros" class="DUMapaFiltros" />
+			<Label class="DUMapaDica" html="true" text="Clique no mapa para sinalizar · M ou ESC fecha" />
+		</Panel>
+	</Panel>
+</root>

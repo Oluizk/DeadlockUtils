@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Deadlock Utils</title>
+  <link rel="stylesheet" href="app/style.css">
+</head>
+<body>
+  <header class="topo">
+    <div class="marca">
+      <span class="logo">◆</span>
+      <div>
+        <h1>Deadlock Utils</h1>
+        <p class="sub">Counters e alertas de itens para a sua partida</p>
+      </div>
+    </div>
+    <div class="acoes">
+      <label class="souls">Souls <input id="souls" type="number" min="0" step="100" placeholder="—"></label>
+      <button id="nova-partida" class="btn">Nova partida</button>
+    </div>
+  </header>
+
+  <main class="grade">
+    <section class="painel" id="painel-time">
+      <h2>Seu time</h2>
+      <label class="campo destaque">Seu herói
+        <select id="meu-heroi"></select>
+      </label>
+      <div id="aliados"></div>
+
+      <h2 class="mt">Seus itens <span class="dica-h">(não serão recomendados)</span></h2>
+      <div class="add-item">
+        <input id="meus-itens-input" list="lista-itens" placeholder="Adicionar item…" autocomplete="off">
+      </div>
+      <div id="meus-itens" class="chips"></div>
+    </section>
+
+    <section class="painel" id="painel-inimigos">
+      <h2>Inimigos <span class="dica-h">(escolha o herói e anote os itens que vê no placar — Tab)</span></h2>
+      <div id="inimigos" class="inimigos"></div>
+    </section>
+
+    <section class="painel" id="painel-saida">
+      <h2>⚠ Alertas</h2>
+      <div id="alertas" class="alertas"></div>
+
+      <div class="cab-rec">
+        <h2>Recomendados</h2>
+        <div id="filtro-tiers" class="tiers"></div>
+      </div>
+      <div id="recomendacoes" class="recs"></div>
+      <div id="avisos" class="avisos"></div>
+    </section>
+  </main>
+
+  <footer class="rodape">
+    Regras feitas pela comunidade — edite os arquivos em <code>data/</code>. Dados de itens/heróis: deadlock.wiki.
+    Projeto de fã, sem vínculo com a Valve.
+  </footer>
+
+  <datalist id="lista-itens"></datalist>
+  <script src="app/engine.js"></script>
+  <script src="app/app.js"></script>
+</body>
+</html>

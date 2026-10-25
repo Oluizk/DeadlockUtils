@@ -1,0 +1,26 @@
+{
+  "_info": "Counters por herói inimigo: quando o herói está no time inimigo, cada item ganha 'peso' pontos. Pode ser editado dentro do jogo (aba Counters > Editar) e compartilhado por código. Itens marcados 'fonte: jogo' vêm de m_mapItemDraftCounterWeights do próprio Deadlock.",
+  "herois": {
+    "Seven": [
+      { "item": "knockdown", "peso": 3, "motivo": "Stun interrompe a Storm Cloud (o próprio jogo marca Nocaute como counter do Seven).", "fonte": "jogo" }
+    ],
+    "Vindicta": [
+      { "item": "knockdown", "peso": 2, "motivo": "Ela passa muito tempo voando — Nocaute é mais forte em alvos no ar (counter oficial do jogo).", "fonte": "jogo" },
+      { "item": "extra-health", "peso": 1, "motivo": "O Assassinate executa alvos com pouca vida — vida extra tira você da faixa de execução." }
+    ],
+    "Deadman Danny": [
+      { "item": "knockdown", "peso": 2, "motivo": "Voa de jetpack: Nocaute é mais forte contra alvos no ar (counter oficial do jogo).", "fonte": "jogo" }
+    ],
+    "McGinnis": [
+      { "item": "healbane", "peso": 2, "motivo": "Corta a cura das torretas/espectros de cura (counter oficial do jogo).", "fonte": "jogo" }
+    ],
+    "Haze": [
+      { "item": "metal-skin", "peso": 2, "motivo": "O Bullet Dance é dano de bala — Metal Skin anula a ultimate." },
+      { "item": "plated-armor", "peso": 1, "motivo": "Desvia parte das balas do Bullet Dance." }
+    ],
+    "Wraith": [
+      { "item": "metal-skin", "peso": 1, "motivo": "Anula o Full Auto (dano de arma)." },
+      { "item": "debuff-reducer", "peso": 1, "motivo": "Telekinesis segura menos tempo." }
+    ]
+  }
+}

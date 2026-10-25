@@ -1,0 +1,305 @@
+{
+  "_info": "Itens que, quando um INIMIGO compra, geram ALERTA e recomendam counters. perigo: 1 = atenção, 2 = perigoso, 3 = muito perigoso. Formato em CONTRIBUTING.md.",
+  "itens": [
+    {
+      "item": "knockdown", "perigo": 3,
+      "alerta": "Stun atrasado: aplica stun 2s depois de marcar você (mais forte se você estiver no ar).",
+      "dica": "Viu a marca? Fique no chão e use Unstoppable / Dispel Magic / Ethereal Shift antes dos 2s. Não pule no momento errado.",
+      "counters": [
+        { "item": "debuff-reducer", "peso": 2, "motivo": "Stun dura menos." },
+        { "item": "reactive-barrier", "peso": 1, "motivo": "Barreira automática quando o stun acerta." },
+        { "item": "dispel-magic", "peso": 2, "motivo": "Limpa a marca antes do stun." },
+        { "item": "unstoppable", "peso": 1, "motivo": "Imune ao stun durante o efeito." }
+      ]
+    },
+    {
+      "item": "cursed-relic", "perigo": 3,
+      "alerta": "Curse: interrompe, silencia, desarma e remove seus buffs por ~3s.",
+      "dica": "Não use seus ativos defensivos primeiro se o portador estiver perto — eles podem ser removidos. Espere o Curse sair.",
+      "counters": [
+        { "item": "counterspell", "peso": 2, "motivo": "Parry bloqueia itens e habilidades inimigas." },
+        { "item": "debuff-reducer", "peso": 2, "motivo": "Curse dura menos." },
+        { "item": "spellbreaker", "peso": 1, "motivo": "+25% resistência a debuff." },
+        { "item": "divine-barrier", "peso": 1, "motivo": "Seu suporte pode limpar o Curse de você (ou você de um aliado)." }
+      ]
+    },
+    {
+      "item": "silence-wave", "perigo": 2,
+      "alerta": "Projétil em área que silencia por 3s.",
+      "dica": "Projétil que se expande — não fiquem amontoados. Desvie pela lateral.",
+      "counters": [
+        { "item": "debuff-reducer", "peso": 2, "motivo": "Silence mais curto." },
+        { "item": "reactive-barrier", "peso": 1, "motivo": "Barreira ao ser silenciado." },
+        { "item": "counterspell", "peso": 1, "motivo": "Parry anula o efeito." }
+      ]
+    },
+    {
+      "item": "focus-lens", "perigo": 2,
+      "alerta": "Silence de 4,5s em um alvo + parte do dano volta quando o silence acaba.",
+      "dica": "Normalmente é usado em quem tem ultimate forte — guarde distância do portador.",
+      "counters": [
+        { "item": "debuff-reducer", "peso": 2, "motivo": "Silence mais curto." },
+        { "item": "dispel-magic", "peso": 1, "motivo": "Remove o silence." },
+        { "item": "spirit-resilience", "peso": 1, "motivo": "Reduz o dano que explode no final." }
+      ]
+    },
+    {
+      "item": "phantom-strike", "perigo": 2,
+      "alerta": "Teleporta até você, te puxa pro chão e desarma.",
+      "dica": "Alvos isolados são presa fácil — fique perto do time quando o portador estiver vivo.",
+      "counters": [
+        { "item": "debuff-reducer", "peso": 1, "motivo": "Disarm mais curto." },
+        { "item": "counterspell", "peso": 1, "motivo": "Parry na hora do teleporte." }
+      ]
+    },
+    {
+      "item": "capacitor", "perigo": 2,
+      "alerta": "Slow forte + silencia seus itens de movimento.",
+      "dica": "Warp Stone / Majestic Leap / Fleetfoot não salvam você enquanto estiver afetado — saia antes.",
+      "counters": [
+        { "item": "debuff-reducer", "peso": 1, "motivo": "Slow e silence mais curtos." },
+        { "item": "dispel-magic", "peso": 1, "motivo": "Limpa o slow e o silence de itens." }
+      ]
+    },
+    {
+      "item": "slowing-hex", "perigo": 1,
+      "alerta": "Slow + silencia itens de movimento + aumenta gravidade.",
+      "dica": "Não conte com item de fuga logo após levar o hex.",
+      "counters": [
+        { "item": "debuff-reducer", "peso": 1, "motivo": "Hex dura menos." }
+      ]
+    },
+    {
+      "item": "disarming-hex", "perigo": 2,
+      "alerta": "Desarma por ~4s e reduz sua resistência a bala.",
+      "dica": "Se você é de arma, recue e use habilidades enquanto estiver desarmado.",
+      "counters": [
+        { "item": "debuff-reducer", "peso": 1, "motivo": "Disarm mais curto." },
+        { "item": "dispel-magic", "peso": 1, "motivo": "Remove o disarm." }
+      ]
+    },
+    {
+      "item": "vortex-web", "perigo": 3,
+      "alerta": "Granada que puxa todo mundo junto e aplica slow — prepara combo de ultimate em área.",
+      "dica": "Espalhem-se. Se for puxado, use ativo defensivo imediatamente (ultimate inimiga vem em seguida).",
+      "counters": [
+        { "item": "unstoppable", "peso": 1, "motivo": "Ignora o CC que vem depois." },
+        { "item": "debuff-reducer", "peso": 1, "motivo": "Slow mais curto." },
+        { "item": "ethereal-shift", "peso": 1, "motivo": "Fica invulnerável durante o combo." }
+      ]
+    },
+    {
+      "item": "arctic-blast", "perigo": 2,
+      "alerta": "Explosão que congela e depois deixa lento; trava regeneração de stamina.",
+      "dica": "Não gaste toda a stamina antes de entrar na luta com o portador.",
+      "counters": [
+        { "item": "debuff-reducer", "peso": 1, "motivo": "Congelamento/slow mais curtos." }
+      ]
+    },
+    {
+      "item": "echo-shard", "perigo": 2,
+      "alerta": "Repete uma habilidade (não-ultimate) — espere dois stuns/combos seguidos.",
+      "dica": "Depois que o inimigo usar a habilidade principal, ela pode vir de novo imediatamente.",
+      "counters": []
+    },
+    {
+      "item": "refresher", "perigo": 3,
+      "alerta": "Reseta TODOS os cooldowns, inclusive a ultimate. Ultimate dupla!",
+      "dica": "Depois da 1ª ultimate, não assuma que acabou. Guarde um ativo defensivo.",
+      "counters": [
+        { "item": "spellbreaker", "peso": 1, "motivo": "Reduz o burst spirit repetido." },
+        { "item": "spirit-resilience", "peso": 1, "motivo": "Aguenta a segunda rodada de habilidades." }
+      ]
+    },
+    {
+      "item": "unstoppable", "perigo": 2,
+      "alerta": "5,5s imune a stun, silence, sleep, root e disarm.",
+      "dica": "NÃO gaste seu CC enquanto o Unstoppable estiver ativo. Espere acabar e aí use.",
+      "counters": []
+    },
+    {
+      "item": "ethereal-shift", "perigo": 2,
+      "alerta": "4s invulnerável.",
+      "dica": "Não use ultimate/burst no alvo dentro do Ethereal Shift. Reposicione e espere ele sair.",
+      "counters": []
+    },
+    {
+      "item": "metal-skin", "perigo": 2,
+      "alerta": "5s imune a balas.",
+      "dica": "Se você é de arma, pare de atirar nele: mude de alvo ou use habilidades.",
+      "counters": []
+    },
+    {
+      "item": "divine-barrier", "perigo": 1,
+      "alerta": "Suporte pode limpar debuffs e dar barreira num aliado.",
+      "dica": "Force o Divine Barrier antes de usar seu CC mais importante.",
+      "counters": []
+    },
+    {
+      "item": "cheat-death", "perigo": 2,
+      "alerta": "Não morre por 4,5s ao levar dano letal (com dano/cura reduzidos).",
+      "dica": "Não gaste ult em quem acabou de ativar Cheat Death — espere os 4,5s e finalize depois.",
+      "counters": []
+    },
+    {
+      "item": "vampiric-burst", "perigo": 2,
+      "alerta": "5s de roubo de vida, cadência alta e munição infinita.",
+      "dica": "Recue ou desarme durante os 5s; trocar tiro com ele nessa hora é perder.",
+      "counters": [
+        { "item": "toxic-bullets", "peso": 2, "meu_heroi_tag": "gun", "motivo": "Corta a cura do lifesteal." },
+        { "item": "healbane", "peso": 2, "meu_heroi_tag": "spirit", "motivo": "Corta a cura do lifesteal." },
+        { "item": "disarming-hex", "peso": 1, "motivo": "Desarma durante o ativo." },
+        { "item": "metal-skin", "peso": 1, "motivo": "Sem balas, sem lifesteal." }
+      ]
+    },
+    {
+      "item": "leech", "perigo": 2,
+      "alerta": "28% de roubo de vida (bala + spirit).",
+      "dica": "Trocas longas favorecem ele. Burst rápido ou anti-cura.",
+      "counters": [
+        { "item": "toxic-bullets", "peso": 3, "meu_heroi_tag": "gun", "motivo": "Anti-cura." },
+        { "item": "healbane", "peso": 3, "meu_heroi_tag": "spirit", "motivo": "Anti-cura." },
+        { "item": "inhibitor", "peso": 1, "meu_heroi_tag": "gun", "motivo": "-40% cura recebida." }
+      ]
+    },
+    {
+      "item": "siphon-bullets", "perigo": 1,
+      "alerta": "Rouba vida máxima com os tiros.",
+      "dica": "Evite trocas longas de tiro com ele.",
+      "counters": [
+        { "item": "plated-armor", "peso": 1, "motivo": "Chance de anular efeitos on-hit das balas." },
+        { "item": "toxic-bullets", "peso": 1, "meu_heroi_tag": "gun", "motivo": "Reduz a cura dele." }
+      ]
+    },
+    {
+      "item": "infuser", "perigo": 1,
+      "alerta": "Ativo: spirit lifesteal + spirit power por 7s.",
+      "dica": "Saia do alcance durante os 7s.",
+      "counters": [
+        { "item": "healbane", "peso": 2, "meu_heroi_tag": "spirit", "motivo": "Anti-cura." },
+        { "item": "toxic-bullets", "peso": 1, "meu_heroi_tag": "gun", "motivo": "Anti-cura." }
+      ]
+    },
+    {
+      "item": "healing-nova", "perigo": 1,
+      "alerta": "Cura em área para o time inimigo.",
+      "dica": "Foque o burst depois que a Nova for usada (60s de cooldown).",
+      "counters": [
+        { "item": "healbane", "peso": 1, "meu_heroi_tag": "spirit", "motivo": "Anti-cura." },
+        { "item": "toxic-bullets", "peso": 1, "meu_heroi_tag": "gun", "motivo": "Anti-cura." }
+      ]
+    },
+    {
+      "item": "rescue-beam", "perigo": 1,
+      "alerta": "Pode curar e PUXAR um aliado pra longe do seu combo.",
+      "dica": "Mate o alvo rápido ou corte a linha de visão do suporte.",
+      "counters": [
+        { "item": "healbane", "peso": 1, "meu_heroi_tag": "spirit", "motivo": "Anti-cura." },
+        { "item": "toxic-bullets", "peso": 1, "meu_heroi_tag": "gun", "motivo": "Anti-cura." }
+      ]
+    },
+    {
+      "item": "silencer", "perigo": 2,
+      "alerta": "As balas dele reduzem seu dano spirit em 25% e acumulam silence em você.",
+      "dica": "Se você é de spirit, não troque tiro longo com ele — entre, use combo e saia.",
+      "counters": [
+        { "item": "plated-armor", "peso": 2, "motivo": "Chance de anular efeitos on-hit (inclui o acúmulo)." },
+        { "item": "metal-skin", "peso": 2, "motivo": "Sem bala, sem silence." },
+        { "item": "debuff-reducer", "peso": 1, "motivo": "Silence mais curto." }
+      ]
+    },
+    {
+      "item": "inhibitor", "perigo": 1,
+      "alerta": "Os tiros dele reduzem seu dano em 30% e sua cura em 40%.",
+      "dica": "Evite ficar exposto aos tiros dele por muito tempo.",
+      "counters": [
+        { "item": "plated-armor", "peso": 1, "motivo": "Chance de anular efeitos on-hit." },
+        { "item": "metal-skin", "peso": 1, "motivo": "Imune às balas." }
+      ]
+    },
+    {
+      "item": "return-fire", "perigo": 1,
+      "alerta": "Por 6,5s devolve balas para quem atirar nele.",
+      "dica": "Pare de atirar e use habilidades enquanto o efeito estiver ativo.",
+      "counters": []
+    },
+    {
+      "item": "shadow-weave", "perigo": 1,
+      "alerta": "Fica invisível por até 13s — emboscada vindo.",
+      "dica": "Fique perto do time e preste atenção em sons. Dano revela brevemente.",
+      "counters": []
+    },
+    {
+      "item": "glass-cannon", "perigo": 1,
+      "alerta": "Dano de arma muito alto, mas frágil.",
+      "dica": "Foque ele primeiro nas lutas.",
+      "counters": [
+        { "item": "bullet-resilience", "peso": 1, "motivo": "Resistência a bala." },
+        { "item": "metal-skin", "peso": 1, "motivo": "Imune às balas quando ele te focar." }
+      ]
+    },
+    {
+      "item": "armor-piercer", "perigo": 1,
+      "alerta": "Balas com chance de ignorar sua resistência a bala.",
+      "dica": "Resistência a bala vale menos contra ele; prefira vida e Metal Skin.",
+      "counters": [
+        { "item": "metal-skin", "peso": 1, "motivo": "Imunidade não é afetada pela perfuração." },
+        { "item": "extra-health", "peso": 1, "motivo": "Vida bruta em vez de resistência." }
+      ]
+    },
+    {
+      "item": "spirit-burn", "perigo": 1,
+      "alerta": "Burst de spirit dele aplica queimadura com -70% na sua cura.",
+      "dica": "Sua cura será fraca depois do combo dele.",
+      "counters": [
+        { "item": "spirit-resilience", "peso": 1, "motivo": "Reduz o burst que ativa o efeito." }
+      ]
+    },
+    {
+      "item": "escalating-exposure", "perigo": 1,
+      "alerta": "Reduz sua resistência spirit ao longo da luta.",
+      "dica": "Lutas longas contra ele são ruins — entre e saia.",
+      "counters": [
+        { "item": "spirit-resilience", "peso": 1, "motivo": "Compensa a redução de resistência." }
+      ]
+    },
+    {
+      "item": "scourge", "perigo": 1,
+      "alerta": "Aura de dano spirit + resistências por 10s.",
+      "dica": "Não fique colado nele enquanto o Scourge estiver ativo.",
+      "counters": [
+        { "item": "spirit-shielding", "peso": 1, "motivo": "Absorve o dano da aura." }
+      ]
+    },
+    {
+      "item": "colossus", "perigo": 1,
+      "alerta": "Fica gigante por 7s: resistências, dano melee e slow em volta.",
+      "dica": "Afaste-se durante os 7s; não brigue corpo a corpo.",
+      "counters": []
+    },
+    {
+      "item": "magic-carpet", "perigo": 1,
+      "alerta": "Fuga voando por até 12s, imune a slows.",
+      "dica": "Use stun (não slow) para segurar quem tem Magic Carpet.",
+      "counters": [
+        { "item": "knockdown", "peso": 1, "motivo": "Stun mais forte em alvos no ar." }
+      ]
+    },
+    {
+      "item": "warp-stone", "perigo": 1,
+      "alerta": "Teleporte curto de fuga com resistência a bala.",
+      "dica": "Silencie itens de movimento antes de tentar o abate.",
+      "counters": [
+        { "item": "slowing-hex", "peso": 1, "motivo": "Silencia itens de movimento." }
+      ]
+    },
+    {
+      "item": "majestic-leap", "perigo": 1,
+      "alerta": "Salta muito alto com barreira para fugir.",
+      "dica": "Alvo no ar = Knockdown mais forte.",
+      "counters": [
+        { "item": "slowing-hex", "peso": 1, "motivo": "Silencia itens de movimento e aumenta gravidade." }
+      ]
+    }
+  ]
+}

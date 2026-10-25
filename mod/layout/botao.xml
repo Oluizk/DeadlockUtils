@@ -1,0 +1,10 @@
+<root>
+	<styles>
+		<include src="s2r://panorama/styles/deadlock_utils.vcss_c" />
+	</styles>
+	<Panel class="DUNav">
+		<Panel class="DUNavFundo" />
+		<Panel class="DUNavBorda" />
+		<Panel class="DUNavIcone" />
+	</Panel>
+</root>

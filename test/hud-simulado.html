@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>HUD simulado — Deadlock Utils</title>
+<style>
+  :root { color-scheme: dark; }
+  body { margin: 0; background: #0b0a09; color: #ddd; font: 13px/1.35 "Segoe UI", sans-serif; }
+  #controles { margin: 8px; display: flex; gap: 6px; flex-wrap: wrap; }
+  button { background: #2a2620; color: #eee; border: 1px solid #555; padding: 4px 9px; border-radius: 5px; cursor: pointer; }
+  #tela { position: relative; height: 720px; margin: 8px; border: 1px solid #333; background: linear-gradient(#1d2b33, #10161a); overflow: hidden; }
+  #log { margin: 8px; white-space: pre-wrap; font: 11px Consolas, monospace; background: #111; padding: 8px; max-height: 300px; overflow: auto; }
+  /* aproximação das classes do mod (o CSS real é Panorama) */
+  .fake { display: none; }
+  .DUEscondido { display: none !important; }
+  [class*="DU"] { box-sizing: border-box; }
+  .lojaSim { position: absolute; inset: 10px 10px 10px 150px; background: #3a342c; }
+  .lojaSim > div, .lojaSim > div > div { height: 100%; }
+  #ShopModsContainer { display: flex; height: 100%; }
+  .navSim { width: 80px; display: flex; flex-direction: column; gap: 6px; padding-top: 10px; }
+  .NavigationButton { height: 46px; background: #6d5f4b; color: #fff; font-size: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+  .showingWeapon #WeaponNav, .showingTech #TechNav, .showingArmor #ArmorNav, .showingFavorites #FavoritesNav, .showingRecommendations #RecommendedNav, .showingAllItems #FilteredNav { height: 110px; background: #c99a3c; }
+  .DUNav { height: 46px; background: #b0843a; cursor: pointer; } .DUNav.DUNavAtiva { height: 110px; background: #ffde96; }
+  .DUNavIcone::after { content: "👁"; }
+  .listasSim { position: relative; flex: 1; background: #4a4136; }
+  .DUAba { position: absolute; inset: 0; background: #b9a684; color: #2b2219; display: flex; flex-direction: column; }
+  .DUAbaCab { display: flex; gap: 12px; padding: 14px 22px 6px; align-items: center; }
+  .DUAbaCabTextos { flex: 1; display: flex; flex-direction: column; }
+  .DUAbaTitulo { font-size: 24px; font-weight: bold; text-transform: uppercase; }
+  .DUAbaSub, .DUAbaVazio { color: #4f402d; }
+  .DUAbaLinha { height: 2px; margin: 0 22px; background: #5a473055; }
+  .DUAbaCorpo { flex: 1; overflow: auto; padding: 6px 22px; }
+  .DUAbaSecao { display: block; color: #6b4417; font-weight: bold; text-transform: uppercase; margin: 10px 0 6px; }
+  .DUAbaModo, .DUBotao { display: inline-block; background: #3b3426; color: #f2e4c4; padding: 4px 10px; margin: 2px; border-radius: 3px; cursor: pointer; }
+  .DUAbaModoAtivo, .DUBotaoPrimario, .DUSelecionado.DUPeso { background: #d9b26a; color: #2b2219; }
+  .DUDetalhe { display: block; min-height: 50px; padding: 8px 22px; background: #1c1712dd; color: #f2e4c4; }
+  .DUAmeacas, .DUTierCartas, .DUGradeHerois, .DUEscolhaGrade, .DUEditorAcoes, .DUTrackerTops { display: flex; flex-wrap: wrap; gap: 5px; }
+  .DUAmeaca { width: 230px; display: flex; gap: 6px; padding: 5px; background: #241e18; color: #f2e4c4; border-left: 4px solid #c9a94a; }
+  .DUPerigo2 { border-left-color: #e0773a; } .DUPerigo3 { border-left-color: #e04848; }
+  .DUAmeacaTextos, .DUTrackerTextos { display: flex; flex-direction: column; }
+  .DUTierLinha { display: flex; gap: 8px; align-items: center; margin-bottom: 6px; background: #2b221922; }
+  .DUTierPreco { width: 70px; font-weight: bold; color: #1f5d52; padding-left: 8px; }
+  .DUCartao { width: 76px; height: 114px; display: flex; flex-direction: column; align-items: center; background: #d8c7a8; font-size: 10px; cursor: pointer; }
+  .DUCartao_weapon { background: #e3b27a; } .DUCartao_vitality { background: #b9d89a; } .DUCartao_spirit { background: #cfb2ea; }
+  .DUCartaoIcone, .DUMiniIcone, .DUAmeacaIcone, .DUEditorIcone, .DUEscolhaIcone, .DUHeroiFoto, .DUTrackerFoto, .DUTrackerDetFoto, .DUTrackerTopFoto, .DUEditorFoto { display: block; background: #0004; font-size: 7px; overflow: hidden; color: #444; }
+  .DUCartaoIcone { width: 60px; height: 56px; } .DUAmeacaIcone { width: 44px; height: 44px; } .DUMiniIcone { width: 40px; height: 40px; }
+  .DUHeroiFoto, .DUEditorIcone, .DUEscolhaIcone, .DUTrackerFoto, .DUTrackerTopFoto { width: 36px; height: 36px; } .DUTrackerDetFoto, .DUEditorFoto { width: 56px; height: 56px; }
+  [data-src]::after { content: attr(data-src); }
+  .DUCartaoNome { text-align: center; font-weight: bold; color: #2a241d; }
+  .DUCartaoSelo { font-size: 8px; font-weight: bold; }
+  .DUEditor { display: flex; gap: 14px; } .DUEditorHerois { width: 300px; } .DUEditorDireita { flex: 1; }
+  .DUHeroiBotao { width: 62px; display: flex; flex-direction: column; align-items: center; font-size: 9px; background: #2b221933; cursor: pointer; }
+  .DUHeroiBotao.DUSelecionado { background: #d9b26a; }
+  .DUEditorCab, .DUTrackerDetCab { display: flex; gap: 10px; align-items: center; }
+  .DUEditorLinha { display: flex; gap: 6px; align-items: center; background: #241e18; color: #f2e4c4; padding: 4px; margin-bottom: 3px; }
+  .DUEditorItemNome { width: 150px; } .DUPesos { display: flex; } .DUMotivo { flex: 1; }
+  .DUEscolhaBotao { cursor: pointer; } .DUEscolhaBotao.DUSelecionado { opacity: .35; }
+  .DUTexto { background: #fffaf0; color: #222; border: 1px solid #8a7656; padding: 3px; min-height: 18px; }
+  .DUFaixa { position: absolute; left: 22px; bottom: 300px; background: #12100ed8; padding: 6px; color: #eee; }
+  .DUFaixaCartas { display: flex; gap: 4px; } .DUMini { width: 48px; background: #24211d; text-align: center; font-size: 10px; }
+  .DUAviso { position: absolute; left: 50%; transform: translateX(-50%); top: 60px; width: 480px; background: #1c1714; border: 1px solid #e0773a; padding: 8px; text-align: center; }
+  .DUMapa { position: absolute; inset: 0; pointer-events: none; }
+  .DUMapaCaixa { position: absolute; right: 40px; top: 200px; width: 240px; background: #b9a684; color: #2b2219; padding: 10px; }
+  .DUMapaLinha { display: flex; justify-content: space-between; }
+  .DUTracker { position: absolute; inset: 0; background: #000b; }
+  .DUTrackerJanela { position: absolute; inset: 30px 60px; background: #b9a684; color: #2b2219; display: flex; flex-direction: column; }
+  .DUTrackerCorpo { flex: 1; display: flex; gap: 16px; padding: 6px 22px; overflow: hidden; }
+  .DUTrackerTimes { width: 420px; overflow: auto; } .DUTrackerDetalhe { flex: 1; overflow: auto; }
+  .DUTrackerJogador { display: flex; gap: 8px; background: #241e18; color: #f2e4c4; padding: 4px; margin-bottom: 3px; border-left: 4px solid #7cc35a; cursor: pointer; }
+  .DUTrackerJogador.DUInimigo { border-left-color: #e04848; } .DUTrackerJogador.DUSelecionado { background: #4a3b26; }
+  .DUTrackerBloco, .DUTrackerTop { background: #241e18; color: #f2e4c4; padding: 6px; display: flex; flex-direction: column; }
+  .DUTrackerHistorico { background: #d9b26a; color: #222; font-size: 9px; padding: 2px 4px; align-self: center; }
+  #minimap_persp.sim { position: absolute; right: 10px; bottom: 10px; width: 220px; height: 220px; }
+  #hud_minimap.sim { position: relative; width: 200px; height: 200px; background: url(minimap_mid.png) center / 100% 100%; }
+  .DUMapaAberto #minimap_persp.sim { right: auto; bottom: auto; left: 10px; top: 10px; width: 820px; height: 820px; }
+  .DUMapaAberto #hud_minimap.sim { width: 820px; height: 820px; }
+  .p-Panel, .p-Image, .p-Label { pointer-events: auto; }
+  .semFilhos * { pointer-events: none !important; }
+  .map_button.localplayer { position: absolute; left: 55%; top: 60%; width: 15%; height: 15%; background: url(icones/player_marker_self_psd.png) center / 100% 100%; transform: translate(-50%, -50%) scale(1.3); }
+  .DUPontoAtivo:hover { transform: scale(1.35); filter: brightness(1.8); z-index: 10; }
+  .DUInvertido .DUPontoAtivo:hover { transform: scale(-1.35, -1.35); }
+  .DUMarcaAnel { position: absolute; left: -40%; top: -40%; width: 180%; height: 180%; border-radius: 50%; box-sizing: border-box; animation: pulso 1.2s ease-out infinite; }
+  .DUMarca { overflow: visible !important; filter: brightness(1.4); }
+  @keyframes pulso { from { opacity: 1; transform: scale(.6); } to { opacity: 0; transform: scale(1.3); } }
+  .DUDica { position: absolute; z-index: 300; width: 360px; color: #f2e4c4; }
+  .DUDica_mapa .DUDicaFundo { background: #1a1612f2; border: 1px solid #c9a46a66; border-radius: 4px; padding: 10px 14px; }
+  .DUDicaIcone { width: 40px; height: 40px; background-size: contain; background-repeat: no-repeat; display: inline-block; }
+  .DUDicaNome { font-size: 22px; font-weight: bold; }
+  .DUDicaRodape { font-size: 11px; font-style: italic; opacity: .7; }
+  #hud_minimap.sim.invert_map { transform: scaleX(-1) scaleY(-1); }
+  .DUPontos { position: absolute; inset: 0; }
+  .DUCamada { position: absolute; inset: 0; }
+  .DUCamadaImagem { position: absolute; inset: 0; width: 100%; height: 100%; background: url(minimap_rat_tunnels.png) center / 100% 100%; opacity: .85; font-size: 0; }
+  .DUPonto { position: absolute; box-sizing: border-box; font-size: 0 !important; overflow: hidden; }
+  .DUBolinha { border-radius: 50%; border: 1px solid #0009; }
+  .DUBadge { border-radius: 50%; background-color: #12161ce8 !important; box-shadow: 0 0 4px #000c; display: flex; align-items: center; justify-content: center; }
+  .DUBadgeIcone { width: 68%; height: 68%; background-size: contain; background-repeat: no-repeat; background-position: center; }
+  .DUInvertido .DUPonto { transform: scale(-1, -1); }
+  .DUMapaCaixa { position: absolute; left: 930px; top: 10px; width: 260px; background: #b9a684; color: #2b2219; padding: 8px; }
+  .DUFiltro { display: flex; gap: 6px; cursor: pointer; opacity: .5; font-size: 11px; } .DUFiltro.DUFiltroOn { opacity: 1; }
+  .DUFiltroIcone { width: 12px; height: 12px; background: #8a7656; font-size: 0; }
+  #EscapeMenu.sim { display: none; position: absolute; left: 0; top: 0; bottom: 0; width: 220px; background: #000c; padding: 20px; }
+  #EscapeMenu.sim.aberto { display: block; }
+  .nav_menu_item { display: block; color: #fff; padding: 6px; margin: 4px 0; background: #333; cursor: pointer; }
+</style>
+</head>
+<body>
+<div id="controles">
+  <button id="b-loja">Loja (B)</button>
+  <button id="b-tab">Placar (Tab)</button>
+  <button id="b-m">Tecla M</button>
+  <button id="b-f6">Tecla F6</button>
+  <button id="b-esc">Menu ESC</button>
+  <button id="b-curse">Dynamo compra Cursed Relic</button>
+  <button id="b-tempo">+5 min</button>
+</div>
+<div id="tela"></div>
+<div id="log"></div>
+<script>
+// ======================= Panorama falso =======================
+const logEl = document.getElementById("log");
+const msgs = [];
+const handlersEv = {};      // RegisterForUnhandledEvent
+const comandos = [];        // CitadelConCommand recebidos
+let clipboard = "";
+class FakePanel {
+  constructor(tipo, pai, id) {
+    this.paneltype = tipo; this.id = id || ""; this._kids = []; this._classes = new Set(); this._valid = true; this._ev = {};
+    this.el = document.createElement(tipo === "Label" ? "span" : tipo === "TextEntry" ? "input" : "div");
+    if (tipo === "Label") this.el.style.display = "block";
+    if (id) this.el.id = id;
+    this.el.className = "p-" + tipo;
+    // style inline como no Panorama: width/height e position "Xpx Ypx 0px" (canto superior esquerdo)
+    const el_ = this.el;
+    this.style = new Proxy({}, { set(t, k, v) {
+      t[k] = v;
+      if (k === "width" || k === "height" || k === "border" || k === "backgroundColor") el_.style[k] = v || "";
+      if (k === "position" && v) { const [x, y] = v.split(" "); el_.style.position = "absolute"; el_.style.left = x; el_.style.top = y; }
+      return true;
+    } });
+    this.visible = true;
+    if (pai) pai._add(this);
+    if (tipo === "TextEntry") this.el.addEventListener("input", () => this._fire("ontextentrychange"));
+  }
+  _add(c) { c.parent = this; this._kids.push(c); this.el.appendChild(c.el); }
+  _sync() {
+    const extra = [...this.el.classList].filter((c) => ["fake", "lojaSim", "navSim", "listasSim", "sim", "aberto"].includes(c));
+    this.el.className = ["p-" + this.paneltype, ...extra, ...this._classes].join(" ");
+  }
+  _fire(n, ...a) { (this._ev[n] || []).forEach((f) => f(...a)); }
+  get text() { return this.paneltype === "TextEntry" ? this.el.value : (this._text || ""); }
+  set text(v) { this._text = v; if (this.paneltype === "TextEntry") this.el.value = v; else if (this.paneltype === "Label") this.el.innerHTML = v; }
+  IsValid() { return this._valid; }
+  Children() { return this._kids.slice(); }
+  GetParent() { return this.parent; }
+  AddClass(c) { this._classes.add(c); this._sync(); }
+  RemoveClass(c) { this._classes.delete(c); this._sync(); }
+  SetHasClass(c, on) { on ? this.AddClass(c) : this.RemoveClass(c); }
+  BHasClass(c) { return this._classes.has(c); }
+  FindChildTraverse(id) { for (const k of this._kids) { if (k.id === id) return k; const r = k.FindChildTraverse(id); if (r) return r; } return null; }
+  FindChildrenWithClassTraverse(c) { const out = []; const rec = (p) => p._kids.forEach((k) => { if (k._classes.has(c)) out.push(k); rec(k); }); rec(this); return out; }
+  GetAttributeString(n, d) { return this[n] || d; }
+  MoveChildAfter(a, b) { b.el.after(a.el); }
+  MoveChildBefore(a, b) { this._kids = this._kids.filter((k) => k !== a); this._kids.splice(this._kids.indexOf(b), 0, a); b.el.before(a.el); }
+  SetParent(novo) {
+    if (this.parent) this.parent._kids = this.parent._kids.filter((k) => k !== this);
+    novo._add(this);
+  }
+  GetPositionWithinWindow() { const r = this.el.getBoundingClientRect(); return { x: r.left, y: r.top }; }
+  get actualuiscale_x() { return 1; }
+  get actuallayoutwidth() { return this.el.offsetWidth; }
+  get hittest() { return this._hittest !== false; }
+  set hittest(v) { this._hittest = !!v; this.el.style.pointerEvents = v ? "" : "none"; }
+  RemoveAndDeleteChildren() { this._kids.forEach((k) => { k._valid = false; k.el.remove(); }); this._kids = []; }
+  DeleteAsync() { this._valid = false; this.el.remove(); if (this.parent) this.parent._kids = this.parent._kids.filter((k) => k !== this); }
+  SetImage(s) {
+    this.src = s; this.el.dataset.src = s.replace(/^.*\//, "").replace("_psd.vtex", "");
+    // prévia: os ícones reais do jogo, convertidos pelo Source2Viewer em test/icones/
+    const m = /panorama\/images\/(?:.*\/)?([A-Za-z0-9_]+)\.(vtex|vsvg)$/.exec(s);
+    if (m) { this.el.style.backgroundImage = "url(icones/" + m[1] + (m[2] === "vsvg" ? ".svg" : ".png") + ")"; this.el.classList.add("comPng"); }
+  }
+  SetPanelEvent(ev, fn) {
+    const map = { onmouseactivate: "click", onactivate: "click", onmouseover: "mouseenter", onmouseout: "mouseleave" };
+    if (map[ev]) this.el.addEventListener(map[ev], (e) => { e.stopPropagation(); fn(); });
+    else (this._ev[ev] = this._ev[ev] || []).push(fn);
+  }
+  BLoadLayout(arquivo) {
+    const nome = arquivo.replace(/^.*deadlock_utils_/, "");
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", "../mod/layout/" + nome, false); xhr.send();
+    if (xhr.status !== 200) return false;
+    const doc = new DOMParser().parseFromString(xhr.responseText, "text/xml");
+    const raizXml = [...doc.documentElement.children].find((n) => n.tagName !== "styles");
+    const montar = (no, painel) => {
+      (no.getAttribute("class") || "").split(" ").filter(Boolean).forEach((c) => painel.AddClass(c));
+      if (no.getAttribute("text") != null) painel.text = no.getAttribute("text");
+      if (no.getAttribute("src")) painel.SetImage(no.getAttribute("src"));
+      if (no.getAttribute("hittest") === "false") painel.hittest = false;
+      if (no.getAttribute("hittestchildren") === "false") painel.el.classList.add("semFilhos");
+      [...no.children].forEach((f) => montar(f, new FakePanel(f.tagName, painel, f.getAttribute("id") || "")));
+    };
+    montar(raizXml, this);
+    return true;
+  }
+  SetAttributeString(n, v) { this[n] = v; }
+  // CitadelHTMLPanel falso: carrega a página real (mod/pagina/ponte.html) num iframe; pedidos pelo
+  // fragmento da URL, respostas pelo título (fetch real ao deadlock-api).
+  SetURL(url) {
+    const [base, hash] = url.split("#");
+    if (!this._iframe) {
+      this._iframe = document.createElement("iframe");
+      this._iframe.style.display = "none";
+      this._iframe.src = base + (hash ? "#" + hash : "");
+      document.body.appendChild(this._iframe);
+      let ultimo = "";
+      setInterval(() => {
+        try { const t = this._iframe.contentDocument.title; if (t !== ultimo) { ultimo = t; this._fire("HTMLTitle", t); this._fire("HTMLTitle", t); } } catch (e) {}
+      }, 40);
+    } else if (hash) this._iframe.contentWindow.location.hash = hash;
+  }
+}
+const raiz = new FakePanel("Panel", null, "Hud");
+document.getElementById("tela").appendChild(raiz.el);
+if (location.search.indexOf("ponte=1") >= 0) window.DU_URL_PONTE_TESTE = location.origin + "/mod/pagina/ponte.html";
+const keyBinds = {};
+
+window.$ = {
+  GetContextPanel: () => raiz,
+  CreatePanel: (t, p, id) => new FakePanel(t, p, id),
+  RegisterKeyBind: (p, key, fn) => { (keyBinds[key] = keyBinds[key] || []).push(fn); },
+  CreatePanelWithProperties: (t, p, id, props) => { const x = new FakePanel(t, p, id); if (props && props.placeholder && t === "TextEntry") x.el.placeholder = props.placeholder; return x; },
+  Schedule: (s, fn) => setTimeout(fn, s * 250), // 4x mais rápido
+  Msg: (m) => { msgs.push(m); logEl.textContent = msgs.slice(-80).join("\n"); },
+  RegisterForUnhandledEvent: (n, fn) => { (handlersEv[n] = handlersEv[n] || []).push(fn); },
+  RegisterEventHandler: (n, p, fn) => { (p._ev[n] = p._ev[n] || []).push(fn); },
+  DispatchEvent: (n, ...a) => {
+    if (n === "CitadelConCommand") {
+      const cmd = a[0]; comandos.push(cmd);
+      let m = /^panorama_dispatch_event (\w+)\(\)$/.exec(cmd);  // o simulador aceita só o formato 0
+      if (m) (handlersEv[m[1]] || []).forEach((f) => f());
+      m = /^bind "(\w+)" "panorama_dispatch_event (\w+)\(\)"$/.exec(cmd);
+      if (m) teclas[m[1].toLowerCase()] = m[2];
+      if (cmd === "+show_scoreboard") topBar.AddClass("gScoreboardOpen");
+      if (cmd === "-show_scoreboard") topBar.RemoveClass("gScoreboardOpen");
+    }
+    if (n === "CopyStringToClipboard") clipboard = a[0];
+    // Compra simulada: só "Activated" funciona (para testar a escolha de método) e só se puder pagar.
+    if (n === "Activated" && a[0] && a[0].paneltype === "CitadelShopMod" && a[0].BHasClass("canAffordMod")) a[0].AddClass("owned");
+    if (n === "CitadelResumePlaying") { esc.RemoveClass("aberto"); raiz.RemoveClass("ShowEscapeMenu"); }
+  },
+};
+window.PlayUISoundEvent = () => {};
+const teclas = {};
+// Como o jogo: a tecla chama todos os RegisterKeyBind dela (o mod registra 2x e precisa ignorar o repetido).
+function tecla(t) {
+  const fns = keyBinds["key_" + t] || [];
+  if (fns.length) { fns.forEach((f) => f()); return; }
+  const ev = teclas[t]; if (ev) (handlersEv[ev] || []).forEach((f) => f()); else alert("tecla " + t + " sem bind");
+}
+
+// ======================= árvore igual à do jogo =======================
+function el(t, pai, id, classes, props) { const p = new FakePanel(t, pai, id); (classes || "").split(" ").filter(Boolean).forEach((c) => p.AddClass(c)); Object.assign(p, props || {}); p.el.classList.add("fake"); return p; }
+function real(p, ...cls) { p.el.classList.remove("fake"); cls.forEach((c) => p.el.classList.add(c)); return p; }
+const vivo = el("Panel", raiz, "gameplay_hud_alive");
+const CRU = location.search.indexOf("cru=1") >= 0; // simula rótulos que devolvem a variável crua
+el("Panel", el("Panel", vivo, "crosshair"), "progress", CRU || location.search.indexOf("vazio=1") >= 0 ? "" : "hero_wraith");
+// Ícones de habilidade reais de cada herói (data/heroes.json), como o placar e a barra de habilidades mostram.
+const HABS = (() => { const x = new XMLHttpRequest(); x.open("GET", "../data/heroes.json", false); x.send(); const h = JSON.parse(x.responseText).herois; const o = {}; for (const k in h) o[k] = h[k].habilidades || []; return o; })();
+const sig = el("Panel", raiz, location.search.indexOf("vazio=1") >= 0 ? "sem_sig" : "hud_signature");
+HABS.Wraith.forEach((k) => el("Image", el("Panel", sig, "", "CitadelAbilityIcon"), "AbilityImage", "", { src: "s2r://panorama/images/" + k + "_psd.vtex" }));
+el("Panel", raiz, "AbilitiesContainer");
+// Armadilha do jogo real: o painel de intenções também tem #TeamEnemy/#PlayersContainer (e vem antes).
+const intents = el("Panel", raiz, "hud_playerintents");
+const intCont = el("Panel", el("Panel", intents, "TeamEnemy"), "PlayersContainer");
+for (let i = 0; i < 6; i++) el("Panel", el("Panel", intCont, "PlayerIntentsPlayer" + i), "", "", {});
+const topBar = el("Panel", raiz, "TopBar");
+const relogioLbl = el("Label", topBar, "GameTime", "", { text: "8:15" });
+el("Label", topBar, "MidbossTimerLabel", "", { text: "2:40" });
+const times = el("Panel", topBar, "TeamsContainer");
+const VAZIO = location.search.indexOf("vazio=1") >= 0; // simula painéis de jogador sem nada legível
+function jogador(cont, heroi, nome, icones) {
+  const p = el("Panel", cont, "", "CitadelHudTopBarPlayer");
+  if (VAZIO) { p._icones = el("Panel", p, "x"); return p; }
+  el("Label", p, "", "PlayerName", { text: nome });
+  el("Label", p, "", "HeroName", { text: CRU ? "{s:hero_name}" : heroi });
+  const hab = el("Panel", p, "PlayerAbilitiesContainer");
+  (HABS[heroi] || []).forEach((k) => el("Image", el("Panel", hab, "", "CitadelAbilityIcon"), "AbilityImage", "", { src: "file://{images}/" + k + ".psd" }));
+  const ic = el("Panel", el("Panel", el("Panel", p, "PlayerModsContainer"), "mod_universal"), "ModIconsContainer");
+  p._icones = ic;
+  icones.forEach((s) => comprar(p, s));
+  return p;
+}
+function comprar(p, k) { el("Image", el("Panel", el("Panel", p._icones, "", "CitadelModIcon"), "mod_icon_background"), "ModIconImage", "", { src: "s2r://panorama/images/" + k + "_psd.vtex" }); }
+// ?trocado=1: como no jogo quando você está no time 3 — o SEU time fica no painel #TeamEnemy.
+const TROCADO = location.search.indexOf("trocado=1") >= 0;
+const amigos = el("Panel", el("Panel", times, TROCADO ? "TeamEnemy" : "TeamFriendly"), "PlayersContainer");
+[["Wraith", "_zyul", ["items/weapon/toxic_bullets"]], ["Kelvin", "Bot1", []], ["Vindicta", "Bot2", []], ["Infernus", "Bot3", []], ["Warden", "Bot4", []], ["McGinnis", "Bot5", []]]
+  .forEach(([h, n, i], k) => { const p = jogador(amigos, h, n, i); if (k === 0) el("Label", p, "SoulsValue", "", { text: "1,6 mil" }); });
+const inimigos = el("Panel", el("Panel", times, TROCADO ? "TeamFriendly" : "TeamEnemy"), "PlayersContainer");
+if (TROCADO) times.MoveChildBefore(inimigos.parent, amigos.parent);
+const ini = [["Abrams", "Ini1", ["items/vitality/leech"]], ["Haze", "Ini2", []], ["Seven", "Ini3", ["items/spirit/knockdown"]], ["Lady Geist", "Ini4", []], ["Dynamo", "Ini5", []], ["Lash", "Ini6", []]]
+  .map(([h, n, i]) => jogador(inimigos, h, n, i));
+// minimapa
+const persp = real(el("Panel", raiz, "minimap_persp"), "sim");
+const mmCont = el("Panel", persp, "minimap_container");
+el("Panel", mmCont, "minimap_frame");
+// #hud_minimap com a imagem REAL do minimapa (data do deadlock-api) para conferir o alinhamento dos pontos.
+const hudMinimap = real(el("Panel", el("Panel", mmCont, "HudMinimapContainer"), "hud_minimap", "HudMinimap"), "sim");
+[mmCont, hudMinimap.parent].forEach((p) => real(p));
+if (location.search.indexOf("invertido=1") >= 0) hudMinimap.AddClass("invert_map");
+// indicador do jogador local como no jogo (hud_minimap.css: .map_button.localplayer.friend = 15%)
+real(el("Panel", hudMinimap, "", "map_button player localplayer friend"));
+// menu ESC
+const esc = real(el("Panel", raiz, "EscapeMenu"), "sim");
+const menuEsc = real(el("Panel", esc, "Menu"));
+const changehero = real(el("Button", menuEsc, "changehero", "nav_menu_item"));
+changehero.el.textContent = "Trocar herói";
+// loja
+const shop = real(el("Panel", raiz, "CitadelHudHeroShop", "CitadelHudHeroShop"), "lojaSim");
+const shopMods = el("Panel", el("Panel", el("Panel", shop, "Shop"), "MainPanel"), "ShopModsContainer");
+[shopMods.parent.parent, shopMods.parent, shopMods].forEach((p) => real(p));
+const hp = el("Panel", shopMods.parent.parent, "HeroPanel"); el("Image", hp, "HeroImage", "", { src: "" });
+const navSim = real(el("Panel", shopMods, "ShopNavigation"), "navSim");
+const listasSim = real(el("Panel", shopMods, "ShopModListsContainer"), "listasSim");
+const abasJogo = { FavoritesNav: "showingFavorites", RecommendedNav: "showingRecommendations", FilteredNav: "showingAllItems", WeaponNav: "showingWeapon", TechNav: "showingTech", ArmorNav: "showingArmor" };
+Object.entries(abasJogo).forEach(([id, cls]) => {
+  const b = real(el("Panel", navSim, id, "NavigationButton"));
+  b.el.prepend(document.createTextNode(id.replace("Nav", "")));
+  // Como o jogo: só muda algo se a aba for diferente da atual.
+  b.el.addEventListener("click", () => { if (shop.BHasClass(cls)) return; Object.values(abasJogo).forEach((c) => shop.RemoveClass(c)); shop.AddClass(cls); });
+});
+shop.AddClass("showingArmor");
+// Lista "todos os itens" da loja com um CitadelShopMod nativo por item (como o jogo cria).
+const listaNativa = el("Panel", el("Panel", listasSim, "ShopModsFiltered"), "ModTiers");
+const NATIVOS = (() => { const x = new XMLHttpRequest(); x.open("GET", "../data/items.json", false); x.send(); return JSON.parse(x.responseText).itens; })();
+NATIVOS.forEach((it, i) => {
+  const m = el("CitadelShopMod", listaNativa, "", i % 3 === 0 ? "canAffordMod" : "");
+  const SEMSRC = location.search.indexOf("semsrc=1") >= 0; // como no jogo: src vazio, só o nome no cartão
+  el("Image", el("Panel", m, "ModCard"), "ModIconImage", "", { src: SEMSRC ? "" : "s2r://panorama/images/" + it.icones.filter((k) => k.startsWith("items/"))[0] + "_psd.vtex" });
+  el("Label", el("Panel", m, "", "mod_name_area"), "", "modName", { text: it.nome_pt });
+  m.el.classList.remove("fake"); m.el.classList.add("nativoSim"); m.el.textContent = "N:" + it.nome;
+});
+shop.el.style.display = "none";
+
+document.getElementById("b-loja").onclick = () => { const a = !topBar.BHasClass("gShopOpen"); topBar.SetHasClass("gShopOpen", a); shop.SetHasClass("gShopOpen", a); shop.el.style.display = a ? "block" : "none"; };
+document.getElementById("b-tab").onclick = () => topBar.SetHasClass("gScoreboardOpen", !topBar.BHasClass("gScoreboardOpen"));
+document.getElementById("b-m").onclick = () => tecla("m");
+document.getElementById("b-f6").onclick = () => tecla("f6");
+// Como no jogo: o menu ESC aberto marca a raiz do HUD com ShowEscapeMenu.
+document.getElementById("b-esc").onclick = () => { const a = !esc.BHasClass("aberto"); esc.SetHasClass("aberto", a); raiz.SetHasClass("ShowEscapeMenu", a); };
+document.getElementById("b-curse").onclick = () => comprar(ini[4], "items/spirit/curse");
+document.getElementById("b-tempo").onclick = () => { const s = segundos() + 300; relogioLbl.text = Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); };
+function segundos() { const [m, s] = relogioLbl.text.split(":").map(Number); return m * 60 + s; }
+</script>
+<script src="../build/deadlock_utils.js"></script>
+</body>
+</html>

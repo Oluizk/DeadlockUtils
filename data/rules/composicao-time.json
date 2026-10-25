@@ -1,0 +1,44 @@
+{
+  "_info": "Regras baseadas na composição do SEU time (você + aliados) e em heróis inimigos específicos. Formato em CONTRIBUTING.md.",
+  "regras": [
+    {
+      "id": "time-sem-interrupcao",
+      "titulo": "Seu time não tem stun e o inimigo tem ultimate canalizada",
+      "quando": { "aliados_sem_tag": "stun", "inimigos_tag": "channel-ult" },
+      "recomendar": [
+        { "item": "knockdown", "peso": 2, "motivo": "Alguém precisa interromper as ultimates — seu time não tem stun." },
+        { "item": "silence-wave", "peso": 2, "motivo": "Seu time não tem como cortar canalizações." }
+      ]
+    },
+    {
+      "id": "time-sem-cura",
+      "titulo": "Seu time não tem suporte que cura",
+      "quando": { "aliados_sem_tag": "healer" },
+      "recomendar": [
+        { "item": "healing-nova", "peso": 1, "motivo": "Cura em área para o time — ninguém mais cura." },
+        { "item": "rescue-beam", "peso": 1, "motivo": "Salva um aliado (cura + puxa) — seu time não tem suporte." }
+      ]
+    },
+    {
+      "id": "time-de-arma",
+      "titulo": "Seu time é focado em arma",
+      "quando": { "aliados_tag": "gun", "min": 4 },
+      "recomendar": [
+        { "item": "heroic-aura", "peso": 2, "motivo": "Velocidade e cadência para todo o time de arma." },
+        { "item": "bullet-resist-shredder", "peso": 1, "meu_heroi_tag": "spirit", "motivo": "Seu dano spirit reduz a resistência a bala para os carries de arma do time." },
+        { "item": "alchemical-fire", "peso": 1, "motivo": "Reduz resistência a bala dos inimigos para o time." }
+      ]
+    },
+    {
+      "id": "time-de-spirit",
+      "titulo": "Seu time é focado em spirit",
+      "quando": { "aliados_tag": "spirit", "min": 4 },
+      "recomendar": [
+        { "item": "mystic-vulnerability", "peso": 2, "motivo": "Reduz resistência spirit dos inimigos para o time todo." },
+        { "item": "spirit-sap", "peso": 1, "motivo": "Reduz resistência spirit do alvo." },
+        { "item": "spirit-shredder", "peso": 1, "meu_heroi_tag": "gun", "motivo": "Seus tiros reduzem resistência spirit e dão spirit lifesteal ao time." },
+        { "item": "escalating-exposure", "peso": 1, "motivo": "Resistência spirit cai durante a luta." }
+      ]
+    }
+  ]
+}
