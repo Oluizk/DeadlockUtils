@@ -120,6 +120,7 @@ function tick() {
       if (l.segundos != null) ultimosSegundos = l.segundos;
       l.meusItens.forEach(marcarPossuido);
       atualizarRecomendacoes(l, false);
+      garantirPontosMinimapa(l);
       if (faixa.visivel) atualizarFaixa(false); // almas e distância da loja mudam sem a recomendação mudar
       if (!valido(loja.botao)) montarAbaLoja();
       montarFaixa();

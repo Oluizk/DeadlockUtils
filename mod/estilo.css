@@ -1221,7 +1221,11 @@
     horizontal-align: center;
     vertical-align: center;
 }
-/* para um dos times o jogo vira o minimapa (scaleX(-1) scaleY(-1)); os ícones voltam a ficar de pé */
+/* no minimapa pequeno a camada inteira é reduzida (~0.44); os ícones ganham escala de volta para não
+   sumirem. 1 = pequenos, 2 = médios, 3 = grandes (configurações > Minimapa > Pontos no minimapa) */
+.DUMiniPontos1 .DUPonto { pre-transform-scale2d: 1.3; }
+.DUMiniPontos2 .DUPonto { pre-transform-scale2d: 1.7; }
+.DUMiniPontos3 .DUPonto { pre-transform-scale2d: 2.1; }/* para um dos times o jogo vira o minimapa (scaleX(-1) scaleY(-1)); os ícones voltam a ficar de pé */
 .DUInvertido .DUPonto
 {
     transform: scaleX(-1) scaleY(-1);

@@ -12,6 +12,7 @@ var AJUSTES_PADRAO = {
   mapaCortaTopo: true,   // esconde os detalhes do placar no topo com o mapa aberto
   marcaSeg: (DU_DATA.config || {}).segundosMarcaMapa || 60,
   miniEscala: 100,       // minimapa normal, em %
+  miniPontos: 2,         // pontos no minimapa normal: 0 desligado, 1..3 tamanho dos ícones
   teclas: {
     mapa: ((DU_DATA.config || {}).teclas || {}).mapa || "",
     tracker: ((DU_DATA.config || {}).teclas || {}).tracker || "",
@@ -63,8 +64,10 @@ function aplicarAjustes() {
     TAM_MAPA = ajustes.mapaTam;
     if (valido(pontos.painel)) { pontos.painel.RemoveAndDeleteChildren(); pontos.criadas = {}; }
     marcas.tam = 0;
+    pontos.chaveEscala = "";
     if (mapa.aberto) { aplicarFiltros(); desenharMarcas(true); }
   }
+  atualizarCamadaPontos();
   if (mapa.aberto) { mapa.jogadorEm = 0; ajustarJogador(true); mostrarPainel(mapa.painel, ajustes.mapaPainel); }
   Object.keys(ajustes.teclas).forEach(function (a) { registrarTecla(ajustes.teclas[a]); });
 }
@@ -116,6 +119,7 @@ function desenharAjustes() {
 
   cartaz(p, { titulo: T("aj.minimapa"), sub: T("aj.minimapa.sub"), tema: "espirito" });
   linhaAjuste(p, T("aj.tamMini"), T("aj.tamMini.desc"), [[100, T("aj.normal")], [115, "+15%"], [130, "+30%"], [150, "+50%"]], ajustes.miniEscala, mudar("miniEscala"));
+  linhaAjuste(p, T("aj.miniPontos"), T("aj.miniPontos.desc"), [[0, T("aj.desligado")], [1, T("aj.pequenos")], [2, T("aj.medios")], [3, T("aj.grandes")]], ajustes.miniPontos, mudar("miniPontos"));
 
   cartaz(p, { titulo: T("aj.pontos"), sub: T("aj.pontos.sub"), tema: "vitalidade" });
   if (!pontos.filtros) carregarFiltros();

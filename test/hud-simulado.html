@@ -112,6 +112,7 @@
   .semFilhos * { pointer-events: none !important; }
   .map_button.localplayer { position: absolute; left: 55%; top: 60%; width: 15%; height: 15%; background: url(icones/player_marker_self_psd.png) center / 100% 100%; transform: translate(-50%, -50%) scale(1.3); }
   .DUIcone.DUIndisponivel { opacity: .45; filter: saturate(.3); }
+  .DUMiniPontos1 .DUPonto { scale: 1.3; } .DUMiniPontos2 .DUPonto { scale: 1.7; } .DUMiniPontos3 .DUPonto { scale: 2.1; }
   .DUPontoAtivo:hover { transform: scale(1.35); filter: brightness(1.8); z-index: 10; }
   .DUInvertido .DUPontoAtivo:hover { transform: scale(-1.35, -1.35); }
   .DUMarcaAnel { position: absolute; left: -40%; top: -40%; width: 180%; height: 180%; border-radius: 50%; box-sizing: border-box; animation: pulso 1.2s ease-out infinite; }
@@ -171,6 +172,7 @@ class FakePanel {
       t[k] = v;
       if (k === "width" || k === "height" || k === "border" || k === "backgroundColor") el_.style[k] = v || "";
       if (k === "position" && v) { const [x, y] = v.split(" "); el_.style.position = "absolute"; el_.style.left = x; el_.style.top = y; }
+      if (k === "preTransformScale2d") el_.style.scale = v || "";
       return true;
     } });
     this.visible = true;

@@ -335,7 +335,7 @@ function abrirMapa() {
   if (montarPontos()) {
     pontos.painel.SetHasClass("DUInvertido", temClasse(minimapa(), "invert_map"));
     aplicarFiltros();
-    mostrarPainel(pontos.painel, true);
+    atualizarCamadaPontos();
   }
   ajustarJogador(true);
   desenharMarcas(true);
@@ -352,7 +352,7 @@ function fecharMapa() {
   mapa.aberto = false;
   hud.RemoveClass("DUMapaAberto");
   mostrarPainel(mapa.painel, false);
-  mostrarPainel(pontos.painel, false);
+  atualizarCamadaPontos(); // os pontos continuam no minimapa pequeno (configurações)
   ajustarJogador(false);
   if (estava) {
     if (dicaItem.item.indexOf("mapa:") === 0) esconderDica();
@@ -385,9 +385,52 @@ function atualizarPainelMapa(l) {
   mapa.midboss.text = l.textoMidboss ? esc(l.textoMidboss) : "-";
 }
 
+// ---------- os mesmos pontos no minimapa pequeno ----------
+// A camada tem sempre TAM_MAPA px (os pontos foram posicionados nesse tamanho). No minimapa pequeno ela
+// é centralizada sobre ele e reduzida com pre-transform-scale2d (que escala a partir do centro), então
+// cada ponto cai no mesmo lugar relativo. Os ícones ganham uma escala de volta (.DUMiniPontos1..3) para
+// não sumirem, e a camada não pega clique (o minimapa continua aceitando ping com o Tab).
+function atualizarCamadaPontos() {
+  var p = pontos.painel;
+  if (!valido(p)) return;
+  var mostrar = mapa.aberto || (modLigado && ajustes.miniPontos > 0);
+  mostrarPainel(p, mostrar);
+  if (!mostrar) return;
+  var tam = tamanhoMinimapa(minimapa());
+  var esc = Math.round(tam / TAM_MAPA * 1000) / 1000;
+  var chave = esc + "|" + mapa.aberto + "|" + ajustes.miniPontos + "|" + TAM_MAPA;
+  if (chave === pontos.chaveEscala) return;
+  pontos.chaveEscala = chave;
+  var off = Math.round((tam - TAM_MAPA) / 2);
+  try {
+    p.style.width = TAM_MAPA + "px";
+    p.style.height = TAM_MAPA + "px";
+    p.style.position = off + "px " + off + "px 0px";
+    p.style.preTransformScale2d = String(esc);
+  } catch (e) {}
+  p.SetHasClass("DUInvertido", temClasse(minimapa(), "invert_map"));
+  [1, 2, 3].forEach(function (n) { p.SetHasClass("DUMiniPontos" + n, !mapa.aberto && ajustes.miniPontos === n); });
+  try { p.hittestchildren = !!mapa.aberto; } catch (e) {}
+}
+// Loop lento (1s): cria a camada mesmo sem nunca ter aberto o mapa grande, e liga os túneis quando o
+// herói é detectado (padrão por herói).
+function garantirPontosMinimapa(leitura) {
+  if (!modLigado || mapa.aberto || !(ajustes.miniPontos > 0)) { atualizarCamadaPontos(); return; }
+  if (!montarPontos()) return;
+  if (!pontos.filtros) carregarFiltros();
+  var eu = leitura ? leitura.eu : null;
+  if (pontos.heroiFiltros !== eu || !Object.keys(pontos.criadas).length) {
+    pontos.heroiFiltros = eu;
+    filtrosDoHeroi(eu);
+    aplicarFiltros();
+  }
+  atualizarCamadaPontos();
+}
+
 // Chamado pelo loop rápido: fecha quando a loja abre ou o jogador saiu do placar por fora.
 function vigiarMapa(estado) {
   vigiarMarcas();
+  if (valido(pontos.painel) && pontos.painel.visible !== false) atualizarCamadaPontos(); // segue a animação de abrir/fechar
   if (!mapa.aberto) return;
   ajustarJogador(true);
   // O mapa usa o placar por baixo (clique/ping no minimapa), mas a HUD não deve expandir como no Tab
