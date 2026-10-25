@@ -37,8 +37,8 @@ As teclas do mod podem ser trocadas no jogo: loja > aba **Deadlock Utils** > **C
 Loja > aba **Deadlock Utils** > **Configurações**:
 
 - **Mapa grande**: tamanho (pequeno, médio, grande), tamanho dos ícones dos heróis e do seu ícone, painel lateral, esconder os detalhes do placar no topo, quanto tempo a marcação fica no minimapa. O tamanho também muda direto no painel do mapa (botões - e +).
-- **Minimapa**: deixa o minimapa normal maior (+15%, +30%, +50%) e mostra nele os mesmos pontos ligados no mapa grande (ícones pequenos, médios ou grandes, ou desligado).
-- **Pontos no mapa**: liga e desliga cada tipo de ponto do mapa grande.
+- **Minimapa**: deixa o minimapa normal maior (+15%, +30%, +50%) e mostra pontos nele (ícones pequenos, médios ou grandes, ou desligado).
+- **Pontos no mapa**: liga e desliga cada tipo de ponto, separado para o mapa grande (botão Mapa) e para o minimapa (botão Mini). O painel do mapa grande tem um botão rápido para mostrar ou esconder os pontos do minimapa.
 - **Atalhos**: troca as teclas do mapa, do tracker e de ligar/desligar o mod.
 
 Tudo vale na hora. Para guardar entre partidas, a ponte precisa estar ativa (próxima seção).

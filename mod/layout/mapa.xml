@@ -23,6 +23,10 @@
 				<Label id="DUMapaTamValor" class="DUMapaTamValor" text=" " />
 				<Button id="DUMapaMaior" class="DUMapaBotao"><Label text="+" /></Button>
 			</Panel>
+			<Panel class="DUMapaLinha DUMapaTamanho">
+				<Label id="DUMapaMiniRotulo" class="DUMapaRotulo" text="Pontos no minimapa" />
+				<Button id="DUMapaMiniPontos" class="DUAbaModo DUMapaMiniBotao"><Label text=" " /></Button>
+			</Panel>
 			<Label class="DUMapaSubtitulo" text="Mostrar no mapa" />
 			<Panel id="DUMapaFiltros" class="DUMapaFiltros" />
 			<Label class="DUMapaDica" html="true" text="Clique no mapa para sinalizar · M ou ESC fecha" />

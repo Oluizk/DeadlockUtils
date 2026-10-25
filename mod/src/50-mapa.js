@@ -31,15 +31,32 @@ function filtrosPadrao() {
   DADOS_MAPA.camadas.concat(DADOS_MAPA.imagens).forEach(function (c) { f[c.id] = !!c.padrao; });
   return f;
 }
+// O minimapa normal tem filtros próprios: ele é pequeno, então por padrão só o essencial.
+var MINI_PADRAO = { lanches: true, sinos: true };
+function filtrosMiniPadrao() {
+  var f = {};
+  DADOS_MAPA.camadas.forEach(function (c) { f[c.id] = !!MINI_PADRAO[c.id]; });
+  return f;
+}
 function carregarFiltros() {
   pontos.filtros = filtrosPadrao();
+  pontos.filtrosMini = filtrosMiniPadrao();
   if (!CONFIG.urlPonte) return;
   ponteLer("du_mapa_filtros", function (ok, valor) {
     if (!ok || !valor) return;
     try {
       var salvo = JSON.parse(valor);
       Object.keys(salvo).forEach(function (k) { if (k in pontos.filtros) { pontos.filtros[k] = !!salvo[k]; pontos.manual[k] = true; } });
-      if (mapa.aberto) { aplicarFiltros(); desenharFiltros(); }
+      aplicarFiltros();
+      if (mapa.aberto) desenharFiltros();
+    } catch (e) {}
+  });
+  ponteLer("du_mini_filtros", function (ok, valor) {
+    if (!ok || !valor) return;
+    try {
+      var salvo = JSON.parse(valor);
+      Object.keys(salvo).forEach(function (k) { if (k in pontos.filtrosMini) pontos.filtrosMini[k] = !!salvo[k]; });
+      aplicarFiltros();
     } catch (e) {}
   });
 }
@@ -138,10 +155,20 @@ function marcador(pai, c, estilo, x, y, s) {
   return p;
 }
 
+function alternarFiltroMini(id) {
+  pontos.filtrosMini[id] = !pontos.filtrosMini[id];
+  aplicarFiltros();
+  if (CONFIG.urlPonte) ponteSalvar("du_mini_filtros", JSON.stringify(pontos.filtrosMini));
+}
+function algumFiltroMini() {
+  return !!pontos.filtrosMini && Object.keys(pontos.filtrosMini).some(function (k) { return pontos.filtrosMini[k]; });
+}
+// Mostra as camadas do modo atual: filtros do mapa grande com ele aberto, os do minimapa com ele fechado.
 function aplicarFiltros() {
   if (!valido(pontos.painel) || !pontos.filtros) return;
+  var fs = mapa.aberto || !pontos.filtrosMini ? pontos.filtros : pontos.filtrosMini;
   Object.keys(pontos.filtros).forEach(function (id) {
-    var on = pontos.filtros[id];
+    var on = !!fs[id];
     var cam = on ? criarCamada(id) : pontos.criadas[id];
     if (cam) mostrarPainel(cam, on);
   });
@@ -289,12 +316,20 @@ function montarPainelMapa() {
   achar(mapa.painel, "DUMapaMaisOpcoes").text = esc(T("aj.maisOpcoes"));
   aoClicar(achar(mapa.painel, "DUMapaMenor"), function () { mudarTamanhoMapa(-1); desenharTamanhoMapa(); });
   aoClicar(achar(mapa.painel, "DUMapaMaior"), function () { mudarTamanhoMapa(1); desenharTamanhoMapa(); });
+  mapa.miniBotao = achar(mapa.painel, "DUMapaMiniPontos");
+  achar(mapa.painel, "DUMapaMiniRotulo").text = T("aj.miniPontos");
+  aoClicar(mapa.miniBotao, function () { ajustes.miniPontos = ajustes.miniPontos > 0 ? 0 : (ajustes.miniPontosAntes || 1); salvarAjustes(); desenharTamanhoMapa(); });
   mostrarPainel(mapa.painel, false);
 }
 
 function desenharTamanhoMapa() {
   if (!valido(mapa.tamValor)) return;
   mapa.tamValor.text = [T("aj.pequeno"), T("aj.medio"), T("aj.grande")][Math.max(0, TAMANHOS_MAPA.indexOf(ajustes.mapaTam))];
+  if (valido(mapa.miniBotao)) {
+    mapa.miniBotao.SetHasClass("DUAbaModoAtivo", ajustes.miniPontos > 0);
+    var l = filhos(mapa.miniBotao)[0];
+    if (l) l.text = ajustes.miniPontos > 0 ? T("aj.sim") : T("aj.nao");
+  }
 }
 
 function desenharFiltros() {
@@ -393,13 +428,14 @@ function atualizarPainelMapa(l) {
 function atualizarCamadaPontos() {
   var p = pontos.painel;
   if (!valido(p)) return;
-  var mostrar = mapa.aberto || (modLigado && ajustes.miniPontos > 0);
+  var mostrar = mapa.aberto || (modLigado && ajustes.miniPontos > 0 && algumFiltroMini());
   mostrarPainel(p, mostrar);
   if (!mostrar) return;
   var tam = tamanhoMinimapa(minimapa());
   var esc = Math.round(tam / TAM_MAPA * 1000) / 1000;
   var chave = esc + "|" + mapa.aberto + "|" + ajustes.miniPontos + "|" + TAM_MAPA;
   if (chave === pontos.chaveEscala) return;
+  if (pontos.modoFiltros !== mapa.aberto) { pontos.modoFiltros = mapa.aberto; aplicarFiltros(); } // trocou entre mapa grande e minimapa
   pontos.chaveEscala = chave;
   var off = Math.round((tam - TAM_MAPA) / 2);
   try {

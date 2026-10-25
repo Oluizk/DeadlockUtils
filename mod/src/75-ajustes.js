@@ -12,7 +12,8 @@ var AJUSTES_PADRAO = {
   mapaCortaTopo: true,   // esconde os detalhes do placar no topo com o mapa aberto
   marcaSeg: (DU_DATA.config || {}).segundosMarcaMapa || 60,
   miniEscala: 100,       // minimapa normal, em %
-  miniPontos: 2,         // pontos no minimapa normal: 0 desligado, 1..3 tamanho dos ícones
+  miniPontos: 1,         // pontos no minimapa normal: 0 desligado, 1..3 tamanho dos ícones
+  miniPontosAntes: 1,    // tamanho escolhido antes de desligar (o botão do painel do mapa religa nele)
   teclas: {
     mapa: ((DU_DATA.config || {}).teclas || {}).mapa || "",
     tracker: ((DU_DATA.config || {}).teclas || {}).tracker || "",
@@ -106,7 +107,7 @@ function desenharAjustes() {
   var p = telaAjustes.painel;
   if (!valido(p) || loja.vista !== "ajustes") return;
   p.RemoveAndDeleteChildren();
-  var mudar = function (k) { return function (v) { ajustes[k] = v; salvarAjustes(); }; };
+  var mudar = function (k) { return function (v) { ajustes[k] = v; if (k === "miniPontos" && v > 0) ajustes.miniPontosAntes = v; salvarAjustes(); }; };
   var simNao = [[true, T("aj.sim")], [false, T("aj.nao")]];
 
   cartaz(p, { titulo: T("aj.mapaGrande"), sub: T("aj.mapaGrande.sub"), tema: "teal" });
@@ -125,19 +126,26 @@ function desenharAjustes() {
   if (!pontos.filtros) carregarFiltros();
   var grade = criar("Panel", p, "", "DUAjGrade");
   DADOS_MAPA.camadas.forEach(function (c) {
-    var on = pontos.filtros[c.id];
-    var b = criar("Panel", grade, "", "DUFiltro DUAjCamada" + (on ? " DUFiltroOn" : ""));
+    var on = pontos.filtros[c.id], onMini = !!(pontos.filtrosMini || {})[c.id];
+    var b = criar("Panel", grade, "", "DUFiltro DUAjCamada" + (on || onMini ? " DUFiltroOn" : ""));
     var amostra = criar("Panel", b, "", "DUFiltroIcone " + (c.estilo === "icone" ? "DUBadge" : "DUBolinha"));
     if (amostra) {
       try { if (c.estilo === "icone") amostra.style.border = "2px solid " + c.cor; else amostra.style.backgroundColor = c.cor; } catch (e) {}
       if (c.estilo === "icone" && c.icone) { var im = imagem(amostra, "DUBadgeIcone", iconePonto(c)); if (im && !c.semCor) { try { im.style.washColor = c.cor; } catch (e) {} } }
     }
     rotulo(b, "DUFiltroNome", esc(c.nome));
-    aoClicar(b, function () { alternarFiltro(c.id); desenharAjustes(); });
+    var chipG = criar("Button", b, "", "DUAbaModo DUAjChip" + (on ? " DUAbaModoAtivo" : ""));
+    rotulo(chipG, "", esc(T("aj.chipGrande")));
+    aoClicar(chipG, function () { alternarFiltro(c.id); desenharAjustes(); });
+    var chipM = criar("Button", b, "", "DUAbaModo DUAjChip" + (onMini ? " DUAbaModoAtivo" : ""));
+    rotulo(chipM, "", esc(T("aj.chipMini")));
+    aoClicar(chipM, function () { alternarFiltroMini(c.id); desenharAjustes(); });
   });
   var acoesPontos = criar("Panel", p, "", "DUAjAcoes");
   botao(acoesPontos, "", T("aj.pontosPadrao"), function () {
     pontos.filtros = filtrosPadrao(); pontos.manual = {};
+    pontos.filtrosMini = filtrosMiniPadrao();
+    if (CONFIG.urlPonte) ponteSalvar("du_mini_filtros", JSON.stringify(pontos.filtrosMini));
     filtrosDoHeroi(ultimaLeitura ? ultimaLeitura.eu : null);
     aplicarFiltros();
     if (CONFIG.urlPonte) ponteSalvar("du_mapa_filtros", JSON.stringify(pontos.filtros));
