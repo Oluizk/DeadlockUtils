@@ -8,7 +8,7 @@
   },
   "accountId": null,
   "_accountId": "Seu id Steam (SteamID3). Se ficar null, o build detecta pela pasta Steam/userdata.",
-  "urlPonte": null,
+  "urlPonte": "https://oluizk.github.io/DeadlockUtils/mod/pagina/ponte.html",
   "_urlPonte": "URL HTTPS onde mod/pagina/ponte.html está publicado (ex.: GitHub Pages). Necessário para o tracker e para salvar counters editados.",
   "itensPorSecao": 4,
   "_itensPorSecao": "Quantos itens em cada seção (Counters / Recomendados) ao segurar Tab.",

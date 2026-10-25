@@ -18,6 +18,9 @@
 					<Button id="DUBotaoEditar" class="DUAbaModo">
 						<Label id="DUBotaoEditarTexto" text=" " />
 					</Button>
+					<Button id="DUBotaoAjustes" class="DUAbaModo">
+						<Label id="DUBotaoAjustesTexto" text=" " />
+					</Button>
 				</Panel>
 			</Panel>
 		</Panel>
@@ -31,6 +34,7 @@
 			<Panel id="DUCounters" class="DUTiers" />
 		</Panel>
 		<Panel id="DUVistaEditor" class="DUAbaCorpo DUEscondido" />
+		<Panel id="DUVistaAjustes" class="DUAbaCorpo DUEscondido" />
 		<Label id="DUDetalhe" class="DUDetalhe" html="true" text=" " />
 	</Panel>
 </root>

@@ -30,15 +30,28 @@ Mod de HUD para o **Deadlock** (Valve), feito em Panorama (a UI do próprio jogo
 | **F8** | Liga/desliga o mod inteiro (esconde tudo e para de trabalhar) |
 | **ESC** | Sempre fecha o mapa e o tracker |
 
-### Ativar o tracker (precisa fazer uma vez)
+As teclas do mod podem ser trocadas no jogo: loja > aba **Deadlock Utils** > **Configurações** > Atalhos.
 
-O navegador embutido do Deadlock só abre páginas **HTTPS** publicadas na internet. O tracker (e o salvamento dos counters editados) usa uma página pequena, `mod/pagina/ponte.html`, que precisa estar publicada:
+### Configurações no jogo
 
-1. Crie uma conta no GitHub (se não tiver) e um repositório público, por exemplo `deadlock-utils`.
-2. Envie o arquivo `mod/pagina/ponte.html` para o repositório (botão **Add file > Upload files**).
-3. Em **Settings > Pages**, escolha **Deploy from a branch**, branch `main`, pasta `/ (root)` e salve.
-4. Depois de ~1 minuto a página fica em `https://SEU-USUARIO.github.io/deadlock-utils/ponte.html` (abra no navegador para conferir: deve aparecer uma página em branco com o título `DU_BOOT`).
-5. Coloque essa URL em `data/config.json`, campo `"urlPonte"`, e rode `instalar-mod.bat` de novo.
+Loja > aba **Deadlock Utils** > **Configurações**:
+
+- **Mapa grande**: tamanho (pequeno, médio, grande), tamanho dos ícones dos heróis e do seu ícone, painel lateral, esconder os detalhes do placar no topo, quanto tempo a marcação fica no minimapa. O tamanho também muda direto no painel do mapa (botões - e +).
+- **Minimapa**: deixa o minimapa normal maior (+15%, +30%, +50%).
+- **Pontos no mapa**: liga e desliga cada tipo de ponto do mapa grande.
+- **Atalhos**: troca as teclas do mapa, do tracker e de ligar/desligar o mod.
+
+Tudo vale na hora. Para guardar entre partidas, a ponte precisa estar ativa (próxima seção).
+
+### Ativar o tracker e o salvamento (precisa fazer uma vez)
+
+O Panorama do Deadlock não tem armazenamento próprio, e o navegador embutido do jogo só abre páginas **HTTPS** publicadas na internet. O tracker, o salvamento das configurações, dos filtros do mapa e dos counters editados usam uma página pequena, `mod/pagina/ponte.html`, publicada pelo GitHub Pages deste repositório:
+
+1. No repositório do GitHub, abra **Settings > Pages**.
+2. Em **Build and deployment**, escolha **Deploy from a branch**, branch `main`, pasta `/ (root)` e salve.
+3. Depois de ~1 minuto, abra `https://oluizk.github.io/DeadlockUtils/mod/pagina/ponte.html` no navegador para conferir (página em branco com o título `DU_BOOT`).
+
+O `data/config.json` já aponta para esse endereço (`"urlPonte"`). Num fork, troque pelo endereço do seu GitHub Pages e rode `instalar-mod.bat` de novo.
 
 ### Configuração: `data/config.json`
 

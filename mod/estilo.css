@@ -1159,11 +1159,25 @@
 /* Com o mapa aberto o placar fica ligado por baixo, e a barra do topo expandiria até 600px com os
    detalhes de cada herói (citadel_hud_top_bar.css: .wants_scoreboard CitadelHudTopBarPlayer). O #TopBar
    é declarado no hud.xml, então dá para recortá-lo na altura da barra normal (retratos e almas). */
-.DUMapaAberto #TopBar
+.DUMapaAberto.DUCortaTopo #TopBar
 {
     max-height: 130px;
     overflow: clip;
 }
+/* tamanhos do mapa grande (configurações > Mapa grande); 820 é o padrão acima. Tem que bater com
+   TAMANHOS_MAPA em 75-ajustes.js: #minimap_persp = T + 80, container/frame = T + 40, #hud_minimap = T. */
+.DUMapaAberto.DUMapaT700 #minimap_persp { width: 780px; height: 780px; }
+.DUMapaAberto.DUMapaT700 #minimap_persp #minimap_container, .DUMapaAberto.DUMapaT700 #minimap_persp #minimap_frame { width: 740px; height: 740px; }
+.DUMapaAberto.DUMapaT700 #minimap_container #hud_minimap { width: 700px; height: 700px; }
+.DUMapaAberto.DUMapaT940 #minimap_persp { width: 1020px; height: 1020px; }
+.DUMapaAberto.DUMapaT940 #minimap_persp #minimap_container, .DUMapaAberto.DUMapaT940 #minimap_persp #minimap_frame { width: 980px; height: 980px; }
+.DUMapaAberto.DUMapaT940 #minimap_container #hud_minimap { width: 940px; height: 940px; }
+/* minimapa normal maior (configurações > Minimapa): ui-scale escala o painel inteiro por igual */
+.DUMini115 #minimap_persp { ui-scale: 115%; }
+.DUMini130 #minimap_persp { ui-scale: 130%; }
+.DUMini150 #minimap_persp { ui-scale: 150%; }
+/* com o mapa grande aberto o tamanho é o das regras acima (precisa vir depois das .DUMini*) */
+.DUMapaAberto #minimap_persp { ui-scale: 100%; }
 .DUMapaAberto #minimap_persp #minimap_hints
 {
     visibility: collapse;
@@ -1368,6 +1382,134 @@
     margin-top: 8px;
     font-size: 13px;
     color: #4f402d;
+}
+
+/* tamanho do mapa no painel lateral: - Médio + */
+.DUMapaTamanho
+{
+    margin-top: 6px;
+}
+.DUMapaBotao
+{
+    width: 26px;
+    height: 24px;
+    vertical-align: center;
+    background-color: #3b3426;
+    border-radius: 3px;
+}
+.DUMapaBotao:hover
+{
+    brightness: 1.4;
+}
+.DUMapaBotao Label
+{
+    horizontal-align: center;
+    vertical-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    color: #f2e4c4;
+}
+.DUMapaTamValor
+{
+    width: 64px;
+    vertical-align: center;
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+    color: #1f5d52;
+}
+
+/* ---------------- configurações (aba da loja > Configurações) ---------------- */
+.DUAjLinha
+{
+    width: 100%;
+    flow-children: right;
+    margin: 0px 0px 4px 12px;
+    padding: 8px 12px;
+    border-radius: 3px;
+    background-color: #10130D14;
+}
+.DUAjLinha:hover
+{
+    background-color: #10130D26;
+}
+.DUAjTextos
+{
+    width: fill-parent-flow(1.0);
+    flow-children: down;
+    vertical-align: center;
+}
+.DUAjNome
+{
+    font-size: 17px;
+    font-weight: bold;
+    color: #10130D;
+}
+.DUAjDesc
+{
+    font-size: 13px;
+    color: #10130Dbb;
+}
+.DUAjOpcoes
+{
+    flow-children: right;
+    vertical-align: center;
+}
+.DUAjOpcao
+{
+    padding: 5px 12px;
+    margin: 0px 0px 0px 6px;
+}
+.DUAjGrade
+{
+    width: 100%;
+    flow-children: right-wrap;
+    margin-left: 12px;
+}
+.DUAjCamada
+{
+    width: 32%;
+    margin: 0px 1% 4px 0px;
+}
+.DUAjAcoes
+{
+    flow-children: right;
+    margin: 8px 0px 4px 12px;
+}
+.DUAjTeclas
+{
+    width: 100%;
+    flow-children: right-wrap;
+    margin: 0px 0px 8px 12px;
+    padding: 8px 12px;
+    background-color: #10130D26;
+    border-radius: 3px;
+}
+.DUAjTeclasDica
+{
+    width: 100%;
+    margin-bottom: 6px;
+}
+.DUAjTecla
+{
+    min-width: 52px;
+    margin: 0px 6px 6px 0px;
+    padding: 5px 8px;
+}
+.DUAjTecla Label
+{
+    horizontal-align: center;
+}
+.DUAjTeclaUsada
+{
+    opacity: 0.35;
+}
+.DUAjRodape
+{
+    margin: 10px 0px 20px 12px;
+    font-size: 14px;
+    font-style: italic;
+    color: #10130Dcc;
 }
 
 /* ---------------- tracker ---------------- */

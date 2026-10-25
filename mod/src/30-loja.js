@@ -43,6 +43,7 @@ function montarAbaLoja() {
   loja.detalhe = achar(c, "DUDetalhe");
   loja.vistaRecs = achar(c, "DUVistaRecs");
   loja.vistaEditor = achar(c, "DUVistaEditor");
+  loja.vistaAjustes = achar(c, "DUVistaAjustes");
   // Cartazes (componente em 15-cartaz.js): o cabeçalho e um por seção, com texto traduzível.
   var topo = achar(c, "DUAbaTopo");
   loja.cTopo = cartaz(topo, { titulo: "Deadlock Utils", sub: T("cartaz.topo.sub"), tema: "vermelho", tamanho: "grande" });
@@ -55,9 +56,11 @@ function montarAbaLoja() {
     icone: "s2r://panorama/images/shop/catalog/catalog_shop_tab_icon_weapon_psd.vtex" });
   achar(c, "DUBotaoRecsTexto").text = T("botao.recomendados");
   achar(c, "DUBotaoEditarTexto").text = T("botao.editar");
+  achar(c, "DUBotaoAjustesTexto").text = T("botao.ajustes");
   loja.detalhe.text = T("detalhe.inicial");
   aoClicar(achar(c, "DUBotaoRecs"), function () { trocarVista("recs"); });
   aoClicar(achar(c, "DUBotaoEditar"), function () { trocarVista("editor"); });
+  aoClicar(achar(c, "DUBotaoAjustes"), function () { trocarVista("ajustes"); });
   log("aba da loja criada (layout ok: " + [loja.status, loja.ameacas, loja.build, loja.counters, loja.detalhe].every(valido) + ")");
   if (ultimoResultado) desenharAba(ultimoResultado, ultimaLeitura);
   return true;
@@ -67,9 +70,13 @@ function trocarVista(v) {
   loja.vista = v;
   mostrarPainel(loja.vistaRecs, v === "recs");
   mostrarPainel(loja.vistaEditor, v === "editor");
+  mostrarPainel(loja.vistaAjustes, v === "ajustes");
   achar(loja.conteudo, "DUBotaoRecs").SetHasClass("DUAbaModoAtivo", v === "recs");
   achar(loja.conteudo, "DUBotaoEditar").SetHasClass("DUAbaModoAtivo", v === "editor");
-  if (v === "editor") { devolverNativos(); abrirEditor(loja.vistaEditor, loja.detalhe); }
+  achar(loja.conteudo, "DUBotaoAjustes").SetHasClass("DUAbaModoAtivo", v === "ajustes");
+  if (v !== "recs") { devolverNativos(); loja.assinatura = ""; }
+  if (v === "editor") abrirEditor(loja.vistaEditor, loja.detalhe);
+  else if (v === "ajustes") abrirAjustes(loja.vistaAjustes);
   else if (ultimoResultado) desenharAba(ultimoResultado, ultimaLeitura);
 }
 

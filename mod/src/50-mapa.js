@@ -265,10 +265,10 @@ function ajustarJogador(abrir) {
         p.style.width = null;
         p.style.height = null;
         // Se o Panorama não aceitar null, volta ao valor do CSS do jogo (hud_minimap.css: 15%).
-        if (String(p.style.width || "").indexOf("4.5") >= 0) { p.style.width = "15%"; p.style.height = "15%"; }
+        if (String(p.style.width || "") === TAM_JOGADOR_MAPA) { p.style.width = "15%"; p.style.height = "15%"; }
       } else {
         p.style.preTransformScale2d = null;
-        if (String(p.style.preTransformScale2d || "").indexOf("0.5") >= 0) p.style.preTransformScale2d = "1";
+        if (String(p.style.preTransformScale2d || "") === ESCALA_HEROIS_MAPA) p.style.preTransformScale2d = "1";
       }
     } catch (e) {}
   });
@@ -284,7 +284,17 @@ function montarPainelMapa() {
   mapa.ponte = achar(mapa.painel, "DUMapaPonte");
   mapa.midboss = achar(mapa.painel, "DUMapaMidboss");
   mapa.filtros = achar(mapa.painel, "DUMapaFiltros");
+  mapa.tamValor = achar(mapa.painel, "DUMapaTamValor");
+  achar(mapa.painel, "DUMapaTamRotulo").text = T("aj.tamMapa");
+  achar(mapa.painel, "DUMapaMaisOpcoes").text = esc(T("aj.maisOpcoes"));
+  aoClicar(achar(mapa.painel, "DUMapaMenor"), function () { mudarTamanhoMapa(-1); desenharTamanhoMapa(); });
+  aoClicar(achar(mapa.painel, "DUMapaMaior"), function () { mudarTamanhoMapa(1); desenharTamanhoMapa(); });
   mostrarPainel(mapa.painel, false);
+}
+
+function desenharTamanhoMapa() {
+  if (!valido(mapa.tamValor)) return;
+  mapa.tamValor.text = [T("aj.pequeno"), T("aj.medio"), T("aj.grande")][Math.max(0, TAMANHOS_MAPA.indexOf(ajustes.mapaTam))];
 }
 
 function desenharFiltros() {
@@ -321,7 +331,7 @@ function abrirMapa() {
   hud.AddClass("DUMapaAberto");
   comando("+show_scoreboard");
   comando("hud_free_cursor 1");
-  mostrarPainel(mapa.painel, true);
+  mostrarPainel(mapa.painel, ajustes.mapaPainel);
   if (montarPontos()) {
     pontos.painel.SetHasClass("DUInvertido", temClasse(minimapa(), "invert_map"));
     aplicarFiltros();
@@ -330,6 +340,7 @@ function abrirMapa() {
   ajustarJogador(true);
   desenharMarcas(true);
   desenharFiltros();
+  desenharTamanhoMapa();
   atualizarPainelMapa(l);
   esconderDica();
   som("UI.Shop.Mod.Starred.Click");
@@ -349,7 +360,7 @@ function fecharMapa() {
     comando("hud_free_cursor -1");
     // As marcas ficam no minimapa pequeno por um tempo.
     if (Object.keys(marcas.lista).length) {
-      marcas.ate = Date.now() + (CONFIG.segundosMarcaMapa || 60) * 1000;
+      marcas.ate = Date.now() + (ajustes.marcaSeg || 60) * 1000;
       desenharMarcas(true);
     }
   }

@@ -17,19 +17,30 @@ function teclaUnica(nome, fn) {
     try { fn(); } catch (e) { log("tecla " + nome + ": " + e); }
   };
 }
+// As teclas podem mudar na tela de configurações. O jogo não deixa desregistrar uma tecla, então cada
+// tecla registrada pergunta, na hora, qual ação está com ela agora (ajustes.teclas).
+var ACOES_TECLA = {
+  mapa: function () { if (modLigado) alternarMapa(); },
+  tracker: function () { if (modLigado) alternarTracker(); },
+  desligar: function () { alternarMod(); },
+};
+var teclasRegistradas = {};
+function registrarTecla(t) {
+  if (!t || typeof $.RegisterKeyBind !== "function") return;
+  var tecla = String(t).toLowerCase(), chave = "key_" + tecla;
+  if (teclasRegistradas[chave]) return;
+  teclasRegistradas[chave] = true;
+  var fn = function () {
+    Object.keys(ACOES_TECLA).forEach(function (a) {
+      if (String(ajustes.teclas[a] || "").toLowerCase() === tecla) teclaUnica(a, ACOES_TECLA[a])();
+    });
+  };
+  try { $.RegisterKeyBind(hud, chave, fn); } catch (e) { log("RegisterKeyBind(hud, " + chave + "): " + e); }
+  try { $.RegisterKeyBind("", chave, fn); } catch (e) { log("RegisterKeyBind('', " + chave + "): " + e); }
+}
 function registrarTeclas() {
   if (typeof $.RegisterKeyBind !== "function") { log("atalhos: $.RegisterKeyBind indisponível"); return; }
-  var teclas = CONFIG.teclas || {};
-  [["mapa", function () { if (modLigado) alternarMapa(); }],
-   ["tracker", function () { if (modLigado) alternarTracker(); }],
-   ["desligar", alternarMod]].forEach(function (par) {
-    var t = teclas[par[0]];
-    if (!t) return;
-    var chave = "key_" + String(t).toLowerCase();
-    var fn = teclaUnica(par[0], par[1]);
-    try { $.RegisterKeyBind(hud, chave, fn); } catch (e) { log("RegisterKeyBind(hud, " + chave + "): " + e); }
-    try { $.RegisterKeyBind("", chave, fn); } catch (e) { log("RegisterKeyBind('', " + chave + "): " + e); }
-  });
+  Object.keys(ajustes.teclas).forEach(function (a) { registrarTecla(ajustes.teclas[a]); });
 }
 
 // ---------- liga/desliga (F8) ----------
@@ -147,6 +158,7 @@ function diagnosticoInicial() {
 }
 
 diagnosticoInicial();
+carregarAjustes(); // tamanhos do mapa, teclas etc. (75-ajustes.js)
 registrarTeclas();
 if (CONFIG.urlPonte) { iniciarPonte(); aoPontePronta(carregarOverrides); }
 $.Schedule(1.0, tick);

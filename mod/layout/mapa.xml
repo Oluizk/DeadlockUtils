@@ -17,9 +17,16 @@
 				<Label class="DUMapaRotulo" text="Chefe do meio" />
 				<Label id="DUMapaMidboss" class="DUMapaValor" html="true" text="-" />
 			</Panel>
+			<Panel class="DUMapaLinha DUMapaTamanho">
+				<Label id="DUMapaTamRotulo" class="DUMapaRotulo" text="Tamanho" />
+				<Button id="DUMapaMenor" class="DUMapaBotao"><Label text="-" /></Button>
+				<Label id="DUMapaTamValor" class="DUMapaTamValor" text=" " />
+				<Button id="DUMapaMaior" class="DUMapaBotao"><Label text="+" /></Button>
+			</Panel>
 			<Label class="DUMapaSubtitulo" text="Mostrar no mapa" />
 			<Panel id="DUMapaFiltros" class="DUMapaFiltros" />
 			<Label class="DUMapaDica" html="true" text="Clique no mapa para sinalizar · M ou ESC fecha" />
+			<Label id="DUMapaMaisOpcoes" class="DUMapaDica" html="true" text=" " />
 		</Panel>
 	</Panel>
 </root>
