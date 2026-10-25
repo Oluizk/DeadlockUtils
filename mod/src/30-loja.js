@@ -30,7 +30,7 @@ function montarAbaLoja() {
     return false;
   }
   mostrarPainel(c, false);
-  evento(b, "onmouseactivate", function () { ativarAba(!loja.ativa); });
+  evento(b, "onmouseactivate", function () { loja.reabrir = false; ativarAba(!loja.ativa); });
   dica(b, T("dica.botaoNav"));
 
   loja.botao = b;
@@ -241,10 +241,16 @@ function desenharAba(r, leitura) {
 }
 aoMudarResultado(function (r, l) { if (loja.ativa && loja.vista === "recs") desenharAba(r, l); });
 
-// Checagem rápida (0,1s): fecha a nossa aba quando o jogador escolhe outra aba ou fecha a loja.
-// Chamado pelo loop rápido (50 ms).
+// Chamado pelo loop rápido (50 ms). Fecha a nossa aba quando o jogador escolhe outra aba. Ao fechar a
+// loja com a nossa aba aberta, ela é lembrada e reabre na próxima vez, como o jogo faz com as abas dele.
 function vigiarAbaLoja(e) {
+  var aberta = !!(e.lojaAberta || temClasse(loja.shop, "gShopOpen"));
+  if (aberta && !loja.lojaAberta && loja.reabrir) {
+    // espera o jogo terminar de abrir a loja (ele recoloca a classe da última aba dele)
+    $.Schedule(0.1, function () { if (loja.reabrir && !loja.ativa && modLigado && temClasse(loja.shop, "gShopOpen")) ativarAba(true); });
+  }
+  loja.lojaAberta = aberta;
   if (!loja.ativa) return;
-  if (classeAbaDoJogo()) { loja.classeAnterior = ""; ativarAba(false); }
-  else if (!e.lojaAberta && !temClasse(loja.shop, "gShopOpen")) ativarAba(false);
+  if (classeAbaDoJogo()) { loja.classeAnterior = ""; loja.reabrir = false; ativarAba(false); }
+  else if (!aberta) { loja.reabrir = true; ativarAba(false); }
 }

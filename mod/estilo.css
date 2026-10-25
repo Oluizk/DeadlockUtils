@@ -1156,6 +1156,14 @@
     width: 820px;
     height: 820px;
 }
+/* Com o mapa aberto o placar fica ligado por baixo, e a barra do topo expandiria até 600px com os
+   detalhes de cada herói (citadel_hud_top_bar.css: .wants_scoreboard CitadelHudTopBarPlayer). O #TopBar
+   é declarado no hud.xml, então dá para recortá-lo na altura da barra normal (retratos e almas). */
+.DUMapaAberto #TopBar
+{
+    max-height: 130px;
+    overflow: clip;
+}
 .DUMapaAberto #minimap_persp #minimap_hints
 {
     visibility: collapse;

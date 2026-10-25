@@ -315,6 +315,7 @@ function abrirMapa() {
   filtrosDoHeroi(l.eu);
   mapa.aberto = true;
   mapa.abertoEm = Date.now();
+  mapa.viuPlacar = false;
   mapa.jogadorEm = 0;
   marcas.ate = 0; // com o mapa aberto as marcas não expiram
   hud.AddClass("DUMapaAberto");
@@ -387,5 +388,8 @@ function vigiarMapa(estado) {
   });
   if (estado.lojaAberta || estado.escAberto) { fecharMapa(); return; }
   // Se o jogador soltou um Tab manual, o placar fecha: fecha o mapa também (depois de 1s de graça).
+  // Só depois de ter visto o placar aberto: se a detecção falhar, o mapa não fecha sozinho (M/ESC fecham).
+  if (estado.placarAberto) mapa.viuPlacar = true;
+  if (!mapa.viuPlacar) return;
   if (!estado.placarAberto && Date.now() - mapa.abertoEm > 1000) fecharMapa();
 }

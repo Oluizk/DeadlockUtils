@@ -275,8 +275,9 @@ window.$ = {
       if (m) (handlersEv[m[1]] || []).forEach((f) => f());
       m = /^bind "(\w+)" "panorama_dispatch_event (\w+)\(\)"$/.exec(cmd);
       if (m) teclas[m[1].toLowerCase()] = m[2];
-      if (cmd === "+show_scoreboard") topBar.AddClass("gScoreboardOpen");
-      if (cmd === "-show_scoreboard") topBar.RemoveClass("gScoreboardOpen");
+      // como no jogo: o placar liga gScoreboardOpen no topo e no minimapa (GlobalClassListener)
+      if (cmd === "+show_scoreboard") { topBar.AddClass("gScoreboardOpen"); hudMinimap.AddClass("gScoreboardOpen"); }
+      if (cmd === "-show_scoreboard") { topBar.RemoveClass("gScoreboardOpen"); hudMinimap.RemoveClass("gScoreboardOpen"); }
     }
     if (n === "CopyStringToClipboard") clipboard = a[0];
     // Compra simulada: só "Activated" funciona (para testar a escolha de método) e só se puder pagar.

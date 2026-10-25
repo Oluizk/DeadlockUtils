@@ -30,11 +30,15 @@ function coletarImagens(p, prof, saida) {
   }
 }
 
-// Placar (Tab) aberto: #minimap_persp também recebe gScoreboardOpen (GlobalClassListener no hud.xml).
-// Não dá para olhar só o #TopBar: com o mapa grande aberto o mod tira a classe dele (ver 50-mapa.js).
+// Placar (Tab) aberto. Não dá para olhar só o #TopBar: com o mapa grande aberto o mod tira a classe
+// dele (ver 50-mapa.js). O #minimap_persp é um GlobalClassListener (aplica a classe num ancestral, não
+// em si mesmo), então olha os ancestrais dele; e o #hud_minimap, que tem o próprio listener.
 function placarAberto() {
+  if (temClasse(topBar(), "gScoreboardOpen")) return true;
   if (!valido(cacheLeitura.persp)) cacheLeitura.persp = achar(hud, "minimap_persp");
-  return temClasse(topBar(), "gScoreboardOpen") || temClasse(cacheLeitura.persp, "gScoreboardOpen");
+  try { if (valido(cacheLeitura.persp) && cacheLeitura.persp.BAscendantHasClass("gScoreboardOpen")) return true; } catch (e) {}
+  if (!valido(cacheLeitura.mm)) cacheLeitura.mm = achar(hud, "hud_minimap");
+  return temClasse(cacheLeitura.mm, "gScoreboardOpen");
 }
 function topBar() {
   if (!valido(cacheLeitura.topBar)) cacheLeitura.topBar = achar(hud, "TopBar");
