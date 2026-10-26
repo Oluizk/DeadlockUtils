@@ -83,7 +83,7 @@ function desenharTracker() {
     tracker.carregando ? "Carregando dados do deadlock-api.com…" :
     tracker.erro ? "Não consegui carregar: " + esc(tracker.erro) :
     tracker.dados ? "Jogadores identificados por: " + esc(tracker.dados.origem) : "";
-  if (!CONFIG.accountId) st += "  ·  Seu id Steam não está configurado (veja o README).";
+  if (!CONFIG.accountId) st += "  ·  " + T("tracker.semConta");
   if (!CONFIG.urlPonte) st = "<font color='#a03020'><b>Tracker desligado:</b> o navegador do jogo só abre páginas HTTPS, e a página da ponte " +
     "(mod/pagina/ponte.html) ainda não foi publicada. Veja \"Ativar o tracker\" no README.</font>";
   tracker.status.text = st;
@@ -141,7 +141,7 @@ function desenharDetalheTracker(jogadores) {
   if (CONFIG.accountId && info.id === CONFIG.accountId) hist.push("Este é você.");
   else if (info.contra) hist.push("Contra você: " + info.contra[0] + " partida(s), você venceu " + info.contra[1] + " e perdeu " + (info.contra[0] - info.contra[1]) + ".");
   if (info.com && !(CONFIG.accountId && info.id === CONFIG.accountId)) hist.push("Junto com você: " + info.com[0] + " partida(s), venceram " + info.com[1] + " e perderam " + (info.com[0] - info.com[1]) + ".");
-  if (!hist.length) hist.push(CONFIG.accountId ? "Vocês nunca se encontraram (nas partidas registradas)." : "Configure seu id Steam para ver o histórico com este jogador.");
+  if (!hist.length) hist.push(CONFIG.accountId ? "Vocês nunca se encontraram (nas partidas registradas)." : T("tracker.semConta"));
   bloco("Histórico com você", hist);
 }
 

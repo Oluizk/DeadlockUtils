@@ -1530,6 +1530,17 @@
 {
     opacity: 0.35;
 }
+.DUAjCampo
+{
+    width: 200px;
+    vertical-align: center;
+    margin-right: 6px;
+}
+.DUAjConta
+{
+    margin-top: 2px;
+    font-weight: bold;
+}
 .DUAjRodape
 {
     margin: 10px 0px 20px 12px;

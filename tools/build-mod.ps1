@@ -8,11 +8,14 @@
 param(
   [string]$Jogo,
   [int]$Pak = 42,
-  [switch]$AtualizarHud
+  [switch]$AtualizarHud,
+  # -Distribuicao: build para publicar (GameBanana, Release). NÃO grava a conta Steam de quem compilou;
+  # cada jogador informa a dele no jogo (Configurações > Tracker).
+  [switch]$Distribuicao
 )
 . (Join-Path $PSScriptRoot "jogo.ps1")
 
-$VersaoMod = "0.9.3"
+$VersaoMod = "1.0.0"
 $Nome = "deadlock_utils"
 $utf8 = New-Object Text.UTF8Encoding $false
 function Ler([string]$rel) { [IO.File]::ReadAllText((Join-Path $Raiz $rel), [Text.Encoding]::UTF8).TrimStart([char]0xFEFF) }
@@ -101,7 +104,10 @@ $idsJogoJson = "{" + (($itensDados | ForEach-Object { '"' + $_.id + '":' + [S2Ha
 
 # 3) Configuração: seu id Steam (SteamID3) é a pasta em Steam\userdata que tem o Deadlock (1422450).
 $config = Ler "data\config.json" | ConvertFrom-Json
-if (-not $config.accountId) {
+if ($Distribuicao) {
+  $config.accountId = $null
+  Write-Host "Build de distribuição: sem conta Steam gravada." -ForegroundColor Cyan
+} elseif (-not $config.accountId) {
   $steam = (Get-ItemProperty "HKCU:\Software\Valve\Steam" -ErrorAction SilentlyContinue).SteamPath
   if ($steam) {
     $conta = Get-ChildItem (Join-Path $steam "userdata") -Directory -ErrorAction SilentlyContinue |

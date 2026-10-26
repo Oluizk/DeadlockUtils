@@ -14,6 +14,7 @@ var AJUSTES_PADRAO = {
   marcaSeg: (DU_DATA.config || {}).segundosMarcaMapa || 60,
   miniEscala: 100,       // minimapa normal, em %
   miniPontos: 1,         // pontos no minimapa normal: 0 desligado, 1..3 tamanho dos ícones
+  contaSteam: 0,         // código de amigo da Steam (SteamID3) para o tracker; 0 = o do build (data/config.json)
   miniPontosAntes: 1,    // tamanho escolhido antes de desligar (o botão do painel do mapa religa nele)
   teclas: {
     mapa: ((DU_DATA.config || {}).teclas || {}).mapa || "",
@@ -59,6 +60,7 @@ function aplicarAjustes() {
   TAMANHOS_MAPA.forEach(function (t) { hud.SetHasClass("DUMapaT" + t, ajustes.mapaTam === t); });
   [115, 130, 150].forEach(function (e) { hud.SetHasClass("DUMini" + e, ajustes.miniEscala === e); });
   hud.SetHasClass("DUCortaTopo", !!ajustes.mapaCortaTopo);
+  CONFIG.accountId = Number(ajustes.contaSteam) || (DU_DATA.config || {}).accountId || null;
   ESCALA_HEROIS_MAPA = ajustes.mapaHerois;
   TAM_JOGADOR_MAPA = ajustes.mapaEu;
   if (TAM_MAPA !== ajustes.mapaTam) {
@@ -82,6 +84,21 @@ function mudarTamanhoMapa(passo) {
   if (TAMANHOS_MAPA[n] === ajustes.mapaTam) return;
   ajustes.mapaTam = TAMANHOS_MAPA[n];
   salvarAjustes();
+}
+
+// Código de amigo da Steam = SteamID3 (número até 10 dígitos). Aceita também [U:1:N] e o link do perfil
+// com o SteamID64 (7656119...), convertido sem perder precisão (64 bits não cabem num Number).
+function lerContaSteam(txt) {
+  var s = String(txt || "").trim();
+  var m = /\[U:1:(\d+)\]/.exec(s);
+  if (m) return Number(m[1]);
+  m = /(7656119\d{10})/.exec(s);
+  if (m) {
+    var alto = Number(m[1].slice(0, -10)), baixo = Number(m[1].slice(-10));
+    var id = (alto - 7656119) * 1e10 + baixo - 7960265728;
+    return id > 0 ? id : 0;
+  }
+  return /^\d{1,10}$/.test(s) ? Number(s) : 0;
 }
 
 // ---------- tela ----------
@@ -173,6 +190,23 @@ function desenharAjustes() {
       if (usada) return;
       aoClicar(b, function () { ajustes.teclas[par[0]] = t; telaAjustes.escolhendoTecla = ""; salvarAjustes(); });
     });
+  });
+
+  cartaz(p, { titulo: T("aj.tracker"), sub: T("aj.tracker.sub"), tema: "vermelho" });
+  var lc = criar("Panel", p, "", "DUAjLinha");
+  var txc = criar("Panel", lc, "", "DUAjTextos");
+  rotulo(txc, "DUAjNome", esc(T("aj.conta")));
+  rotulo(txc, "DUAjDesc", esc(T("aj.conta.desc")));
+  var atualConta = CONFIG.accountId ? String(CONFIG.accountId) : T("aj.conta.nenhuma");
+  var estado = rotulo(txc, "DUAjDesc DUAjConta", esc(T("aj.conta.atual", atualConta)));
+  var opc = criar("Panel", lc, "", "DUAjOpcoes");
+  var campo = criar("TextEntry", opc, "", "DUTexto DUAjCampo", { maxchars: "80" });
+  if (campo && ajustes.contaSteam) { try { campo.text = String(ajustes.contaSteam); } catch (e) {} }
+  botao(opc, "DUBotaoPrimario DUAjOpcao", T("aj.conta.salvar"), function () {
+    var id = lerContaSteam(textoDe(campo));
+    if (!id) { estado.text = "<font color='#a8322a'>" + esc(T("aj.conta.invalida")) + "</font>"; return; }
+    ajustes.contaSteam = id;
+    salvarAjustes();
   });
 
   var fim = criar("Panel", p, "", "DUAjAcoes");

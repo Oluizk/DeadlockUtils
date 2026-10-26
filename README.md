@@ -1,25 +1,31 @@
 # Deadlock Utils
 
+**English:** [README.en.md](README.en.md)
+
 Mod de HUD para o **Deadlock** (Valve), feito em Panorama (a UI do próprio jogo):
 
 | Função | Como usar |
 |---|---|
 | **Aba "Deadlock Utils" na loja** | Abra a loja (B): nova aba na barra lateral. Mostra itens perigosos dos inimigos, a **build do seu herói** para a fase atual (dados de popularidade do próprio jogo) e os **counters** contra o time inimigo, nos cartões da loja. Passe o mouse para ver o porquê. |
 | **Editor de counters** | Na aba, botão **Editar counters**: escolha o herói inimigo, adicione/remova itens, peso 1 a 4 e motivo. **Copiar código** gera um código curto `DU1:...` (de um herói ou de tudo que você editou) para colar no grupo; quem recebe cola no campo e clica **Importar**. |
-| **Itens no Tab** | Segurando Tab, acima dos três círculos de investimento: duas seções, **Counters** (com o retrato de contra quem) e **Recomendados** (build do seu herói). Só aparecem itens que você **ainda não tem e pode pagar agora**. Hover mostra o porquê; clique compra (perto da loja). |
+| **Itens no Tab** | Segurando Tab, acima dos três círculos de investimento: duas seções, **Counters** (com o retrato de contra quem) e **Recomendados** (build do seu herói). Item que você já tem some; os que não dá para comprar agora (sem almas ou longe da loja) ficam meio transparentes. Hover mostra o porquê; clique compra (perto da loja). |
 | **Mapa em tela cheia** | Tecla **M**: o minimapa do jogo fica grande no centro, com o placar aberto: clique para sinalizar, cursor livre, o herói continua andando. Mostra relógio, **próximo buff da ponte** e **chefe do meio**, e **pontos de interesse com filtros**: lanches de cura, estátuas douradas, caixas (normais e resistentes), buffs da ponte, véus cósmicos, sinos, fendas, plataformas de salto, dutos de vapor, cordas, teleportes, lojas, urna, sentinelas, acampamentos (T1/T2/T3/cofres) e os **túneis do Rem** (caminho pontilhado + entradas, tirados do próprio mapa do jogo). Passe o mouse num ícone para ver o que é; **clique para marcar** o local: a marca continua no minimapa pequeno por 60 s depois de fechar (só para você: o jogo não permite que mods mandem ping ao time). Dados: `data/mapa.json` (`tools\atualizar-mapa.ps1`). Abrir a loja ou ESC fecha o mapa. |
 | **Tracker** | Tecla **F6** ou botão **Tracker** no menu ESC. Para cada jogador: rank, heróis mais jogados, desempenho com o herói atual e se você já jogou **com/contra** ele (e o resultado). Dados do [deadlock-api.com](https://deadlock-api.com). |
 | **Aviso de item perigoso** | Quando um inimigo compra Knockdown, Cursed Relic, Refresher etc., aparece um aviso no topo da tela. |
 
 ## Instalar / remover
 
-1. Feche o Deadlock.
-2. **`instalar-mod.bat`**: compila, habilita a pasta de addons no `gameinfo.gi` (com backup) e copia `pak42_dir.vpk` para `game\citadel\addons\`.
-3. Abra o jogo. As teclas **M** e **F6** são criadas pelo próprio mod na primeira vez que ele carrega.
+**Para jogar** (não precisa compilar nada):
 
-**`desinstalar-mod.bat`** remove o mod, as teclas que ele criou e volta o `gameinfo.gi` ao original (se não houver outros mods).
+1. Baixe o `DeadlockUtils-vX.Y.Z.zip` na página de [Releases](https://github.com/Oluizk/DeadlockUtils/releases) (ou no GameBanana) e extraia.
+2. Feche o Deadlock e dê dois cliques em **`Instalar.bat`**. Ele acha o jogo, habilita a pasta de addons no `gameinfo.gi` (com backup) e copia `pak42_dir.vpk` para `game\citadel\addons\`. No fim ele mostra o seu código de amigo da Steam, para o tracker.
+3. Abra o jogo. No tracker, informe o código em loja (B) > Deadlock Utils > Configurações > Tracker.
 
-> **Depois de cada atualização do Deadlock** rode `instalar-mod.bat` de novo (a Steam restaura o `gameinfo.gi`). Se o patch mexer no HUD, recompile com `powershell -ExecutionPolicy Bypass -File tools\build-mod.ps1 -AtualizarHud`.
+**`Desinstalar.bat`** remove o mod e volta o `gameinfo.gi` ao original (se não houver outros mods).
+
+**A partir do código** (para quem mexe no mod): **`instalar-mod.bat`** compila e instala; **`desinstalar-mod.bat`** remove. Para gerar o pacote de publicação: `powershell -ExecutionPolicy Bypass -File tools\empacotar.ps1` (cria `dist\DeadlockUtils-vX.Y.Z.zip` sem a sua conta Steam gravada).
+
+> **Depois de cada atualização do Deadlock** rode o instalador de novo (a Steam restaura o `gameinfo.gi`). Se o patch mexer no HUD, recompile com `powershell -ExecutionPolicy Bypass -File tools\build-mod.ps1 -AtualizarHud`.
 
 ### Teclas
 
