@@ -7,7 +7,7 @@
       "quando": { "aliados_sem_tag": "stun", "inimigos_tag": "channel-ult" },
       "recomendar": [
         { "item": "knockdown", "peso": 2, "motivo": { "en": "Someone has to interrupt the ultimates: your team has no stun.", "pt": "Alguém precisa interromper as ultimates: seu time não tem stun.", "es": "Alguien tiene que interrumpir las definitivas: tu equipo no tiene aturdimientos.", "ru": "Кто-то должен прерывать ульты: в вашей команде нет оглушений." } },
-        { "item": "silence-wave", "peso": 2, "motivo": { "en": "Your team has no way to cut channels.", "pt": "Seu time não tem como cortar canalizações.", "es": "Tu equipo no tiene forma de cortar canalizaciones.", "ru": "Вашей команде нечем прерывать поддерживаемые способности." } }
+        { "item": "cursed-relic", "peso": 2, "motivo": { "en": "Interrupts a channeled ultimate from range: your team has no stun for it.", "pt": "Interrompe a ultimate canalizada à distância: seu time não tem stun para isso.", "es": "Interrumpe la definitiva canalizada a distancia: tu equipo no tiene stun para ello.", "ru": "Прерывает поддерживаемую ульту издалека: в вашей команде нет оглушения." } }
       ]
     },
     {

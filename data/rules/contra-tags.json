@@ -147,7 +147,6 @@
       "quando": { "inimigos_tag": "channel-ult" },
       "recomendar": [
         { "item": "knockdown", "peso": 2, "motivo": { "en": "Stun interrupts the channeled ultimate.", "pt": "Stun interrompe a ultimate canalizada.", "es": "El aturdimiento interrumpe la definitiva canalizada.", "ru": "Оглушение прерывает поддерживаемую ульту." } },
-        { "item": "silence-wave", "peso": 2, "motivo": { "en": "AoE silence cuts the channel.", "pt": "Silence em área corta a canalização.", "es": "Silencio en área que corta la canalización.", "ru": "Безмолвие по области прерывает поддержание." } },
         { "item": "cursed-relic", "peso": 2, "motivo": { "en": "Interrupts + silences the target.", "pt": "Interrompe + silencia o alvo.", "es": "Interrumpe + silencia al objetivo.", "ru": "Прерывает + накладывает безмолвие на цель." } },
         { "item": "focus-lens", "peso": 1, "motivo": { "en": "Silences one target for 4.5s.", "pt": "Silencia um alvo por 4,5s.", "es": "Silencia a un objetivo durante 4,5s.", "ru": "Накладывает безмолвие на цель на 4,5 с." } }
       ]
