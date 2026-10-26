@@ -1,65 +1,49 @@
-<h2>Deadlock Utils</h2>
-<p>An in-game HUD mod for Deadlock, built with Panorama (the game's own UI). No overlay and no external app: everything runs <b>inside the match</b> and looks like part of the game.</p>
-<p><b>Languages:</b> English (default), Português (pt-BR), Español and Русский. You pick it in the installer.</p>
+<p><b>Deadlock Utils</b> is an in-game HUD mod made with Panorama, the game's own UI: no overlay and no external app, everything opens inside the match with the game's look. It shows your hero's build and the counters to the enemy team in the shop, recommended items on Tab, a big map with timers and points of interest, and a player tracker. Available in English (default), Português (pt-BR), Español and Русский.</p>
 
-<h3>Features</h3>
-<ul>
-<li><b>Shop tab (B):</b> your hero's build for the current phase of the match, <b>counters</b> to the enemy team and the dangerous items enemies bought, on the shop's own item cards. Hover to see why, click to buy.</li>
-<li><b>Items on Tab:</b> hold Tab to see <b>Counters</b> and <b>Recommended</b> above the investment circles. Items you own disappear, items you can't buy right now are faded. Click to buy.</li>
-<li><b>Big map (M):</b> the game's minimap, big, with free cursor and pings. Bridge buff and mid boss timers, plus points of interest you can toggle (healing snacks, bells, jump pads, golden statues, crates, veils, teleporters, shops, urn, camps and Rem's tunnels). Hover a point to see what it is, click to mark it.</li>
-<li><b>Minimap points:</b> the same points on the regular minimap, with their own filters.</li>
-<li><b>Tracker (F6 or ESC menu):</b> rank, most played heroes and your history with or against each player (deadlock-api.com).</li>
-<li><b>Dangerous item alert</b> when an enemy buys Knockdown, Cursed Relic, Refresher and similar items.</li>
-<li><b>Counter editor:</b> edit counters for any hero in game and share them with a short code (<code>DU1:...</code>).</li>
-<li><b>Settings:</b> map and minimap sizes, icon sizes, filters, hotkeys.</li>
-</ul>
+<table>
+<tr><th>Feature</th><th>How to use</th><th>What it does</th></tr>
+<tr><td><b>Shop tab</b></td><td>Shop (B) > Deadlock Utils tab</td><td>Your hero's build for the current phase, counters to the enemy team and the dangerous items enemies bought, on the shop's own item cards. Hover to see why, click to buy.</td></tr>
+<tr><td><b>Items on Tab</b></td><td>Hold Tab</td><td>Counters and Recommended above the investment circles. Owned items disappear, items you can't buy right now are faded. Click to buy.</td></tr>
+<tr><td><b>Big map</b></td><td>M</td><td>The game's minimap, big, with free cursor and pings. Bridge buff and mid boss timers, points of interest with filters (healing, bells, jump pads, statues, crates, veils, teleporters, shops, urn, camps, Rem's tunnels). Click a point to mark it.</td></tr>
+<tr><td><b>Minimap points</b></td><td>Settings > Map points > Mini</td><td>The same points on the regular minimap.</td></tr>
+<tr><td><b>Tracker</b></td><td>F6 or ESC menu</td><td>Rank, most played heroes and your history with or against each player (deadlock-api.com).</td></tr>
+<tr><td><b>Danger alert</b></td><td>Automatic</td><td>Warning when an enemy buys Knockdown, Cursed Relic, Refresher and similar items.</td></tr>
+<tr><td><b>Counter editor</b></td><td>Shop tab > Edit counters</td><td>Edit the counters for any hero and share them with a short code (DU1:...).</td></tr>
+<tr><td><b>Settings</b></td><td>Shop tab > Settings</td><td>Map and minimap sizes, icon sizes, filters, hotkeys. F8 turns the mod on/off.</td></tr>
+</table>
 
-<h3>Hotkeys</h3>
-<ul>
-<li><b>M</b>: big map</li>
-<li><b>F6</b>: tracker</li>
-<li><b>F8</b>: turn the mod on/off</li>
-<li><b>ESC</b>: closes the map and the tracker</li>
-</ul>
-
-<h3>Important</h3>
-<ul>
-<li>It replaces the game's <code>hud.xml</code>: <b>not compatible with other mods that also replace it.</b></li>
-<li>Valve has not published rules about mods. HUD mods have had no known bans so far, but <b>use it at your own risk.</b></li>
-<li>Privacy: the tracker sends the Steam IDs and names of the players in your match to deadlock-api.com. No password is ever requested.</li>
-</ul>
-<p>Open source, contributions welcome (counters, translations, map data): <a href="https://github.com/Oluizk/DeadlockUtils">github.com/Oluizk/DeadlockUtils</a></p>
+<h3>Install</h3>
+<ol>
+<li>Close Deadlock.</li>
+<li>Extract the whole .zip to any folder.</li>
+<li>Double-click <b>install.bat</b> and pick your language: 1 English, 2 Português, 3 Español, 4 Русский (Enter = English).</li>
+<li>Open Deadlock. For the tracker: shop (B) > Deadlock Utils > Settings > Tracker, enter your Steam friend code (the installer shows it).</li>
+</ol>
+<p>Run <b>install.bat</b> again after Deadlock updates or to change the language. To remove: <b>uninstall.bat</b>. If Windows SmartScreen warns, click More info > Run anyway.</p>
+<p><b>Notes:</b> it replaces the game's hud.xml, so it does not work with other mods that also replace it. Valve has no published rules about mods: use at your own risk. Open source: <a href="https://github.com/Oluizk/DeadlockUtils">github.com/Oluizk/DeadlockUtils</a></p>
 
 <hr>
 
-<h2>Português (pt-BR)</h2>
-<p>Mod de HUD para o Deadlock feito em Panorama (a interface do próprio jogo). Sem overlay e sem programa externo: tudo funciona <b>dentro da partida</b>, com o visual do jogo.</p>
-<p><b>Idiomas:</b> inglês (padrão), português (pt-BR), espanhol e russo. A escolha é feita no instalador.</p>
+<p><b>Deadlock Utils</b> é um mod de HUD feito em Panorama, a interface do próprio jogo: sem overlay e sem programa externo, tudo abre dentro da partida com o visual do jogo. Mostra na loja a build do seu herói e os counters contra o time inimigo, itens recomendados no Tab, um mapa grande com timers e pontos de interesse, e um tracker de jogadores. Disponível em inglês (padrão), português (pt-BR), espanhol e russo.</p>
 
-<h3>Funções</h3>
-<ul>
-<li><b>Aba na loja (B):</b> build do seu herói para a fase atual da partida, <b>counters</b> contra o time inimigo e os itens perigosos que os inimigos compraram, nos próprios cartões da loja. Passe o mouse para ver o porquê, clique para comprar.</li>
-<li><b>Itens no Tab:</b> segurando Tab, aparecem <b>Counters</b> e <b>Recomendados</b> acima dos círculos de investimento. O que você já tem some; o que não dá para comprar agora fica apagado. Clique para comprar.</li>
-<li><b>Mapa grande (M):</b> o minimapa do jogo em tamanho grande, com cursor livre e pings. Timers do buff da ponte e do chefe do meio, e pontos de interesse com filtros (lanches de cura, sinos, plataformas de salto, estátuas douradas, caixas, véus, teleportes, lojas, urna, acampamentos e túneis do Rem). Passe o mouse num ponto para ver o que é, clique para marcar.</li>
-<li><b>Pontos no minimapa:</b> os mesmos pontos no minimapa normal, com filtros próprios.</li>
-<li><b>Tracker (F6 ou menu ESC):</b> rank, heróis mais jogados e o seu histórico com ou contra cada jogador (deadlock-api.com).</li>
-<li><b>Aviso de item perigoso</b> quando um inimigo compra Knockdown, Cursed Relic, Refresher e parecidos.</li>
-<li><b>Editor de counters:</b> edite os counters de qualquer herói no jogo e compartilhe com um código curto (<code>DU1:...</code>).</li>
-<li><b>Configurações:</b> tamanho do mapa e do minimapa, tamanho dos ícones, filtros, atalhos.</li>
-</ul>
+<table>
+<tr><th>Função</th><th>Como usar</th><th>O que faz</th></tr>
+<tr><td><b>Aba na loja</b></td><td>Loja (B) > aba Deadlock Utils</td><td>Build do seu herói para a fase atual, counters contra o time inimigo e os itens perigosos que os inimigos compraram, nos próprios cartões da loja. Passe o mouse para ver o porquê, clique para comprar.</td></tr>
+<tr><td><b>Itens no Tab</b></td><td>Segurar Tab</td><td>Counters e Recomendados acima dos círculos de investimento. O que você já tem some; o que não dá para comprar agora fica apagado. Clique para comprar.</td></tr>
+<tr><td><b>Mapa grande</b></td><td>M</td><td>O minimapa do jogo em tamanho grande, com cursor livre e pings. Timers do buff da ponte e do chefe do meio, pontos de interesse com filtros (cura, sinos, plataformas de salto, estátuas, caixas, véus, teleportes, lojas, urna, acampamentos, túneis do Rem). Clique num ponto para marcar.</td></tr>
+<tr><td><b>Pontos no minimapa</b></td><td>Configurações > Pontos no mapa > Mini</td><td>Os mesmos pontos no minimapa normal.</td></tr>
+<tr><td><b>Tracker</b></td><td>F6 ou menu ESC</td><td>Rank, heróis mais jogados e o seu histórico com ou contra cada jogador (deadlock-api.com).</td></tr>
+<tr><td><b>Aviso de perigo</b></td><td>Automático</td><td>Aviso quando um inimigo compra Knockdown, Cursed Relic, Refresher e parecidos.</td></tr>
+<tr><td><b>Editor de counters</b></td><td>Aba da loja > Editar counters</td><td>Edite os counters de qualquer herói e compartilhe com um código curto (DU1:...).</td></tr>
+<tr><td><b>Configurações</b></td><td>Aba da loja > Configurações</td><td>Tamanho do mapa e do minimapa, tamanho dos ícones, filtros, atalhos. F8 liga/desliga o mod.</td></tr>
+</table>
 
-<h3>Teclas</h3>
-<ul>
-<li><b>M</b>: mapa grande</li>
-<li><b>F6</b>: tracker</li>
-<li><b>F8</b>: liga/desliga o mod</li>
-<li><b>ESC</b>: fecha o mapa e o tracker</li>
-</ul>
-
-<h3>Importante</h3>
-<ul>
-<li>Substitui o <code>hud.xml</code> do jogo: <b>não funciona junto com outros mods que também o substituem.</b></li>
-<li>A Valve não publicou regras sobre mods. Mods de HUD não tiveram banimentos conhecidos até hoje, mas <b>use por sua conta e risco.</b></li>
-<li>Privacidade: o tracker envia ao deadlock-api.com os IDs e nomes Steam dos jogadores da sua partida. Nenhuma senha é pedida.</li>
-</ul>
-<p>Código aberto, contribuições são bem-vindas (counters, traduções, dados do mapa): <a href="https://github.com/Oluizk/DeadlockUtils">github.com/Oluizk/DeadlockUtils</a></p>
+<h3>Instalar</h3>
+<ol>
+<li>Feche o Deadlock.</li>
+<li>Extraia o .zip inteiro em qualquer pasta.</li>
+<li>Dê dois cliques em <b>install.bat</b> e escolha o idioma: 1 English, 2 Português, 3 Español, 4 Русский (Enter = inglês).</li>
+<li>Abra o Deadlock. Para o tracker: loja (B) > Deadlock Utils > Configurações > Tracker, informe seu código de amigo da Steam (o instalador mostra).</li>
+</ol>
+<p>Rode o <b>install.bat</b> de novo depois de atualizações do Deadlock ou para trocar o idioma. Para remover: <b>uninstall.bat</b>. Se o Windows SmartScreen avisar, clique em Mais informações > Executar assim mesmo.</p>
+<p><b>Avisos:</b> substitui o hud.xml do jogo, então não funciona junto com outros mods que também o substituem. A Valve não publicou regras sobre mods: use por sua conta e risco. Código aberto: <a href="https://github.com/Oluizk/DeadlockUtils">github.com/Oluizk/DeadlockUtils</a></p>
