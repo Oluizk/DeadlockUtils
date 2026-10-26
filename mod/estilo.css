@@ -550,7 +550,10 @@
 }
 
 /* ---------------- editor de counters ---------------- */
-/* Coluna da direita com alturas fixas: lista e catálogo rolam por dentro (sem isso o Panorama
+/* Visual da loja do jogo: cartazes de papel rasgado nos títulos, abas com o gradiente e a fonte dos
+   botões de categoria (citadel_hud_hero_shop.css: courage/fortitude/spirit, "Swear Text Demo"),
+   rótulos pequenos na fonte block, itens no cartão da loja.
+   Coluna da direita com alturas fixas: lista e catálogo rolam por dentro (sem isso o Panorama
    espreme o que não cabe e o catálogo some). */
 .DUEditor
 {
@@ -568,7 +571,11 @@
     height: 100%;
     flow-children: down;
     overflow: squish scroll;
-    margin-right: 14px;
+    margin-right: 16px;
+}
+.DUEditorHerois .DUCartaz
+{
+    margin: 8px 0px 6px 0px;
 }
 .DUGradeHerois
 {
@@ -578,22 +585,25 @@
 .DUHeroiBotao
 {
     width: 74px;
-    height: 92px;
+    height: 90px;
     margin: 2px;
     flow-children: down;
-    background-color: #2b221933;
+    background-color: #10130D26;
+    border: 2px solid #00000000;
     border-radius: 3px;
-    transition-property: background-color, brightness;
+    transition-property: background-color, brightness, pre-transform-scale2d;
     transition-duration: 0.08s;
 }
 .DUHeroiBotao:hover
 {
-    background-color: #2b221966;
-    brightness: 1.1;
+    background-color: #10130D4d;
+    brightness: 1.15;
+    pre-transform-scale2d: 1.04;
 }
 .DUHeroiBotao.DUSelecionado
 {
-    background-color: #d9b26a;
+    background-color: #d8452f;
+    border: 2px solid #FFEFD7;
 }
 .DUHeroiFoto
 {
@@ -605,14 +615,23 @@
 .DUHeroiNome
 {
     width: 100%;
-    font-size: 11px;
+    font-family: oracle;
+    font-size: 12px;
+    font-weight: bold;
     text-align: center;
     text-overflow: shrink;
     color: #2b2219;
 }
+.DUSelecionado .DUHeroiNome
+{
+    color: #FFEFD7;
+}
 .DUHeroiEditado
 {
+    font-family: block;
     font-size: 9px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
     horizontal-align: center;
     color: #8a3d12;
 }
@@ -622,53 +641,70 @@
     height: 100%;
     flow-children: down;
     overflow: clip;
-    padding-top: 10px;
 }
 .DUEditorEscolha
 {
     margin: 30px 0px 10px 6px;
 }
 
-/* cabeçalho */
+/* cabeçalho: retrato redondo + cartaz com o nome do herói */
 .DUEditorCab
 {
     width: 100%;
     height: 78px;
     flow-children: right;
-    padding: 6px 10px;
-    background-color: #10130D1f;
-    border-radius: 4px;
+    margin-top: 6px;
 }
 .DUEditorFoto
 {
-    width: 64px;
-    height: 64px;
-    margin-right: 12px;
+    width: 74px;
+    height: 74px;
+    margin-right: -26px;
     vertical-align: center;
+    border: 3px solid #FFEFD7;
+    border-radius: 50%;
+    background-color: #2b2219;
+    box-shadow: 0px 2px 8px #000000aa;
+    z-index: 2;
 }
-.DUEditorCabTextos
+.DUEditorCab .DUCartaz
 {
     width: fill-parent-flow(1.0);
-    flow-children: down;
-    vertical-align: center;
+    margin: 8px 0px 8px 0px;
 }
-.DUEditorTitulo
+.DUEditorCab .DUCartazConteudo
 {
-    font-family: oracle;
-    font-size: 24px;
-    font-style: italic;
-    font-weight: bold;
-    color: #10130D;
+    margin-left: 40px;
+}
+.DUEditorBarraCab
+{
+    width: 100%;
+    flow-children: right;
+    margin: 2px 0px 6px 0px;
 }
 .DUEditorEstado
 {
-    font-size: 14px;
-    color: #10130Dcc;
+    width: fill-parent-flow(1.0);
+    vertical-align: center;
+    margin-left: 6px;
+    font-family: block;
+    font-size: 13px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #10130Dbb;
 }
 .DUEditorAcoes
 {
     flow-children: right;
     vertical-align: center;
+}
+.DUEditor .DUBotao Label
+{
+    font-family: block;
+    font-size: 15px;
+    font-weight: normal;
+    letter-spacing: 1px;
+    text-transform: uppercase;
 }
 
 /* lista dos counters */
@@ -676,24 +712,23 @@
 {
     width: 100%;
     flow-children: right;
-    margin-top: 8px;
     padding: 0px 10px;
 }
 .DUEditorColunas Label
 {
+    font-family: block;
     font-size: 12px;
-    font-weight: bold;
     letter-spacing: 1px;
     text-transform: uppercase;
-    color: #10130Daa;
+    color: #10130D99;
 }
 .DUEditorColItem
 {
-    width: 226px;
+    width: 238px;
 }
 .DUEditorColPeso
 {
-    width: 152px;
+    width: 132px;
 }
 .DUEditorColMotivo
 {
@@ -702,7 +737,7 @@
 .DUEditorLista
 {
     width: 100%;
-    height: 210px;
+    height: 200px;
     flow-children: down;
     overflow: squish scroll;
     margin-top: 2px;
@@ -713,77 +748,137 @@
     height: 48px;
     flow-children: right;
     margin-bottom: 3px;
-    padding: 4px 6px;
-    background-color: #241e18e6;
+    padding: 3px 8px 3px 4px;
+    background-color: gradient( linear, 0% 0%, 100% 0%, from( #241e18f2 ), to( #241e18cc ) );
     border-left: 4px solid #3a352d;
-    border-radius: 3px;
+    border-radius: 2px;
+    box-shadow: 1px 2px 4px #00000055;
 }
 .DUCat_weapon
 {
-    border-left: 4px solid #e08a3c;
+    border-left: 4px solid #E58A00;
 }
 .DUCat_vitality
 {
-    border-left: 4px solid #7cc35a;
+    border-left: 4px solid #7BBA1D;
 }
 .DUCat_spirit
 {
-    border-left: 4px solid #b27cf0;
+    border-left: 4px solid #A66CD6;
+}
+.DUEditorMoldura
+{
+    width: 42px;
+    height: 42px;
+    margin-right: 10px;
+    vertical-align: center;
+    border-radius: 2px;
+}
+.DUEditorMoldura:hover
+{
+    brightness: 1.3;
 }
 .DUEditorIcone
 {
-    width: 40px;
-    height: 40px;
-    margin-right: 8px;
+    width: 36px;
+    height: 36px;
+    horizontal-align: center;
     vertical-align: center;
 }
 .DUEditorItemNome
 {
-    width: 170px;
+    width: 182px;
     vertical-align: center;
-    font-size: 15px;
+    font-family: oracle;
+    font-size: 17px;
+    font-weight: bold;
     text-overflow: shrink;
-    color: #f2e4c4;
+    color: #FFEFD7;
 }
 .DUPesos
 {
     flow-children: right;
     vertical-align: center;
-    margin-right: 8px;
+    margin-right: 10px;
 }
-.DUPeso
+.DUEditorLinha .DUPeso
 {
-    width: 32px;
-    padding: 4px 0px;
-    margin-right: 3px;
+    width: 28px;
+    height: 28px;
+    padding: 0px;
+    margin: 0px 3px 0px 0px;
+    background-color: #ffffff14;
+    border: 1px solid #ffffff22;
+    border-radius: 50%;
+    box-shadow: none;
 }
-.DUPeso Label
+.DUEditorLinha .DUPeso Label
 {
     horizontal-align: center;
+    vertical-align: center;
+    font-family: numericBlock;
+    font-size: 15px;
+    color: #FFEFD7aa;
 }
-.DUMotivo
+.DUEditorLinha .DUPeso.DUSelecionado
+{
+    background-color: #d9b26a;
+    border: 1px solid #FFEFD7;
+}
+.DUEditorLinha .DUPeso.DUSelecionado Label
+{
+    color: #2b2219;
+}
+.DUEditorLinha .DUMotivo
 {
     width: fill-parent-flow(1.0);
+    height: 32px;
     vertical-align: center;
+    font-size: 14px;
+    color: #FFEFD7;
+    background-color: #00000055;
+    border: 1px solid #ffffff1a;
+    border-radius: 2px;
 }
-.DURemover
+.DUEditorLinha .DUMotivo:focus
 {
+    border: 1px solid #d9b26a;
+}
+.DUEditorLinha .DURemover
+{
+    width: 28px;
+    height: 28px;
+    padding: 0px;
+    margin: 0px 0px 0px 8px;
     vertical-align: center;
-    margin-left: 6px;
-    background-color: #6b2a20;
+    background-color: #ffffff10;
+    border-radius: 50%;
+    box-shadow: none;
+}
+.DUEditorLinha .DURemover:hover
+{
+    background-color: #b23a2a;
+}
+.DUEditorLinha .DURemover Label
+{
+    horizontal-align: center;
+    vertical-align: center;
+    color: #FFEFD7;
 }
 .DUEditorVazio
 {
-    margin: 12px 0px 0px 10px;
+    margin: 14px 0px 0px 10px;
     font-size: 16px;
     color: #10130Dcc;
 }
 .DUEditorMsg
 {
     width: 100%;
-    height: 22px;
-    margin: 2px 0px 0px 10px;
-    font-size: 15px;
+    height: 20px;
+    margin: 0px 0px 0px 8px;
+    font-family: block;
+    font-size: 13px;
+    letter-spacing: 1px;
     color: #1f5d52;
 }
 
@@ -793,73 +888,96 @@
     width: 100%;
     height: fill-parent-flow(1.0);
     flow-children: down;
-    padding: 8px 10px;
-    background-color: #10130D26;
-    border-radius: 4px;
+}
+.DUCatalogo .DUCartaz
+{
+    margin: 0px 0px 6px 0px;
 }
 .DUCatalogoBarra
 {
     width: 100%;
     flow-children: right;
-}
-.DUCatalogoTitulo
-{
-    font-family: oracle;
-    font-size: 22px;
-    font-style: italic;
-    font-weight: bold;
-    color: #10130D;
-    margin-right: 14px;
-    vertical-align: center;
+    margin-bottom: 4px;
 }
 .DUCatalogoAbas
 {
     flow-children: right;
     vertical-align: center;
 }
-.DUCatalogoAba
+/* abas = botões de categoria da loja */
+.DUEditor .DUCatalogoAba
 {
-    padding: 5px 12px;
-    margin-right: 4px;
-    border-bottom: 3px solid #00000000;
+    height: 36px;
+    padding: 0px 16px;
+    margin: 0px 4px 0px 0px;
+    border-radius: 2px;
+    background-color: #3b3426;
+    box-shadow: 2px 2px 0px #00000060;
+    transition-property: brightness, transform;
+    transition-duration: 0.15s;
 }
-.DUCatAba_weapon
+.DUEditor .DUCatalogoAba:hover
 {
-    border-bottom: 3px solid #e08a3c;
+    brightness: 1.35;
+    transform: translateY(-2px);
 }
-.DUCatAba_vitality
+.DUEditor .DUCatalogoAba Label
 {
-    border-bottom: 3px solid #7cc35a;
+    vertical-align: center;
+    font-family: "Swear Text Demo";
+    font-size: 19px;
+    font-weight: bold;
+    text-transform: none;
+    letter-spacing: 0px;
+    color: #FFEFD7;
 }
-.DUCatAba_spirit
+.DUCatAba_weapon { background-color: gradient( linear, 0% 0%, 100% 0%, from( #6a4310 ), to( #3a2a16 ) ); }
+.DUCatAba_vitality { background-color: gradient( linear, 0% 0%, 100% 0%, from( #3f600f ), to( #1F3400 ) ); }
+.DUCatAba_spirit { background-color: gradient( linear, 0% 0%, 100% 0%, from( #5e3a7c ), to( #2c1b3b ) ); }
+.DUEditor .DUCatalogoAba.DUAbaModoAtivo
 {
-    border-bottom: 3px solid #b27cf0;
+    background-color: gradient( linear, 0% 0%, 100% 0%, from( #b8893f ), to( #6b4c1e ) );
+}
+.DUEditor .DUCatAba_weapon.DUAbaModoAtivo { background-color: gradient( linear, 0% 0%, 100% 0%, from( #9D620B ), to( #583F21 ) ); }
+.DUEditor .DUCatAba_vitality.DUAbaModoAtivo { background-color: gradient( linear, 0% 0%, 100% 0%, from( #649717 ), to( #1F3400 ) ); }
+.DUEditor .DUCatAba_spirit.DUAbaModoAtivo { background-color: gradient( linear, 0% 0%, 100% 0%, from( #8A55B3 ), to( #3a2350 ) ); }
+.DUEditor .DUCatalogoAba.DUAbaModoAtivo Label
+{
+    font-style: italic;
+    color: #FFEFD7;
+    text-shadow: 2px 2px 0px #00000070;
 }
 .DUCatalogoBusca
 {
     width: fill-parent-flow(1.0);
+    height: 36px;
     flow-children: right;
     vertical-align: center;
-    margin-left: 12px;
+    margin-left: 10px;
+    padding: 0px 10px;
+    background-color: #241e18e6;
+    border-radius: 2px;
+    box-shadow: 2px 2px 0px #00000060;
 }
 .DUCatalogoLupa
 {
     vertical-align: center;
-    margin-right: 6px;
-    font-size: 14px;
-    font-weight: bold;
-    color: #10130Dcc;
+    margin-right: 8px;
+    font-family: block;
+    font-size: 13px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #FFEFD799;
 }
-.DUCatalogoCampo
+.DUCatalogoBusca .DUCatalogoCampo
 {
     width: fill-parent-flow(1.0);
-    height: 32px;
-}
-.DUCatalogoAjuda
-{
-    margin: 5px 0px 3px 2px;
-    font-size: 13px;
-    color: #10130Daa;
+    height: 30px;
+    vertical-align: center;
+    font-size: 15px;
+    color: #FFEFD7;
+    background-color: #00000000;
+    border: 0px solid #00000000;
 }
 .DUCatalogoGrade
 {
@@ -870,26 +988,36 @@
 }
 .DUCatalogoGrade VerticalScrollBar .ScrollThumb
 {
-    background-color: #5FE69E80;
+    background-color: #d9b26a99;
 }
 .DUCatalogoTier
 {
     width: 100%;
     flow-children: right;
-    margin: 6px 0px 3px 2px;
-    padding-bottom: 2px;
-    border-bottom: 1px solid #10130D40;
+    margin: 6px 0px 3px 0px;
+    padding: 2px 8px;
+    background-color: gradient( linear, 0% 0%, 100% 0%, from( #10130D40 ), to( #10130D00 ) );
 }
 .DUCatalogoTierNome
 {
-    margin-right: 8px;
-    font-size: 15px;
-    font-weight: bold;
+    vertical-align: center;
+    margin-right: 10px;
+    font-family: block;
+    font-size: 16px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
     color: #10130D;
+}
+.DUCatalogoAlma
+{
+    wash-color: #1f5d52;
+    margin-top: 1px;
 }
 .DUCatalogoTierCusto
 {
-    font-size: 14px;
+    vertical-align: center;
+    font-family: numericBlock;
+    font-size: 16px;
     font-weight: bold;
     color: #1f5d52;
 }
@@ -921,9 +1049,9 @@
 }
 .DUJaNaLista
 {
-    border: 3px solid #1f5d52;
-    saturation: 0.35;
-    brightness: 0.85;
+    border: 3px solid #d9b26a;
+    saturation: 0.3;
+    brightness: 0.8;
 }
 
 /* compartilhar / importar */
@@ -931,10 +1059,14 @@
 {
     width: 100%;
     flow-children: down;
-    margin-top: 6px;
-    padding: 8px 10px;
-    background-color: #10130D26;
-    border-radius: 4px;
+}
+.DUCompartilhar .DUCartaz
+{
+    margin: 4px 0px 6px 0px;
+}
+.DUCompartilhar .DUEditorEstado
+{
+    margin-top: 8px;
 }
 .DUCompartilhar .DUEditorAcoes
 {

@@ -161,6 +161,7 @@ function mostrarDica(rec, tipo, ancora, statusExtra) {
   mostrarPainel(dicaItem.DUDicaCustoLinha, true);
   mostrarPainel(dicaItem.DUDicaMotivos, true);
   dicaItem.DUDicaRodape.text = T("dica.comprar");
+  mostrarPainel(dicaItem.DUDicaRodape, true);
   try { dicaItem.DUDicaIcone.SetImage(iconeItem(it)); } catch (e) {}
   dicaItem.DUDicaNome.text = nomeItem(it);
   var pode = podeComprar(it.id);
@@ -183,6 +184,51 @@ function mostrarDica(rec, tipo, ancora, statusExtra) {
     var pos = ancora.GetPositionWithinWindow();
     var escala = ancora.actualuiscale_x || 1;
     dicaItem.painel.style.position = Math.round(pos.x / escala + 70) + "px " + Math.max(10, Math.round(pos.y / escala - 120)) + "px 0px";
+  } catch (e) {}
+  mostrarPainel(dicaItem.painel, true);
+}
+// Tooltip com os detalhes do item (descrição e atributos do jogo, data/itens-detalhes.json), para o
+// editor de counters: o tooltip nativo não abre em painéis criados pelo mod.
+function detalhesDoItem(it) {
+  var d = DU_DATA.detalhesItens || {};
+  return (d[IDIOMA] || {})[it.id] || (d.en || {})[it.id] || [];
+}
+function htmlDetalhes(it) {
+  var cor = { weapon: "#EC9719", vitality: "#8EDA3B", spirit: "#CE90FF" }[it.categoria] || "#FFEFD7";
+  return detalhesDoItem(it).map(function (s) {
+    var cab = s.tipo === "active" ? "<font color='#FFEFD7'><b>" + esc(T("dica.ativo").toUpperCase()) + "</b></font><br>" :
+      s.tipo === "passive" ? "<font color='#FFEFD7'><b>" + esc(T("dica.passivo").toUpperCase()) + "</b></font><br>" : "";
+    var stats = (s.st || []).map(function (p) { return "<font color='" + cor + "'><b>" + esc(p[0]) + "</b></font> " + esc(p[1]); }).join("<br>");
+    return cab + (s.txt ? s.txt + (stats ? "<br>" : "") : "") + stats;
+  }).join("<br><br>");
+}
+function mostrarDicaDetalhe(it, ancora, rodape) {
+  if (!montarDica()) return;
+  dicaItem.item = it.id;
+  ["weapon", "vitality", "spirit"].forEach(function (c) { dicaItem.painel.SetHasClass("DUDica_" + c, it.categoria === c); });
+  dicaItem.painel.RemoveClass("DUDica_mapa");
+  dicaItem.painel.RemoveClass("DUSemAlmas");
+  mostrarPainel(dicaItem.DUDicaIcone, true);
+  mostrarPainel(dicaItem.DUDicaCustoLinha, true);
+  try { dicaItem.DUDicaIcone.SetImage(iconeItem(it)); } catch (e) {}
+  dicaItem.DUDicaNome.text = nomeItem(it);
+  dicaItem.DUDicaCusto.text = String(it.custo);
+  dicaItem.DUDicaStatus.text = esc(T("ed.tier", it.tier));
+  mostrarPainel(dicaItem.DUDicaStatus, true);
+  mostrarPainel(dicaItem.DUDicaContra, false);
+  var html = htmlDetalhes(it);
+  dicaItem.DUDicaMotivos.text = html;
+  mostrarPainel(dicaItem.DUDicaMotivos, !!html);
+  dicaItem.DUDicaRodape.text = rodape || "";
+  mostrarPainel(dicaItem.DUDicaRodape, !!rodape);
+  // Ao lado do item; se não couber à direita (itens na borda da tela), à esquerda.
+  try {
+    var pos = ancora.GetPositionWithinWindow();
+    var escala = ancora.actualuiscale_x || 1;
+    var largura = (hud.actuallayoutwidth || 1920 * escala) / escala;
+    var x = pos.x / escala + (ancora.actuallayoutwidth || 64 * escala) / escala + 8;
+    if (x + 460 > largura) x = pos.x / escala - 460;
+    dicaItem.painel.style.position = Math.round(Math.max(0, x)) + "px " + Math.max(10, Math.round(pos.y / escala - 140)) + "px 0px";
   } catch (e) {}
   mostrarPainel(dicaItem.painel, true);
 }

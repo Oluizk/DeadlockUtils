@@ -18,7 +18,7 @@ function abrirEditor(alvo, detalhe) {
   var corpo = criar("Panel", alvo, "", "DUEditor");
 
   var esquerda = criar("Panel", corpo, "", "DUEditorHerois");
-  rotulo(esquerda, "DUAbaSecao", T("ed.heroiInimigo"));
+  cartaz(esquerda, { titulo: T("ed.cartazHerois"), sub: T("ed.cartazHeroisSub"), tema: "escuro" });
   var grade = criar("Panel", esquerda, "", "DUGradeHerois");
   Object.keys(dados.herois).sort().forEach(function (nome) {
     var b = criar("Panel", grade, "", "DUHeroiBotao" + (nome === editor.heroi ? " DUSelecionado" : ""));
@@ -43,13 +43,13 @@ function desenharHeroiEditor() {
   var h = editor.heroi;
   if (!editor.rascunho) editor.rascunho = countersDoHeroi(h).map(function (c) { return { item: c.item, peso: c.peso, motivo: c.motivo || "" }; });
 
-  // cabeçalho: retrato, título, estado (padrão / editado) e ações
+  // cabeçalho: retrato + cartaz com o nome do herói; embaixo, estado (padrão / editado) e ações
   var cab = criar("Panel", d, "", "DUEditorCab");
   imagem(cab, "DUEditorFoto", imagemHeroi(h));
-  var tt = criar("Panel", cab, "", "DUEditorCabTextos");
-  rotulo(tt, "DUEditorTitulo", esc(T("ed.countersContra", h)));
-  rotulo(tt, "DUEditorEstado", T(overrides.herois[h] ? "ed.editadoPorVoce" : "ed.padraoComunidade") + " " + T("ed.ajudaPeso"));
-  var acoes = criar("Panel", cab, "", "DUEditorAcoes");
+  cartaz(cab, { titulo: h, sub: T("ed.cartazCountersSub"), tema: "vermelho" });
+  var barraCab = criar("Panel", d, "", "DUEditorBarraCab");
+  rotulo(barraCab, "DUEditorEstado", T(overrides.herois[h] ? "ed.editadoPorVoce" : "ed.padraoComunidade"));
+  var acoes = criar("Panel", barraCab, "", "DUEditorAcoes");
   botao(acoes, "DUBotaoPrimario", T("ed.salvar"), function () {
     overrides.herois[h] = editor.rascunho.filter(function (c) { return dados.itensPorId[c.item]; });
     salvarOverrides();
@@ -81,8 +81,11 @@ function desenharHeroiEditor() {
     var it = dados.itensPorId[c.item];
     if (!it) return;
     var linha = criar("Panel", lista, "", "DUEditorLinha DUCat_" + it.categoria);
-    var icone = imagem(linha, "DUEditorIcone", iconeItem(it));
-    tooltipDoItem(icone, it);
+    // ícone no fundo do cartão da loja (cor e tier do item)
+    var moldura = criar("Panel", linha, "", "DUEditorMoldura");
+    try { moldura.style.backgroundImage = fundoCartao(it); moldura.style.backgroundSize = "cover"; } catch (e) {}
+    imagem(moldura, "DUEditorIcone", iconeItem(it));
+    tooltipDoItem(moldura, it);
     rotulo(linha, "DUEditorItemNome", esc(nomeItem(it)));
     var pesos = criar("Panel", linha, "", "DUPesos");
     [1, 2, 3, 4].forEach(function (p) {
@@ -107,8 +110,8 @@ function desenharHeroiEditor() {
 // ---------- catálogo de itens: pesquisa + abas + grade ----------
 function desenharCatalogo(d) {
   var caixa = criar("Panel", d, "", "DUCatalogo");
+  cartaz(caixa, { titulo: T("ed.itens"), sub: T("ed.itensSub"), tema: "teal" });
   var barra = criar("Panel", caixa, "", "DUCatalogoBarra");
-  rotulo(barra, "DUCatalogoTitulo", T("ed.adicionar"));
   var abas = criar("Panel", barra, "", "DUCatalogoAbas");
   editor.abas = {};
   ["todas"].concat(CATEGORIAS).forEach(function (cat) {
@@ -128,7 +131,6 @@ function desenharCatalogo(d) {
     // Só a grade é redesenhada: redesenhar tudo tiraria o foco do campo a cada letra.
     evento(campo, "ontextentrychange", function () { editor.busca = textoDe(campo); desenharGradeCatalogo(); });
   }
-  rotulo(caixa, "DUCatalogoAjuda", T("ed.cliqueAdicionar"));
   editor.grade = criar("Panel", caixa, "", "DUCatalogoGrade");
   desenharGradeCatalogo();
 }
@@ -161,7 +163,8 @@ function desenharGradeCatalogo() {
       tier = it.tier;
       var cabTier = criar("Panel", g, "", "DUCatalogoTier");
       rotulo(cabTier, "DUCatalogoTierNome", T("ed.tier", tier));
-      rotulo(cabTier, "DUCatalogoTierCusto", esc(T("almas", it.custo)));
+      criar("Panel", cabTier, "", "DUDicaAlma DUCatalogoAlma");
+      rotulo(cabTier, "DUCatalogoTierCusto", String(it.custo));
       linha = criar("Panel", g, "", "DUCatalogoLinha");
     }
     var c = cartaoItem(linha, it, { classe: "DUCartaoEscolha" + (no[it.id] ? " DUJaNaLista" : "") });
@@ -174,26 +177,20 @@ function desenharGradeCatalogo() {
   });
 }
 
-// Tooltip do próprio jogo (CitadelShowModTooltip, 40-tab.js); se não houver, um texto simples.
+// Tooltip no visual do jogo com a descrição e os atributos do item (mostrarDicaDetalhe, 40-tab.js).
 function tooltipDoItem(p, it, extra) {
   if (!p) return;
   evento(p, "onmouseover", function () {
-    if (!abrirTooltipNativo(p, it)) {
-      var t = nomeItem(it) + " (T" + it.tier + ")" + (extra ? "\n" + extra() : "");
-      try { $.DispatchEvent("UIShowTextTooltip", p, t); } catch (e) {}
-    }
+    mostrarDicaDetalhe(it, p, extra ? extra() : "");
     if (valido(editor.detalhe)) editor.detalhe.text = "<b>" + esc(nomeItem(it)) + "</b>" + (extra ? ": " + esc(extra()) : "");
   });
-  evento(p, "onmouseout", function () {
-    fecharTooltipNativo();
-    try { $.DispatchEvent("UIHideTextTooltip", p); } catch (e) {}
-  });
+  evento(p, "onmouseout", esconderDica);
 }
 
 // ---------- compartilhar / importar ----------
 function desenharCompartilhar(d) {
   var caixa = criar("Panel", d, "", "DUCompartilhar");
-  rotulo(caixa, "DUCatalogoTitulo", T("ed.compartilhar"));
+  cartaz(caixa, { titulo: T("ed.compartilhar"), sub: T("ed.compartilharSub"), tema: "escuro" });
   var linha = criar("Panel", caixa, "", "DUEditorAcoes");
   if (editor.heroi) botao(linha, "", esc(T("ed.copiarDe", editor.heroi)), function () { compartilhar([editor.heroi]); });
   botao(linha, "", T("ed.copiarTudo"), function () {

@@ -104,6 +104,7 @@ tools/build-mod.ps1     compila o VPK (sem ferramentas da Valve)
 tools/atualizar-builds.ps1  regenera data/builds.json a partir do heroes.vdata do jogo
 data/textos.json        textos da interface por idioma (en, pt, es, ru); textos das regras ficam nos próprios arquivos de data/rules como { "en", "pt", "es", "ru" }
 tools/atualizar-mapa.ps1    regenera data/mapa.json (deadlock-api + túneis do Rem lidos do mapa com o Source2Viewer)
+tools/atualizar-itens.ps1   regenera data/itens-detalhes.json (descrição e atributos dos itens nos 4 idiomas, do deadlock-api; usado no tooltip do editor)
 tools/bin/s2v/          Source2Viewer CLI (não vai para o git; baixe em github.com/ValveResourceFormat/ValveResourceFormat/releases, arquivo cli-windows-x64.zip)
 test/hud-simulado.html  simula o HUD no navegador para testar o script sem abrir o jogo
 ```

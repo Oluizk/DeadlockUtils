@@ -192,11 +192,12 @@ function mostrarDicaMapa(c, pt, i) {
   mostrarPainel(dicaItem.DUDicaCustoLinha, false);
   dicaItem.painel.RemoveClass("DUSemAlmas");
   mostrarPainel(dicaItem.DUDicaStatus, true);
-  dicaItem.DUDicaStatus.text = "<font color='" + c.cor + "'>" + c.pontos.length + " no mapa</font>";
+  dicaItem.DUDicaStatus.text = "<font color='" + c.cor + "'>" + esc(T("mapa.qtd", c.pontos.length)) + "</font>";
   mostrarPainel(dicaItem.DUDicaContra, false);
   dicaItem.DUDicaMotivos.text = esc(c.desc || "");
   mostrarPainel(dicaItem.DUDicaMotivos, !!c.desc);
   dicaItem.DUDicaRodape.text = T(marcas.lista[c.id + ":" + i] ? "mapa.desmarcar" : "mapa.marcar");
+  mostrarPainel(dicaItem.DUDicaRodape, true);
   // Posição pela conta (não pela posição do ícone): funciona também com o mapa invertido.
   try {
     var mm = minimapa();

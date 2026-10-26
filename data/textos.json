@@ -258,7 +258,16 @@
     "ed.cliqueRemover": "already in the list, click to remove",
     "ed.nadaEncontrado": "No item found.",
     "ed.tier": "Tier {1}",
-    "ed.naLista": "ADDED"
+    "ed.naLista": "ADDED",
+    "ed.cartazHerois": "Heroes",
+    "ed.cartazHeroisSub": "pick an enemy",
+    "ed.cartazCountersSub": "how to counter",
+    "ed.itens": "Items",
+    "ed.itensSub": "click to add",
+    "ed.compartilharSub": "send to friends",
+    "dica.ativo": "Active",
+    "dica.passivo": "Passive",
+    "mapa.qtd": "{1} on the map"
   },
   "pt": {
     "cartaz.topo.sub": "os itens certos, na hora certa!",
@@ -518,7 +527,16 @@
     "ed.cliqueRemover": "já está na lista, clique para tirar",
     "ed.nadaEncontrado": "Nenhum item encontrado.",
     "ed.tier": "Tier {1}",
-    "ed.naLista": "NA LISTA"
+    "ed.naLista": "NA LISTA",
+    "ed.cartazHerois": "Heróis",
+    "ed.cartazHeroisSub": "escolha um inimigo",
+    "ed.cartazCountersSub": "como counterar",
+    "ed.itens": "Itens",
+    "ed.itensSub": "clique para adicionar",
+    "ed.compartilharSub": "mande para os amigos",
+    "dica.ativo": "Ativo",
+    "dica.passivo": "Passivo",
+    "mapa.qtd": "{1} no mapa"
   },
   "es": {
     "cartaz.topo.sub": "¡los objetos justos, en el momento justo!",
@@ -778,7 +796,16 @@
     "ed.cliqueRemover": "ya está en la lista, clic para quitar",
     "ed.nadaEncontrado": "No se encontró ningún objeto.",
     "ed.tier": "Nivel {1}",
-    "ed.naLista": "AÑADIDO"
+    "ed.naLista": "AÑADIDO",
+    "ed.cartazHerois": "Héroes",
+    "ed.cartazHeroisSub": "elige un enemigo",
+    "ed.cartazCountersSub": "cómo counterear",
+    "ed.itens": "Objetos",
+    "ed.itensSub": "clic para añadir",
+    "ed.compartilharSub": "envíalo a tus amigos",
+    "dica.ativo": "Activo",
+    "dica.passivo": "Pasivo",
+    "mapa.qtd": "{1} en el mapa"
   },
   "ru": {
     "cartaz.topo.sub": "нужные предметы в нужный момент!",
@@ -1038,6 +1065,15 @@
     "ed.cliqueRemover": "уже в списке, нажмите, чтобы убрать",
     "ed.nadaEncontrado": "Предметы не найдены.",
     "ed.tier": "Уровень {1}",
-    "ed.naLista": "В СПИСКЕ"
+    "ed.naLista": "В СПИСКЕ",
+    "ed.cartazHerois": "Герои",
+    "ed.cartazHeroisSub": "выберите врага",
+    "ed.cartazCountersSub": "как законтрить",
+    "ed.itens": "Предметы",
+    "ed.itensSub": "нажмите, чтобы добавить",
+    "ed.compartilharSub": "отправьте друзьям",
+    "dica.ativo": "Активный",
+    "dica.passivo": "Пассивный",
+    "mapa.qtd": "На карте: {1}"
   }
 }

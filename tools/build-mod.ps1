@@ -15,7 +15,7 @@ param(
 )
 . (Join-Path $PSScriptRoot "jogo.ps1")
 
-$VersaoMod = "1.1.0"
+$VersaoMod = "1.2.0"
 $Nome = "deadlock_utils"
 $utf8 = New-Object Text.UTF8Encoding $false
 function Ler([string]$rel) { [IO.File]::ReadAllText((Join-Path $Raiz $rel), [Text.Encoding]::UTF8).TrimStart([char]0xFEFF) }
@@ -165,6 +165,7 @@ heroes: $(Ler "data\heroes.json"),
 builds: $(Ler "data\builds.json"),
 mapa: $(Ler "data\mapa.json"),
 textos: $(Ler "data\textos.json"),
+detalhesItens: $(Ler "data\itens-detalhes.json"),
 countersHerois: $(Ler "data\rules\counters-herois.json"),
 ameacas: $(Ler "data\rules\itens-inimigos.json"),
 regrasArquivos: [
