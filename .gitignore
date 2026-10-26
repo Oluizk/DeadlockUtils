@@ -1,5 +1,5 @@
 build/
-.claude/settings.local.json
+.claude/
 Thumbs.db
 desktop.ini
 test/*.png
@@ -8,3 +8,4 @@ test/icones/
 exceptions.txt
 test/fontes/
 dist/
+docs/
