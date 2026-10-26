@@ -270,38 +270,38 @@ function vigiarMarcas() {
 // ---------- ícones dos heróis (menores com o mapa grande) ----------
 // Você: largura em % (o CSS do jogo usa 15%). Os outros heróis têm o tamanho definido pelo próprio jogo
 // (citadel_minimap_player_width), então encolhem por pre-transform-scale2d, que o jogo não mexe.
-function ajustarJogador(abrir) {
-  if (abrir) {
-    // Os painéis aparecem/somem (visão, morte, renascer): procura de novo a cada segundo.
-    if (Date.now() - mapa.jogadorEm < 1000) return;
-    mapa.jogadorEm = Date.now();
-    porClasse(minimapa(), "player").forEach(function (p) {
-      if (mapa.jogador.indexOf(p) < 0 && temClasse(p, "map_button")) mapa.jogador.push(p);
-    });
-  }
+function ajustarJogador(forcar) {
+  // Os painéis aparecem/somem (visão, morte, renascer): procura de novo a cada segundo.
+  if (!forcar && Date.now() - mapa.jogadorEm < 1000) return;
+  mapa.jogadorEm = Date.now();
+  porClasse(minimapa(), "player").forEach(function (p) {
+    if (mapa.jogador.indexOf(p) < 0 && temClasse(p, "map_button")) mapa.jogador.push(p);
+  });
   mapa.jogador = mapa.jogador.filter(valido);
+  // Mapa grande: os dois ajustes do mapa. Minimapa normal: só o seu ícone (o do jogo é 15%, enorme
+  // quando o minimapa está ampliado); os outros heróis ficam como o jogo desenha.
+  var grande = mapa.aberto;
+  var tamEu = grande ? TAM_JOGADOR_MAPA : (ajustes.miniEu || "15%");
+  var escOutros = grande ? ESCALA_HEROIS_MAPA : "1";
+  var chave = tamEu + "|" + escOutros + "|" + mapa.jogador.length;
+  if (!forcar && chave === mapa.chaveJogador) return; // nada mudou: não mexe nos estilos à toa
+  mapa.chaveJogador = chave;
   mapa.jogador.forEach(function (p) {
-    var eu = temClasse(p, "localplayer");
     try {
-      if (abrir) {
-        if (eu) { p.style.width = TAM_JOGADOR_MAPA; p.style.height = TAM_JOGADOR_MAPA; }
-        else p.style.preTransformScale2d = ESCALA_HEROIS_MAPA;
-        return;
-      }
-      if (eu) {
+      if (temClasse(p, "localplayer")) {
+        if (tamEu !== "15%") { p.style.width = tamEu; p.style.height = tamEu; return; }
         p.style.width = null;
         p.style.height = null;
         // Se o Panorama não aceitar null, volta ao valor do CSS do jogo (hud_minimap.css: 15%).
-        if (String(p.style.width || "") === TAM_JOGADOR_MAPA) { p.style.width = "15%"; p.style.height = "15%"; }
+        if (p.style.width && String(p.style.width) !== "15%") { p.style.width = "15%"; p.style.height = "15%"; }
       } else {
+        if (escOutros !== "1") { p.style.preTransformScale2d = escOutros; return; }
         p.style.preTransformScale2d = null;
-        if (String(p.style.preTransformScale2d || "") === ESCALA_HEROIS_MAPA) p.style.preTransformScale2d = "1";
+        if (p.style.preTransformScale2d && String(p.style.preTransformScale2d) !== "1") p.style.preTransformScale2d = "1";
       }
     } catch (e) {}
   });
-  if (!abrir) mapa.jogador = [];
 }
-
 // ---------- painel lateral (timers + filtros) ----------
 function montarPainelMapa() {
   if (mapa.falhou || valido(mapa.painel)) return;
@@ -388,7 +388,7 @@ function fecharMapa() {
   hud.RemoveClass("DUMapaAberto");
   mostrarPainel(mapa.painel, false);
   atualizarCamadaPontos(); // os pontos continuam no minimapa pequeno (configurações)
-  ajustarJogador(false);
+  ajustarJogador(true); // volta aos tamanhos do minimapa normal
   if (estava) {
     if (dicaItem.item.indexOf("mapa:") === 0) esconderDica();
     comando("-show_scoreboard");
@@ -466,6 +466,7 @@ function garantirPontosMinimapa(leitura) {
 // Chamado pelo loop rápido: fecha quando a loja abre ou o jogador saiu do placar por fora.
 function vigiarMapa(estado) {
   vigiarMarcas();
+  if (modLigado) ajustarJogador(false);
   if (valido(pontos.painel) && pontos.painel.visible !== false) atualizarCamadaPontos(); // segue a animação de abrir/fechar
   if (!mapa.aberto) return;
   ajustarJogador(true);

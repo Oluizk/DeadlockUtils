@@ -8,6 +8,7 @@ var AJUSTES_PADRAO = {
   mapaTam: 820,          // mapa grande
   mapaHerois: "0.5",     // escala dos outros heróis no mapa grande
   mapaEu: "4.5%",        // seu ícone no mapa grande (o jogo usa 15%)
+  miniEu: "9%",          // seu ícone no minimapa normal (o jogo usa 15%)
   mapaPainel: true,      // painel lateral com timers e filtros
   mapaCortaTopo: true,   // esconde os detalhes do placar no topo com o mapa aberto
   marcaSeg: (DU_DATA.config || {}).segundosMarcaMapa || 60,
@@ -69,7 +70,8 @@ function aplicarAjustes() {
     if (mapa.aberto) { aplicarFiltros(); desenharMarcas(true); }
   }
   atualizarCamadaPontos();
-  if (mapa.aberto) { mapa.jogadorEm = 0; ajustarJogador(true); mostrarPainel(mapa.painel, ajustes.mapaPainel); }
+  ajustarJogador(true);
+  if (mapa.aberto) mostrarPainel(mapa.painel, ajustes.mapaPainel);
   Object.keys(ajustes.teclas).forEach(function (a) { registrarTecla(ajustes.teclas[a]); });
 }
 
@@ -120,6 +122,7 @@ function desenharAjustes() {
 
   cartaz(p, { titulo: T("aj.minimapa"), sub: T("aj.minimapa.sub"), tema: "espirito" });
   linhaAjuste(p, T("aj.tamMini"), T("aj.tamMini.desc"), [[100, T("aj.normal")], [115, "+15%"], [130, "+30%"], [150, "+50%"]], ajustes.miniEscala, mudar("miniEscala"));
+  linhaAjuste(p, T("aj.miniEu"), T("aj.miniEu.desc"), [["6%", T("aj.pequeno")], ["9%", T("aj.medio")], ["12%", T("aj.grande")], ["15%", T("aj.doJogo")]], ajustes.miniEu, mudar("miniEu"));
   linhaAjuste(p, T("aj.miniPontos"), T("aj.miniPontos.desc"), [[0, T("aj.desligado")], [1, T("aj.pequenos")], [2, T("aj.medios")], [3, T("aj.grandes")]], ajustes.miniPontos, mudar("miniPontos"));
 
   cartaz(p, { titulo: T("aj.pontos"), sub: T("aj.pontos.sub"), tema: "vitalidade" });
