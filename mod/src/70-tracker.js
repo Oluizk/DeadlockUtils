@@ -146,24 +146,28 @@ function desenharDetalheTracker(jogadores) {
   bloco(T("tr.historico"), hist);
 }
 
-// Botões "Deadlock Utils" (central de configurações) e "Tracker" no menu ESC da partida (usam as classes do
-// próprio menu, então ficam com o visual do jogo). Ficam na linha do "Comentários" (#SubOptions > .FeedbackRow),
-// como itens "minor" do próprio menu.
+// Botões "Deadlock Utils" (central de configurações) e "Tracker" no menu ESC da partida, numa linha própria
+// logo abaixo do "Comentários" (#SubOptions > .FeedbackRow). O menu é outro layout (hud_escape_menu.xml), e
+// o CSS dele não vale para painéis criados por este script; por isso a linha vem de um layout do mod
+// (menuesc.xml) que inclui esse CSS: os botões usam as classes do jogo e ficam iguais aos do menu (fonte,
+// cores, hover e sons vêm do jogo).
 var botaoEscPronto = false;
 function montarBotaoEsc() {
   if (botaoEscPronto) return;
   var menu = achar(hud, "EscapeMenu");
   if (!valido(menu)) return;
-  var linha = porClasse(achar(menu, "SubOptions"), "FeedbackRow")[0] || achar(menu, "SubOptions");
-  if (!valido(linha)) return;
-  [["DUBotaoCentral", "Deadlock Utils", abrirCentral], ["DUBotaoTracker", "Tracker", abrirTracker]].forEach(function (x) {
-    if (valido(achar(menu, x[0]))) return;
-    var b = criar("Button", linha, x[0], "nav_menu_item minor");
-    if (!b) return;
-    rotulo(b, "menuButtonLabel", x[1]);
-    aoClicar(b, function () {
+  var sub = achar(menu, "SubOptions");
+  if (!valido(sub)) return;
+  var linha = painelComLayout(sub, "DULinhaMenuEsc", "menuesc");
+  if (!linha) return;
+  var comentarios = porClasse(sub, "FeedbackRow")[0];
+  if (valido(comentarios)) { try { sub.MoveChildAfter(linha, comentarios); } catch (e) {} }
+  [["DUBotaoCentral", abrirCentral], ["DUBotaoTracker", abrirTracker]].forEach(function (x) {
+    var b = achar(linha, x[0]);
+    if (!valido(b)) return;
+    evento(b, "onactivate", function () {
       try { $.DispatchEvent("CitadelResumePlaying"); } catch (e) {} // fecha o menu ESC
-      x[2]();
+      x[1]();
     });
   });
   botaoEscPronto = true;

@@ -1,0 +1,18 @@
+<root>
+	<styles>
+		<!-- O CSS do próprio menu ESC (com o base antes, de onde vêm os @define que ele usa): os botões
+		     usam as classes do jogo e ficam iguais aos do menu, com hover e sons. -->
+		<include src="s2r://panorama/styles/citadel_base_styles.vcss" />
+		<include src="s2r://panorama/styles/hud_escape_menu.vcss" />
+		<include src="s2r://panorama/styles/deadlock_utils.vcss_c" />
+	</styles>
+	<!-- Linha do mod no menu ESC (70-tracker.js), logo abaixo do "Comentários" -->
+	<Panel class="DULinhaMenuEsc">
+		<Button id="DUBotaoCentral" class="nav_menu_item minor">
+			<Label class="menuButtonLabel" text="Deadlock Utils" />
+		</Button>
+		<Button id="DUBotaoTracker" class="nav_menu_item minor">
+			<Label class="menuButtonLabel" text="Tracker" />
+		</Button>
+	</Panel>
+</root>

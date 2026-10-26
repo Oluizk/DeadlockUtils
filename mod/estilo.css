@@ -2768,6 +2768,24 @@
     color: #4f402d;
 }
 
+/* Linha do mod no menu ESC (layout menuesc.xml, que inclui o hud_escape_menu.css do jogo: o visual dos
+   botões é o de .nav_menu_item.minor de lá). Daqui só o que o jogo faz por id: a linha em fila, como a
+   .FeedbackRow, e a caixa alta, como a do "Comentários". */
+.DULinhaMenuEsc
+{
+    flow-children: right;
+    height: fit-children;
+    overflow: noclip;
+}
+.DULinhaMenuEsc .menuButtonLabel
+{
+    text-transform: uppercase;
+}
+.DULinhaMenuEsc #DUBotaoTracker
+{
+    margin-left: 24px;
+}
+
 /* Por último para vencer as regras acima */
 .DUEscondido
 {
