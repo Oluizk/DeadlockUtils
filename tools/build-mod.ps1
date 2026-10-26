@@ -15,7 +15,7 @@ param(
 )
 . (Join-Path $PSScriptRoot "jogo.ps1")
 
-$VersaoMod = "1.3.0"
+$VersaoMod = "2.0.0"
 $Nome = "deadlock_utils"
 $utf8 = New-Object Text.UTF8Encoding $false
 function Ler([string]$rel) { [IO.File]::ReadAllText((Join-Path $Raiz $rel), [Text.Encoding]::UTF8).TrimStart([char]0xFEFF) }
@@ -28,14 +28,19 @@ Write-Host "Deadlock: $Jogo (versão $versaoJogo)"
 & powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $PSScriptRoot "validar.ps1")
 if ($LASTEXITCODE -ne 0) { throw "Corrija as regras antes de compilar." }
 
-# 1) hud.xml original. Ele precisa ser da MESMA versão do jogo, senão o HUD quebra.
+# 1) Layouts originais do jogo que o mod altera (mod/vendor/<nome>.xml). Precisam ser da MESMA versão do
+#    jogo, senão o HUD quebra. hud.xml recebe o script e o estilo do mod; os outros recebem os blocos de
+#    mod/jogo/<nome>.xml (ver o formato lá).
+$LayoutsJogo = @("hud", "citadel_hud_top_bar", "citadel_hud_top_bar_player", "hud_health")
 $hudVendor = Join-Path $Raiz "mod\vendor\hud.xml"
 $hudVersaoArq = Join-Path $Raiz "mod\vendor\hud.versao.txt"
 if ($AtualizarHud) {
-  Write-Host "Baixando hud.xml atual do GameTracking-Deadlock..."
-  $url = "https://raw.githubusercontent.com/SteamTracking/GameTracking-Deadlock/master/game/citadel/pak01_dir/panorama/layout/hud.xml"
+  Write-Host "Baixando os layouts atuais do GameTracking-Deadlock..."
+  foreach ($n in $LayoutsJogo) {
+    $url = "https://raw.githubusercontent.com/SteamTracking/GameTracking-Deadlock/master/game/citadel/pak01_dir/panorama/layout/$n.xml"
+    [IO.File]::WriteAllText((Join-Path $Raiz "mod\vendor\$n.xml"), (Invoke-WebRequest -UseBasicParsing $url).Content, $utf8)
+  }
   $urlInf = "https://raw.githubusercontent.com/SteamTracking/GameTracking-Deadlock/master/game/citadel/steam.inf"
-  [IO.File]::WriteAllText($hudVendor, (Invoke-WebRequest -UseBasicParsing $url).Content, $utf8)
   $inf = (Invoke-WebRequest -UseBasicParsing $urlInf).Content
   $v = ([regex]::Match($inf, "ClientVersion=(\d+)")).Groups[1].Value
   [IO.File]::WriteAllText($hudVersaoArq, $v, $utf8)
@@ -58,6 +63,39 @@ if ($hud.Contains("</scripts>")) {
 } else {
   $j = $hud.IndexOf("</styles>") + "</styles>".Length
   $hud = $hud.Insert($j, "`n`t<scripts>`n`t`t$incScript`n`t</scripts>")
+}
+
+# Aplica mod/jogo/<nome>.xml num layout do jogo. Diretivas (comentários):
+#   <!-- DU:estilo <css> -->     inclui panorama/styles/<css>.vcss_c no fim dos <styles> do layout
+#   <!-- DU:depois <trecho> -->  o bloco seguinte entra logo depois do trecho
+#   <!-- DU:antes <trecho> -->   ... logo antes
+#   <!-- DU:trocar <trecho> -->  ... no lugar do trecho
+# No trecho, um espaço vale qualquer quantidade de espaço/quebra de linha. O trecho tem que existir uma
+# vez só no original: se um patch do jogo mexer nele, o build para aqui (e não sai um HUD quebrado).
+function Aplicar-Patch([string]$xml, [string]$nome) {
+  $texto = Ler "mod\jogo\$nome.xml"
+  $partes = [regex]::Split($texto, "<!--\s*DU:(estilo|depois|antes|trocar)\s+(.*?)\s*-->", "Singleline")
+  for ($i = 1; $i -lt $partes.Count; $i += 3) {
+    $tipo = $partes[$i]; $arg = $partes[$i + 1]
+    $bloco = [regex]::Replace($partes[$i + 2], "<!--.*?-->", "", "Singleline").Trim("`r", "`n")
+    if ($tipo -eq "estilo") {
+      $bloco = "`t`t<include src=`"s2r://panorama/styles/$arg.vcss_c`" />"
+      $tipo = "antes"; $arg = "</styles>"
+    }
+    $re = ([regex]::Escape($arg) -replace "(\\ )+", "\s+")
+    $achados = [regex]::Matches($xml, $re)
+    if ($achados.Count -ne 1) { throw "mod/jogo/$nome.xml: o trecho '$arg' aparece $($achados.Count) vez(es) no $nome.xml do jogo (o jogo mudou?)" }
+    $m = $achados[0]
+    if ($tipo -eq "trocar") { $xml = $xml.Remove($m.Index, $m.Length).Insert($m.Index, $bloco) }
+    elseif ($tipo -eq "depois") { $xml = $xml.Insert($m.Index + $m.Length, "`n" + $bloco) }
+    else { $xml = $xml.Insert($m.Index, $bloco + "`n") }
+  }
+  return $xml
+}
+$layoutsAlterados = @{}
+foreach ($n in $LayoutsJogo | Where-Object { $_ -ne "hud" }) {
+  $original = [regex]::Replace((Ler "mod\vendor\$n.xml"), "^\s*<!--.*?-->\s*", "", "Singleline")
+  $layoutsAlterados[$n] = Aplicar-Patch $original $n
 }
 
 # 2) Nomes dos heróis em todos os idiomas do jogo (o placar mostra o nome localizado).
@@ -183,11 +221,26 @@ $modulos
 })();
 "@
 # 5) CSS: o Panorama não entende alguns seletores e um CSS inválido derruba o HUD inteiro.
+# Os @define do jogo (offWhite, block, oracle...) só valem dentro do arquivo do jogo que os cria: no CSS
+# do mod viram valor inválido em silêncio (fonte padrão, cor errada). O build recusa.
+function Validar-Css([string]$arquivo, [string]$texto) {
+  $semComentarios = [regex]::Replace($texto, "/\*.*?\*/", "", "Singleline")
+  foreach ($m in [regex]::Matches($semComentarios, "([^{}]*)\{")) {
+    $sel = $m.Groups[1].Value
+    if ($sel.Trim().StartsWith("0%") -or $sel.Trim().StartsWith("50%") -or $sel.Trim().StartsWith("100%")) { continue }
+    if ($sel -match "[+~]" -or $sel -match "::|:(not|is|where|has|nth-[a-z-]+)\(") { throw "$arquivo : seletor não suportado pelo Panorama: '$($sel.Trim())'" }
+  }
+  $apelido = [regex]::Match($semComentarios, ":\s*(offWhite|offBlack|block|oracle|numericBlock|numericOracle|colorEnemy|team1Color|team2Color)\s*[;,]")
+  if ($apelido.Success) { throw "$arquivo : '$($apelido.Groups[1].Value)' é um @define do jogo e não vale no CSS do mod; use o valor (ver mod/jogo/topo.css)" }
+  $abre = ([regex]::Matches($semComentarios, "\{")).Count; $fecha = ([regex]::Matches($semComentarios, "\}")).Count
+  if ($abre -ne $fecha) { throw "$arquivo : chaves desbalanceadas ({ $abre, } $fecha)" }
+}
 $css = Ler "mod\estilo.css"
-$semComentarios = [regex]::Replace($css, "/\*.*?\*/", "", "Singleline")
-foreach ($m in [regex]::Matches($semComentarios, "([^{}]*)\{")) {
-  $sel = $m.Groups[1].Value
-  if ($sel -match "[+~]" -or $sel -match "::|:(not|is|where|has|nth-[a-z-]+)\(") { throw "CSS: seletor não suportado pelo Panorama: '$($sel.Trim())'" }
+Validar-Css "mod/estilo.css" $css
+$cssJogo = @{}
+foreach ($arq in Get-ChildItem (Join-Path $Raiz "mod\jogo") -Filter "*.css") {
+  $cssJogo[$arq.BaseName] = Ler "mod\jogo\$($arq.Name)"
+  Validar-Css "mod/jogo/$($arq.Name)" $cssJogo[$arq.BaseName]
 }
 
 # 6) Modelos (blocos de metadados) tirados do próprio jogo.
@@ -208,9 +261,23 @@ $modeloJs = Modelo "panorama/scripts/async.vts_c"
 $build = Join-Path $Raiz "build"
 $stage = Join-Path $build "stage"
 if (Test-Path $stage) { Remove-Item -Recurse -Force $stage }
-foreach ($d in "panorama\layout", "panorama\scripts", "panorama\styles") { New-Item -ItemType Directory -Force (Join-Path $stage $d) | Out-Null }
+foreach ($d in "panorama\layout", "panorama\scripts", "panorama\styles", "panorama\images\$Nome") { New-Item -ItemType Directory -Force (Join-Path $stage $d) | Out-Null }
 [IO.File]::WriteAllBytes((Join-Path $stage "panorama\layout\hud.vxml_c"), [S2Resource]::CompileXml($hud, $modeloXml))
 [IO.File]::WriteAllBytes((Join-Path $stage "panorama\styles\$Nome.vcss_c"), [S2Resource]::CompileCss($css, $modeloCss))
+# Layouts do jogo alterados (modelo = o próprio arquivo original) e os CSS que entram neles.
+foreach ($n in $layoutsAlterados.Keys) {
+  [IO.File]::WriteAllBytes((Join-Path $stage "panorama\layout\$n.vxml_c"), [S2Resource]::CompileXml($layoutsAlterados[$n], (Modelo "panorama/layout/$n.vxml_c")))
+  [IO.File]::WriteAllText((Join-Path $build "$n.xml"), $layoutsAlterados[$n], $utf8)
+}
+foreach ($c in $cssJogo.Keys) {
+  [IO.File]::WriteAllBytes((Join-Path $stage "panorama\styles\$($Nome)_$c.vcss_c"), [S2Resource]::CompileCss($cssJogo[$c], $modeloCss))
+}
+# Imagens: mod/imagens/<x>.png -> panorama/images/deadlock_utils/<x>_png.vtex_c (s2r://panorama/images/deadlock_utils/<x>_png.vtex)
+$modeloTextura = Modelo "panorama/images/icons/logo_deadlock_word_only_png.vtex_c"
+foreach ($arq in Get-ChildItem (Join-Path $Raiz "mod\imagens") -Filter "*.png") {
+  $png = [IO.File]::ReadAllBytes($arq.FullName)
+  [IO.File]::WriteAllBytes((Join-Path $stage "panorama\images\$Nome\$($arq.BaseName)_png.vtex_c"), [S2Resource]::CompileTexturePng($png, $modeloTextura))
+}
 # Layouts próprios: mod/layout/<x>.xml -> panorama/layout/deadlock_utils_<x>.vxml_c
 foreach ($arq in Get-ChildItem (Join-Path $Raiz "mod\layout") -Filter "*.xml") {
   $destino = "{0}_{1}.vxml_c" -f $Nome, $arq.BaseName

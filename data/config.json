@@ -1,19 +1,23 @@
 {
-  "_info": "Configurações do Deadlock Utils. Depois de mudar, rode instalar-mod.bat de novo.",
+  "_info": "Valores padrão do Deadlock Utils (o jogador muda tudo no jogo, na central de configurações). Depois de mudar aqui, compile de novo (tools\\build-mod.ps1).",
   "teclas": {
     "_info": "Teclas do mod. Deixe vazio (\"\") para desativar. T não é usado porque é o Push-to-Talk do jogo.",
     "mapa": "m",
     "tracker": "F6",
+    "central": "RSHIFT",
     "desligar": "F8"
   },
   "accountId": null,
   "_accountId": "Seu id Steam (SteamID3). Se ficar null, o build detecta pela pasta Steam/userdata.",
   "urlPonte": "https://oluizk.github.io/DeadlockUtils/mod/pagina/ponte.html",
-  "_urlPonte": "URL HTTPS onde mod/pagina/ponte.html está publicado (ex.: GitHub Pages). Necessário para o tracker e para salvar counters editados.",
+  "_urlPonte": "URL HTTPS onde mod/pagina/ponte.html está publicado (ex.: GitHub Pages). Necessário para o tracker e para salvar configurações e counters editados.",
   "itensPorSecao": 4,
   "_itensPorSecao": "Quantos itens em cada seção (Counters / Recomendados) ao segurar Tab.",
   "segundosAviso": 7,
   "segundosMarcaMapa": 60,
   "buffPonteInicio": 300,
-  "buffPonteIntervalo": 300
+  "buffPonteIntervalo": 300,
+  "urnaInicio": 600,
+  "urnaIntervalo": 300,
+  "_tempos": "Segundos. Buffs da ponte e urna: primeira vez e intervalo (estimativa quando o mod não vê o objetivo no minimapa)."
 }

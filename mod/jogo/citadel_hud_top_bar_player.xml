@@ -1,0 +1,6 @@
+<!-- Deadlock Utils: cartão de cada herói no placar do topo (panorama/layout/citadel_hud_top_bar_player.xml).
+     Só inclui o CSS do mod (mod/jogo/topo.css): nível sempre visível, cor do nível e inimigos fora de visão
+     são regras de CSS ligadas por classes que 86-topo.js põe na raiz do HUD e em cada cartão.
+     Formato das diretivas: ver mod/jogo/citadel_hud_top_bar.xml. -->
+
+<!-- DU:estilo deadlock_utils_topo -->

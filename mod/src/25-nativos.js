@@ -105,28 +105,80 @@ function jaTem(itemId) {
 }
 
 // ---------- compra ----------
+// O jogo compra pelo painel do próprio item (CitadelShopMod). Há dois jeitos de pedir; o que funcionar
+// fica guardado (também nas configurações salvas: a descoberta acontece uma vez só).
+// Com o método conhecido, a compra não espera o jogo: o item sai da fileira do Tab na hora, como na loja,
+// e a confirmação roda por trás. Se em 2 s nada indicar a compra, ele volta.
 var METODOS_COMPRA = [
   function (p) { $.DispatchEvent("CitadelPurchaseModItem", p); },
   function (p) { $.DispatchEvent("Activated", p, "mouse"); },
 ];
-// Dispara a compra na hora e confere a cada 0,1s (até 0,6s) se o item virou "owned".
-function comprarItem(itemId, aoTerminar) {
+var comprasPendentes = {}; // id do item -> quando foi pedido
+function compraPendente(id) { return !!comprasPendentes[id] && Date.now() - comprasPendentes[id] < 2500; }
+function almasAgora() {
+  var l = ultimaLeitura;
+  return l && l.meuCartao ? lerAlmas(textoDe(achar(l.meuCartao.painel, "SoulsValue"))) : null;
+}
+// Com a loja fechada o jogo pode demorar a marcar o painel como "owned": vale também o item aparecer no
+// seu cartão do placar ou as almas caírem pelo preço do item.
+function compraConfirmada(itemId, almasAntes) {
+  if (jaTem(itemId)) return true;
+  var l = ultimaLeitura;
+  if (!l || !l.meuCartao) return false;
+  var j = lerJogador(l.meuCartao.painel);
+  if (j && j.itens.indexOf(itemId) >= 0) { marcarPossuido(itemId); return true; }
+  var it = dados.itensPorId[itemId], almas = almasAgora();
+  return !!it && almasAntes != null && almas != null && almasAntes - almas >= it.custo * 0.8;
+}
+// aoTerminar(ok, mensagem) sai na hora; aoConfirmar(ok, mensagem), opcional, quando a confirmação chega.
+// Duas compras seguidas sem confirmação: o método salvo deixou de valer (patch do jogo) e é descoberto de novo.
+function comprarItem(itemId, aoTerminar, aoConfirmar) {
+  var fim = aoTerminar || function () {};
+  var confirmou = aoConfirmar || function () {};
   var p = nativoDe(itemId);
   if (!p) { varrerNativos(true); p = nativoDe(itemId); }
-  if (!p) { log("compra: item " + itemId + " sem painel nativo na loja"); if (aoTerminar) aoTerminar(false, T("compra.abraLoja")); return; }
-  if (temClasse(p, "owned")) { if (aoTerminar) aoTerminar(true, T("compra.jaTem")); return; }
-  var ordem = nativos.metodoCompra >= 0 ? [nativos.metodoCompra] : METODOS_COMPRA.map(function (_, i) { return i; });
+  if (!p) { log("compra: item " + itemId + " sem painel nativo na loja"); fim(false, T("compra.abraLoja")); confirmou(false, T("compra.abraLoja")); return; }
+  if (temClasse(p, "owned")) { fim(true, T("compra.jaTem")); confirmou(true, T("compra.jaTem")); return; }
+  var almasAntes = almasAgora();
+  var metodo = nativos.metodoCompra >= 0 ? nativos.metodoCompra : ajustes.metodoCompra;
+  if (metodo >= 0 && METODOS_COMPRA[metodo]) {
+    try { METODOS_COMPRA[metodo](p); } catch (e) { log("compra: método " + metodo + " erro: " + e); }
+    comprasPendentes[itemId] = Date.now();
+    fim(true, T("compra.ok"));
+    $.Schedule(2.0, function () {
+      var ok = compraConfirmada(itemId, almasAntes);
+      delete comprasPendentes[itemId];
+      if (ok) { nativos.falhasSeguidas = 0; confirmou(true, T("compra.ok")); atualizarRecomendacoes(lerPartida(), true); return; }
+      nativos.falhasSeguidas = (nativos.falhasSeguidas || 0) + 1;
+      log("compra de " + itemId + " não confirmada (" + nativos.falhasSeguidas + " seguida)");
+      if (nativos.falhasSeguidas >= 2) {
+        log("compra: método " + metodo + " parou de funcionar, vai descobrir de novo");
+        nativos.metodoCompra = -1;
+        ajustes.metodoCompra = -1;
+        nativos.falhasSeguidas = 0;
+        salvarAjustes();
+      }
+      confirmou(false, T("compra.recusou"));
+      if (faixa.visivel) atualizarFaixa(true);
+    });
+    return;
+  }
+  // Primeira compra: descobre o método (um de cada vez, conferindo por 1 s).
   (function tentar(k) {
-    if (k >= ordem.length) { log("compra: nenhum método funcionou para " + itemId); if (aoTerminar) aoTerminar(false, T("compra.recusou")); return; }
-    try { METODOS_COMPRA[ordem[k]](p); } catch (e) { log("compra: método " + ordem[k] + " erro: " + e); }
+    if (k >= METODOS_COMPRA.length) { log("compra: nenhum método funcionou para " + itemId); fim(false, T("compra.recusou")); confirmou(false, T("compra.recusou")); return; }
+    try { METODOS_COMPRA[k](p); } catch (e) { log("compra: método " + k + " erro: " + e); }
     var checagens = 0;
     (function conferir() {
-      if (temClasse(p, "owned")) {
-        if (nativos.metodoCompra !== ordem[k]) log("compra: método " + ordem[k] + " funciona");
-        nativos.metodoCompra = ordem[k];
-        if (aoTerminar) aoTerminar(true, T("compra.ok"));
+      if (compraConfirmada(itemId, almasAntes)) {
+        log("compra: método " + k + " funciona");
+        nativos.metodoCompra = k;
+        nativos.falhasSeguidas = 0;
+        ajustes.metodoCompra = k;
+        salvarAjustes();
+        fim(true, T("compra.ok"));
+        confirmou(true, T("compra.ok"));
         atualizarRecomendacoes(lerPartida(), true);
-      } else if (++checagens < 6) $.Schedule(0.1, conferir);
+      } else if (++checagens < 10) $.Schedule(0.1, conferir);
       else tentar(k + 1);
     })();
   })(0);

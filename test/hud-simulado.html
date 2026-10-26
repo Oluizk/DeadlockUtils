@@ -105,7 +105,13 @@
   .DUTrackerBloco, .DUTrackerTop { background: #241e18; color: #f2e4c4; padding: 6px; display: flex; flex-direction: column; }
   .DUTrackerHistorico { background: #d9b26a; color: #222; font-size: 9px; padding: 2px 4px; align-self: center; }
   #minimap_persp.sim { position: absolute; right: 10px; bottom: 10px; width: 220px; height: 220px; }
-  #hud_minimap.sim { position: relative; width: 200px; height: 200px; background: url(minimap_mid.png) center / 100% 100%; }
+  #hud_minimap.sim { position: relative; width: 200px; height: 200px; }
+  .simFundoCont { position: absolute; inset: 0; } .simFundoMapa { position: absolute; inset: 0; background: url(minimap_mid.png) center / 100% 100%; }
+  .simCanvas { position: absolute; inset: 0; }
+  .DU_miniOpac85 #HudMinimapContainer { opacity: .85; } .DU_miniOpac70 #HudMinimapContainer { opacity: .7; } .DU_miniOpac55 #HudMinimapContainer { opacity: .55; } .DU_miniOpac40 #HudMinimapContainer { opacity: .4; }
+  .DUMapaAberto #HudMinimapContainer { opacity: 1; } .DUMapaAberto.DU_mapaOpac85 #HudMinimapContainer { opacity: .85; } .DUMapaAberto.DU_mapaOpac70 #HudMinimapContainer { opacity: .7; } .DUMapaAberto.DU_mapaOpac55 #HudMinimapContainer { opacity: .55; } .DUMapaAberto.DU_mapaOpac40 #HudMinimapContainer { opacity: .4; }
+  /* camada dos heróis (iconesmapa.xml): o jogo a centraliza no pai; aqui o JS a posiciona por correção */
+  .DUIconesMapa { position: absolute; left: 0; top: 0; } .DUIconesMapa.invert_map { transform: scaleX(-1) scaleY(-1); }
   .DUMapaAberto #minimap_persp.sim { right: auto; bottom: auto; left: 10px; top: 10px; width: 820px; height: 820px; }
   .DUMapaAberto #hud_minimap.sim { width: 820px; height: 820px; }
   .p-Panel, .p-Image, .p-Label { pointer-events: auto; }
@@ -138,6 +144,97 @@
   #EscapeMenu.sim { display: none; position: absolute; left: 0; top: 0; bottom: 0; width: 220px; background: #000c; padding: 20px; }
   #EscapeMenu.sim.aberto { display: block; }
   .nav_menu_item { display: block; color: #fff; padding: 6px; margin: 4px 0; background: #333; cursor: pointer; }
+  /* ---- 2.0: mira, vida, central, painel de objetivos (aproximação do CSS Panorama) ---- */
+  .simMiraCont { position: absolute; inset: 0; pointer-events: none; z-index: 40; }
+  .simArma { position: absolute; left: 50%; top: 50%; width: 500px; height: 500px; margin: -250px 0 0 -250px; }
+  #gun_data { position: absolute; inset: 0; }
+  .simRetJogo { position: absolute; left: 238px; top: 238px; width: 24px; height: 24px; background: linear-gradient(#fff, #fff) center / 24px 2px no-repeat, linear-gradient(#fff, #fff) center / 2px 24px no-repeat; opacity: .8; }
+  .simPontoJogo { position: absolute; left: 249px; top: 249px; width: 2px; height: 2px; background: #fff; }
+  .DUMira, .DUMiraDesenho { position: absolute; inset: 0; }
+  .DUMiraPeca { position: absolute; box-sizing: border-box; }
+  .DUVidaMira { position: absolute; left: 0; right: 0; margin: 0 auto; top: 244px; display: flex; flex-direction: column; align-items: center; }
+  .DUVidaMiraBarra { width: 100%; height: 8px; background: #000a; border: 1px solid #000; box-sizing: border-box; }
+  .DUVidaMiraCheia { height: 100%; } .DUVidaMiraTexto { font-weight: bold; text-shadow: 1px 1px 2px #000; }
+  .simVida { position: absolute; left: 20px; bottom: 20px; width: 200px; height: 220px; z-index: 30; }
+  .simBarra { position: absolute; left: 0; bottom: 0; width: 66px; height: 212px; background: #333; overflow: hidden; display: flex; flex-direction: column-reverse; }
+  .simEsq { width: 100%; background-color: #FFEFD7; } .simMeio { display: none; }
+  .simNum { display: inline-block !important; font-size: 22px; font-weight: bold; margin-left: 80px; color: #FFEFD7; }
+  .DUCentral { position: absolute; inset: 0; background: #000a; z-index: 400; display: flex; align-items: center; justify-content: center; }
+  .DUCentralJanela { width: 1150px; height: 680px; display: flex; background: #b9a684 url(icones/catalog_shop_generic_bg2_psd.png) 0 0 / 100% 100%; color: #10130D; font-family: Oracle, sans-serif; border-radius: 6px; overflow: hidden; }
+  .DUCentralLateral { width: 230px; display: flex; flex-direction: column; background: linear-gradient(#1d201a, #10130D); border-right: 3px solid #d9b26a; }
+  .DUCentralSecoes { flex: 1; overflow: auto; }
+  .DUCentralSecao { display: flex; align-items: center; gap: 10px; height: 44px; padding: 0 14px; color: #FFEFD7cc; cursor: pointer; border-left: 4px solid transparent; font-weight: bold; }
+  .DUCentralSecaoAtiva { background: linear-gradient(90deg, #e6c27c, #c99a4c); color: #10130D; border-left-color: #FFEFD7; }
+  .DUCentralPonte { color: #FFEFD799; padding: 10px 14px; font-size: 12px; } .DUCentralPonteOk { color: #8EDA3B; }
+  .DUCentralMain { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+  .DUCentralTopo { display: flex; align-items: center; height: 96px; padding-right: 14px; position: relative; flex: none; }
+  .DUCentralCabeca { flex: 1; position: relative; height: 100%; }
+  .DUCentralBusca { display: flex; gap: 6px; align-items: center; }
+  .DUCentralFechar { width: 36px; height: 36px; border-radius: 50%; background: #10130D; color: #FFEFD7; display: flex; align-items: center; justify-content: center; cursor: pointer; margin-left: 10px; }
+  .DUCentralCorpo { flex: 1; display: flex; min-height: 0; }
+  .DUCentralLista { flex: 1; overflow: auto; padding: 0 16px 20px 14px; }
+  .DUCentralPrevia { width: 290px; padding: 0 18px; flex: none; }
+  .DUCentralDica { background: #10130De6; color: #ccc; padding: 8px 18px; font-size: 12px; }
+  .DUCfgGrupo { display: flex; align-items: center; gap: 8px; margin: 12px 0 6px; }
+  .DUCfgGrupoNome { color: #6b4417; font-weight: bold; text-transform: uppercase; font-size: 13px; white-space: nowrap; }
+  .DUCfgGrupoLinha { flex: 1; height: 2px; background: #6b441755; }
+  .DUCfgSecaoBusca { font-family: Pulp; font-size: 24px; text-transform: uppercase; margin-top: 10px; }
+  .DUCfgLinha { display: flex; align-items: center; gap: 12px; padding: 8px 12px; margin-bottom: 4px; background: #10130D12; border-radius: 4px; }
+  .DUCfgLinha:hover { background: #10130D26; }
+  .DUCfgLarga { flex-direction: column; align-items: stretch; }
+  .DUCfgTextos { flex: 1; display: flex; flex-direction: column; } .DUCfgNome { font-weight: bold; font-size: 15px; } .DUCfgDesc { font-size: 12px; color: #10130Dbb; }
+  .DUCfgControle { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; }
+  .DUCfgSwitch { width: 46px; height: 24px; border-radius: 12px; background: #3b3426; position: relative; cursor: pointer; flex: none; }
+  .DUCfgSwitch.DUCfgOn { background: #1f8a6c; }
+  .DUCfgSwitchBola { position: absolute; left: 3px; top: 3px; width: 18px; height: 18px; border-radius: 9px; background: #FFEFD7; transition: transform .12s; }
+  .DUCfgOn .DUCfgSwitchBola { transform: translateX(22px); } .DUCfgSwitchTexto { width: 80px; font-weight: bold; font-size: 12px; }
+  .DUCfgBarra { position: relative; width: 150px; height: 26px; background: #10130D33; border-radius: 3px; }
+  .DUCfgBarraCheia { height: 100%; background: linear-gradient(90deg, #c99a4c, #e6c27c); }
+  .DUCfgBarraValor { position: absolute; inset: 0; display: flex !important; align-items: center; justify-content: center; font-weight: bold; }
+  .DUCfgPadrao { font-size: 11px; width: 100px; cursor: pointer; }
+  .DUCfgCor { width: 22px; height: 22px; border-radius: 4px; border: 2px solid #10130D55; cursor: pointer; box-sizing: border-box; }
+  .DUCfgCorSel { border: 3px solid #10130D; transform: scale(1.15); } .DUCfgHex { width: 80px; }
+  .DUCfgCorAtual { width: 30px; height: 26px; border: 2px solid #10130D; border-radius: 4px; }
+  .DUCfgPreviaTitulo { color: #6b4417; font-weight: bold; text-transform: uppercase; margin: 18px 0 8px; }
+  .DUCfgPreviaMira { position: relative; width: 260px; height: 260px; border: 3px solid #10130D; border-radius: 6px; display: flex; overflow: hidden; }
+  .DUCfgPreviaEscuro { flex: 1; background: linear-gradient(#2b3b45, #11171b); } .DUCfgPreviaClaro { flex: 1; background: linear-gradient(#ddd3bb, #9c937c); }
+  .DUCfgPreviaDesenho { position: absolute; left: 0; top: 0; width: 260px; height: 260px; }
+  .DUCfgPreviaVida { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; } .DUCfgPreviaPct { width: 44px; font-weight: bold; }
+  .DUCfgPreviaBarra { flex: 1; height: 20px; background: #10130Dcc; border: 1px solid #10130D; } .DUCfgPreviaCheia { height: 100%; }
+  .DUCfgTeclas { display: flex; flex-wrap: wrap; gap: 4px; padding: 8px; background: #10130D26; margin-bottom: 8px; } .DUCfgTeclaUsada { opacity: .35; }
+  .DUCfgCamada { width: 31%; display: flex; align-items: center; }
+  .DUAvisoHeroi, .DUAvisoItem { width: 44px; height: 44px; display: inline-block; background-color: #3a342c; border-radius: 6px; vertical-align: middle; background-size: cover; }
+  .DUMapaLinhaTimer { cursor: pointer; }
+  /* ---- 2.1: placar do topo com o que o build insere, vida no layout do jogo, minimapa, logo ---- */
+  .simTopo { position: absolute; left: 50%; top: 0; transform: translateX(-50%); width: 460px; height: 140px; display: flex !important; flex-direction: column; align-items: center; z-index: 20; pointer-events: none; }
+  .simCentro { display: flex !important; gap: 10px; margin-top: 8px; }
+  .simCentro .TeamScore { display: flex !important; background: #000a; padding: 2px 10px; border-radius: 3px; }
+  .simCentro .ScoreContainer { display: flex !important; gap: 6px; align-items: center; }
+  .simCentro .ScoreLabel { display: inline !important; font-weight: bold; color: #fff; font-size: 18px; }
+  .DUVantagem { display: none !important; font-size: 13px; font-weight: bold; }
+  .DU_tAlmas .DUVantagem.DUVisivel { display: inline !important; }
+  .DUVantagemNos { color: #8EDA3B; } .DUVantagemEles { color: #FF6B5B; }
+  .simRejuv { display: flex !important; margin-top: 6px; }
+  .simRejuv > div { width: 70px; height: 64px; display: flex !important; flex-direction: column; align-items: center; justify-content: flex-end; }
+  .simRejuv .DUObjetivo { visibility: hidden; opacity: 0; transition: opacity .35s; }
+  .DU_tUrna #DUUrna, .DU_tPonte #DUPonte { visibility: visible; opacity: 1; }
+  .rejuvTimer { width: 30px; height: 30px; border-radius: 50%; background: #10130Dcc; border: 1px solid #FFEFD733; display: flex !important; align-items: center; justify-content: center; box-sizing: border-box; }
+  .DUObjImagem { display: block !important; width: 20px; height: 20px; border-radius: 50%; background: #FFEFD7; opacity: .3; }
+  #DUUrna .DUObjImagem { background: #3fd0d4; }
+  .DUObjDisponivel .DUObjImagem { opacity: 1; animation: pisca 1.6s infinite; } .DUObjAlerta .DUObjImagem { opacity: .65; }
+  .DUUrnaNos .rejuvTimer { border-color: #7DDB5A; } .DUUrnaEles .rejuvTimer { border-color: #FF5656; }
+  .DUUrnaNos .DUObjImagem, .DUUrnaEles .DUObjImagem { opacity: 1; }
+  .DUObjTempo, #MidbossTimerLabel { display: none !important; font-size: 10px; font-weight: bold; color: #FFEFD7; opacity: .5; }
+  .DUObjContando .DUObjTempo, #MidbossTimerLabel { display: block !important; } .DUObjAlerta .DUObjTempo { color: #ffd24a; opacity: .9; }
+  @keyframes pisca { 50% { filter: brightness(1.8); } }
+  .DUMiniTimers { position: absolute; inset: 0; } .DUMiniTimer { position: absolute; width: 80px; text-align: center; font-weight: bold; font-size: 12px; color: #FFEFD7; text-shadow: 0 0 3px #000; }
+  .DUCentralMarca { display: flex; flex-direction: column; align-items: center; padding: 14px 0 10px; border-bottom: 1px solid #FFEFD722; }
+  .DUCentralLogo { width: 200px; height: 130px; background: url(../mod/imagens/logo.png) center / contain no-repeat; }
+  .DUCentralVersao { color: #FFEFD780; font-style: italic; font-size: 13px; }
+  .DUVidaPropria { position: absolute; inset: 0; display: none; } .DU_vidaInstantanea .DUVidaPropria { display: block; }
+  .DUVidaPropriaCheia { position: absolute; left: 0; right: 0; bottom: 0; background-color: #FFEFD7; }
+  .DU_vidaInstantanea .simEsq { opacity: 0; }
+  .DU_vidaPulso .simEsq, .DU_vidaPulso .DUVidaPropriaCheia { animation: pisca .8s infinite; }
 </style>
 </head>
 <body>
@@ -149,6 +246,13 @@
   <button id="b-esc">Menu ESC</button>
   <button id="b-curse">Dynamo compra Cursed Relic</button>
   <button id="b-tempo">+5 min</button>
+  <button id="b-f9">Tecla F9 (configurações)</button>
+  <button id="b-dano">Tomar dano</button>
+  <button id="b-cura">Curar</button>
+  <button id="b-ponte">Buffs na ponte</button>
+  <button id="b-urna">Urna aparece/some</button>
+  <button id="b-pre">Pré-jogo (contagem)</button>
+  <button id="b-hideout">Hideout</button>
 </div>
 <div id="tela"></div>
 <div id="log"></div>
@@ -170,9 +274,12 @@ class FakePanel {
     const el_ = this.el;
     this.style = new Proxy({}, { set(t, k, v) {
       t[k] = v;
-      if (k === "width" || k === "height" || k === "border" || k === "backgroundColor") el_.style[k] = v || "";
+      if (["width", "height", "border", "backgroundColor", "opacity", "transform", "borderRadius", "color", "visibility", "backgroundImage"].includes(k)) el_.style[k] = v || "";
       if (k === "position" && v) { const [x, y] = v.split(" "); el_.style.position = "absolute"; el_.style.left = x; el_.style.top = y; }
       if (k === "preTransformScale2d") el_.style.scale = v || "";
+      if (k === "washColor") el_.style.backgroundColor = v || "";   // aproximação: tinge o fundo
+      if (k === "brightness") el_.style.filter = v ? "brightness(" + v + ")" : "";
+      if (k === "uiScale") el_.style.zoom = v || "";
       return true;
     } });
     this.visible = true;
@@ -206,6 +313,9 @@ class FakePanel {
   GetPositionWithinWindow() { const r = this.el.getBoundingClientRect(); return { x: r.left, y: r.top }; }
   get actualuiscale_x() { return 1; }
   get actuallayoutwidth() { return this.el.offsetWidth; }
+  get actuallayoutheight() { return this.el.offsetHeight; }
+  get actualxoffset() { return this.parent ? this.el.getBoundingClientRect().left - this.parent.el.getBoundingClientRect().left : 0; }
+  get actualyoffset() { return this.parent ? this.el.getBoundingClientRect().top - this.parent.el.getBoundingClientRect().top : 0; }
   get hittest() { return this._hittest !== false; }
   set hittest(v) { this._hittest = !!v; this.el.style.pointerEvents = v ? "" : "none"; }
   RemoveAndDeleteChildren() { this._kids.forEach((k) => { k._valid = false; k.el.remove(); }); this._kids = []; }
@@ -301,7 +411,31 @@ function el(t, pai, id, classes, props) { const p = new FakePanel(t, pai, id); (
 function real(p, ...cls) { p.el.classList.remove("fake"); cls.forEach((c) => p.el.classList.add(c)); return p; }
 const vivo = el("Panel", raiz, "gameplay_hud_alive");
 const CRU = location.search.indexOf("cru=1") >= 0; // simula rótulos que devolvem a variável crua
-el("Panel", el("Panel", vivo, "crosshair"), "progress", CRU || location.search.indexOf("vazio=1") >= 0 ? "" : "hero_wraith");
+const crosshairSim = el("Panel", vivo, "crosshair");
+el("Panel", crosshairSim, "progress", CRU || location.search.indexOf("vazio=1") >= 0 ? "" : "hero_wraith");
+// mira do jogo (ability_hud_elements/element_gun.xml): 500x500 no centro da tela
+real(vivo); real(crosshairSim, "simMiraCont");
+const armaSim = real(el("Panel", crosshairSim, "", "ability_element_gun"), "simArma");
+const dadosArma = real(el("Panel", armaSim, "gun_data"));
+real(el("Panel", dadosArma, "GunGrosshair"), "simRetJogo");
+real(el("Panel", armaSim, "Dot"), "simPontoJogo");
+el("Panel", armaSim, "DotOutline");
+// barra de vida do jogo (hud_health_container.xml + hud_health.xml)
+const vidaCont = real(el("Panel", raiz, "health_and_abilities_container"), "simVida");
+const barraVida = real(el("ProgressBarWithMiddle", vidaCont, "health_bar"), "simBarra");
+// o preenchimento que o build põe dentro do #health_bar (mod/jogo/hud_health.xml)
+real(el("Panel", real(el("Panel", barraVida, "DUVidaPropria", "DUVidaPropria")), "DUVidaPropriaCheia", "DUVidaPropriaCheia"));
+const vidaEsq = real(el("Panel", barraVida, "", "ProgressBarLeft"), "simEsq");
+real(el("Panel", barraVida, "", "ProgressBarMiddle"), "simMeio");
+el("Panel", vidaCont, "pending_incoming_damage"); el("Panel", vidaCont, "pending_incoming_heal");
+const vidaNum = real(el("Label", vidaCont, "", "currentHealthLabel", { text: "1600" }), "simNum");
+real(el("Label", vidaCont, "", "totalHealthLabel", { text: "/ 2000" }), "simNum");
+let vidaAtual = 1600;
+function definirVida(v) {
+  vidaAtual = Math.max(0, Math.min(2000, v)); vidaNum.text = String(vidaAtual);
+  vidaEsq.el.style.height = (vidaAtual / 20) + "%";
+}
+definirVida(1600);
 // Ícones de habilidade reais de cada herói (data/heroes.json), como o placar e a barra de habilidades mostram.
 const HABS = (() => { const x = new XMLHttpRequest(); x.open("GET", "../data/heroes.json", false); x.send(); const h = JSON.parse(x.responseText).herois; const o = {}; for (const k in h) o[k] = h[k].habilidades || []; return o; })();
 const sig = el("Panel", raiz, location.search.indexOf("vazio=1") >= 0 ? "sem_sig" : "hud_signature");
@@ -313,12 +447,38 @@ const intCont = el("Panel", el("Panel", intents, "TeamEnemy"), "PlayersContainer
 for (let i = 0; i < 6; i++) el("Panel", el("Panel", intCont, "PlayerIntentsPlayer" + i), "", "", {});
 const topBar = el("Panel", raiz, "TopBar");
 const relogioLbl = el("Label", topBar, "GameTime", "", { text: "8:15" });
-el("Label", topBar, "MidbossTimerLabel", "", { text: "2:40" });
+// placar do topo (citadel_hud_top_bar.xml) JÁ com o que o build insere (mod/jogo/citadel_hud_top_bar.xml):
+// almas dos times com DUVantagemEsq/Dir, Rejuvenator com as colunas DUUrna e DUPonte, fenda
+const centroTopo = real(el("Panel", topBar, "", "TeamNetworth"), "simCentro");
+const caixaEsq = real(el("Panel", el("Panel", centroTopo, "TeamScoreFriendly", "TeamScore team1"), "", "ScoreContainer"));
+real(el("Label", caixaEsq, "DUVantagemEsq", "DUVantagem", { text: " " }));
+real(el("Label", caixaEsq, "", "ScoreLabel", { text: "45.2k" }));
+const caixaDir = real(el("Panel", el("Panel", centroTopo, "TeamScoreEnemy", "TeamScore Right team2"), "", "ScoreContainer"));
+real(el("Label", caixaDir, "", "ScoreLabel", { text: "41.0k" }));
+real(el("Label", caixaDir, "DUVantagemDir", "DUVantagem", { text: " " }));
+[caixaEsq.parent, caixaDir.parent].forEach((p) => real(p));
+const rejCharges = real(el("Panel", topBar, "RejuvenatorCharges"), "simRejuv");
+function colunaObjetivo(id) {
+  const c = real(el("Panel", rejCharges, id, "DUObjetivo"));
+  real(el("Panel", real(el("Panel", c, "", "rejuvTimer")), "", "statusEffectImage DUObjImagem"));
+  real(el("Label", c, "", "midbossTimerLabel DUObjTempo", { text: " " }));
+  return c;
+}
+colunaObjetivo("DUUrna");
+real(el("Panel", rejCharges, "RejuvenatorFriendly"));
+const rejTimer = real(el("Panel", rejCharges, "RejuvenatorTimer", "midboss_cooldown"));
+real(el("Label", rejTimer, "MidbossTimerLabel", "", { text: "2:40" }));
+real(el("Panel", rejCharges, "RejuvenatorEnemy"));
+colunaObjetivo("DUPonte");
+el("Panel", topBar, "KothCashInMeter");
+real(topBar, "simTopo");
 const times = el("Panel", topBar, "TeamsContainer");
 const VAZIO = location.search.indexOf("vazio=1") >= 0; // simula painéis de jogador sem nada legível
 function jogador(cont, heroi, nome, icones) {
-  const p = el("Panel", cont, "", "CitadelHudTopBarPlayer");
+  const p = el("Panel", cont, "", "CitadelHudTopBarPlayer HealthVisible");
   if (VAZIO) { p._icones = el("Panel", p, "x"); return p; }
+  el("Panel", p, "HeroImageArea");
+  el("Label", el("Panel", p, "", "HeroLevelBacker"), "", "HeroLevelLabel", { text: String(8 + Math.floor(Math.random() * 6)) });
   el("Label", p, "", "PlayerName", { text: nome });
   el("Label", p, "", "HeroName", { text: CRU ? "{s:hero_name}" : heroi });
   const hab = el("Panel", p, "PlayerAbilitiesContainer");
@@ -333,11 +493,12 @@ function comprar(p, k) { el("Image", el("Panel", el("Panel", p._icones, "", "Cit
 const TROCADO = location.search.indexOf("trocado=1") >= 0;
 const amigos = el("Panel", el("Panel", times, TROCADO ? "TeamEnemy" : "TeamFriendly"), "PlayersContainer");
 [["Wraith", "_zyul", ["items/weapon/toxic_bullets"]], ["Kelvin", "Bot1", []], ["Vindicta", "Bot2", []], ["Infernus", "Bot3", []], ["Warden", "Bot4", []], ["McGinnis", "Bot5", []]]
-  .forEach(([h, n, i], k) => { const p = jogador(amigos, h, n, i); if (k === 0) el("Label", p, "SoulsValue", "", { text: "1,6 mil" }); });
+  .forEach(([h, n, i], k) => { const p = jogador(amigos, h, n, i); p.AddClass("friend"); p.AddClass(TROCADO ? "team2" : "team1"); if (k === 0) { p.AddClass("IsLocalPlayer"); el("Label", p, "SoulsValue", "", { text: "1,6 mil" }); } });
 const inimigos = el("Panel", el("Panel", times, TROCADO ? "TeamFriendly" : "TeamEnemy"), "PlayersContainer");
 if (TROCADO) times.MoveChildBefore(inimigos.parent, amigos.parent);
 const ini = [["Abrams", "Ini1", ["items/vitality/leech"]], ["Haze", "Ini2", []], ["Seven", "Ini3", ["items/spirit/knockdown"]], ["Lady Geist", "Ini4", []], ["Dynamo", "Ini5", []], ["Lash", "Ini6", []]]
   .map(([h, n, i]) => jogador(inimigos, h, n, i));
+ini.forEach((p, k) => { p.AddClass("enemy"); p.AddClass(TROCADO ? "team1" : "team2"); if (k === 2) p.RemoveClass("HealthVisible"); }); // Seven fora de visão
 // minimapa
 const persp = real(el("Panel", raiz, "minimap_persp"), "sim");
 const mmCont = el("Panel", persp, "minimap_container");
@@ -346,12 +507,21 @@ el("Panel", mmCont, "minimap_frame");
 const hudMinimap = real(el("Panel", el("Panel", mmCont, "HudMinimapContainer"), "hud_minimap", "HudMinimap"), "sim");
 [mmCont, hudMinimap.parent].forEach((p) => real(p));
 if (location.search.indexOf("invertido=1") >= 0) hudMinimap.AddClass("invert_map");
+// como no hud_minimap.xml: as imagens do mapa ficam num painel próprio, separado dos ícones
+const fundoSim = real(el("Panel", hudMinimap, "MinimapBackgroundTest"), "simFundoCont");
+real(el("Image", fundoSim, "", "can_zoom backgroundImage1"), "simFundoMapa");
+el("Image", fundoSim, "", "can_zoom backgroundImage2");
+real(el("Panel", fundoSim, "canvas"), "simCanvas");
 // indicador do jogador local como no jogo (hud_minimap.css: .map_button.localplayer.friend = 15%)
 real(el("Panel", hudMinimap, "", "map_button player localplayer friend"));
 real(el("Panel", hudMinimap, "", "map_button player enemy"));
+// objetivos no minimapa (hud_minimap.css): locais dos buffs da ponte, chefe do meio
+const buffsPonte = [el("Panel", hudMinimap, "", "map_button powerup_spawn"), el("Panel", hudMinimap, "", "map_button powerup_spawn")];
+el("Panel", hudMinimap, "", "map_button mid_boss");
 // menu ESC
 const esc = real(el("Panel", raiz, "EscapeMenu"), "sim");
 const menuEsc = real(el("Panel", esc, "Menu"));
+real(el("Panel", real(el("Panel", esc, "SubOptions")), "", "FeedbackRow"));
 const changehero = real(el("Button", menuEsc, "changehero", "nav_menu_item"));
 changehero.el.textContent = "Trocar herói";
 // loja
@@ -389,6 +559,19 @@ document.getElementById("b-f6").onclick = () => tecla("f6");
 document.getElementById("b-esc").onclick = () => { const a = !esc.BHasClass("aberto"); esc.SetHasClass("aberto", a); raiz.SetHasClass("ShowEscapeMenu", a); };
 document.getElementById("b-curse").onclick = () => comprar(ini[4], "items/spirit/curse");
 document.getElementById("b-tempo").onclick = () => { const s = segundos() + 300; relogioLbl.text = Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); };
+document.getElementById("b-f9").onclick = () => tecla("f9");
+document.getElementById("b-dano").onclick = () => definirVida(vidaAtual - 350);
+document.getElementById("b-cura").onclick = () => definirVida(vidaAtual + 350);
+document.getElementById("b-ponte").onclick = () => { const on = !buffsPonte[0].BHasClass("powerup_gun"); buffsPonte[0].SetHasClass("powerup_gun", on); buffsPonte[1].SetHasClass("powerup_casting", on); };
+document.getElementById("b-urna").onclick = () => {
+  const u = hudMinimap.FindChildrenWithClassTraverse("idol_spawn")[0];
+  if (u) u.DeleteAsync(); else el("Panel", hudMinimap, "", "map_button idol_spawn");
+};
+// como o jogo: o estado vai em classes na raiz do HUD (hud.css esconde o HUD dele com elas)
+document.getElementById("b-pre").onclick = () => raiz.SetHasClass("GameStatePreGameWait", !raiz.BHasClass("GameStatePreGameWait"));
+document.getElementById("b-hideout").onclick = () => raiz.SetHasClass("InHideout", !raiz.BHasClass("InHideout"));
+// o relógio anda sozinho (1 s simulado a cada 250 ms, como o $.Schedule do simulador)
+setInterval(() => { const s = segundos() + 1; relogioLbl.text = Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); }, 250);
 function segundos() { const [m, s] = relogioLbl.text.split(":").map(Number); return m * 60 + s; }
 </script>
 <script>

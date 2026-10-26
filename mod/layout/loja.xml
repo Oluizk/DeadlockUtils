@@ -34,7 +34,6 @@
 			<Panel id="DUCounters" class="DUTiers" />
 		</Panel>
 		<Panel id="DUVistaEditor" class="DUAbaCorpo DUEscondido" />
-		<Panel id="DUVistaAjustes" class="DUAbaCorpo DUEscondido" />
 		<Label id="DUDetalhe" class="DUDetalhe" html="true" text=" " />
 	</Panel>
 </root>

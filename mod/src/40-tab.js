@@ -37,11 +37,13 @@ function longeDaLoja() {
   try { return s.BAscendantHasClass("shopClosed") || s.BAscendantHasClass("purchasingDisabled"); } catch (e) { return false; }
 }
 function compravelAgora(it) { return !jaTem(it.id) && temAlmas(it) && !longeDaLoja(); }
+// Comprado (ou pedido agora há pouco): sai da fileira.
+function saiDaFaixa(id) { return jaTem(id) || compraPendente(id); }
 function selecionar(lista, n, jaUsados) {
   var out = [];
   for (var i = 0; i < lista.length && out.length < n; i++) {
     var rec = lista[i];
-    if (jaUsados[rec.item.id] || jaTem(rec.item.id)) continue;
+    if (jaUsados[rec.item.id] || saiDaFaixa(rec.item.id)) continue;
     jaUsados[rec.item.id] = true;
     out.push(rec);
   }
@@ -61,6 +63,13 @@ function desenharLinha(alvo, recs, tipo) {
     evento(c, "onmouseover", function () { mostrarDicaFaixa(rec, tipo, c); });
     evento(c, "onmouseout", esconderDica);
     aoClicar(c, function () {
+      // Sem almas ou longe da loja: nem pede (o jogo recusaria); só diz o motivo.
+      if (!compravelAgora(it)) {
+        var motivo = longeDaLoja() ? T("longeDaLoja") : T("compra.semAlmas");
+        if (dicaItem.item === it.id) mostrarDica(rec, tipo, c, motivo);
+        else mostrarPorque("<font color='#ffa1a1'>" + esc(motivo) + "</font>");
+        return;
+      }
       c.AddClass("DUComprando");
       comprarItem(it.id, function (ok, msg) {
         c.RemoveClass("DUComprando");
@@ -99,7 +108,7 @@ function mostrarPorque(html) {
 function atualizarFaixa(forcar) {
   montarFaixa();
   if (!valido(faixa.painel) || !ultimoResultado) return;
-  var n = CONFIG.itensPorSecao || 4, usados = {};
+  var n = ajustes.itensTab || CONFIG.itensPorSecao || 4, usados = {};
   var counters = selecionar(ultimoResultado.counters, n, usados);
   var build = selecionar(ultimoResultado.build, n, usados);
   var chave = function (x) { return x.item.id + (compravelAgora(x.item) ? "" : "~"); };
@@ -241,8 +250,9 @@ function esconderDica() {
 
 function atualizarVisibilidadeFaixa(leitura) {
   if (!valido(faixa.painel)) return;
-  // Só com o Tab: nunca junto com loja, mapa, tracker ou menu ESC.
-  var visivel = leitura.placarAberto && !leitura.lojaAberta && !leitura.escAberto && !mapa.aberto && !tracker.aberto;
+  // Só com o Tab e na partida ativa: nunca junto com loja, mapa, tracker, central ou menu ESC.
+  var visivel = ajustes.faixaTab && leitura.ativa && leitura.placarAberto && !leitura.lojaAberta && !leitura.escAberto &&
+    !mapa.aberto && !tracker.aberto && !central.aberto;
   if (visivel !== faixa.visivel) {
     faixa.visivel = visivel;
     mostrarPainel(faixa.painel, visivel);
@@ -257,7 +267,17 @@ function montarAviso() {
   if (!aviso.painel) return;
   aviso.titulo = achar(aviso.painel, "DUAvisoTitulo");
   aviso.texto = achar(aviso.painel, "DUAvisoTexto");
+  aviso.heroi = achar(aviso.painel, "DUAvisoHeroi");
+  aviso.item = achar(aviso.painel, "DUAvisoItem");
   mostrarPainel(aviso.painel, false);
+}
+// Retrato do inimigo e ícone do item (vazio = esconde).
+function imagensAviso(heroi, it) {
+  [[aviso.heroi, heroi ? imagemHeroi(heroi) : ""], [aviso.item, it ? iconeItem(it) : ""]].forEach(function (x) {
+    mostrarPainel(x[0], !!x[1]);
+    if (x[1]) { try { x[0].SetImage(x[1]); } catch (e) {} }
+  });
+  if (valido(aviso.item) && it) ["weapon", "vitality", "spirit"].forEach(function (c) { aviso.item.SetHasClass("DUAvisoItem_" + c, it.categoria === c); });
 }
 
 function checarNovasAmeacas(r) {
@@ -265,7 +285,7 @@ function checarNovasAmeacas(r) {
     var chave = a.heroi + "|" + a.itemId;
     if (aviso.vistos[chave]) return;
     aviso.vistos[chave] = true;
-    if (a.perigo >= 2) aviso.fila.push(a);
+    if (a.perigo >= 2 && ajustes.avisoPerigo) aviso.fila.push(a);
     log("item perigoso: " + a.nomeItem + " (" + a.heroi + ")");
   });
 }
@@ -276,21 +296,28 @@ function mostrarAvisoTexto(titulo, texto, agora) {
   if (!valido(aviso.painel)) return;
   if (agora) aviso.fila = [];
   aviso.painel.SetHasClass("DUPerigo3", false);
+  aviso.painel.AddClass("DUAvisoSoTexto");
+  imagensAviso("", null);
   aviso.titulo.text = titulo;
   aviso.texto.text = esc(texto);
   mostrarPainel(aviso.painel, true);
   aviso.ate = agoraSeg + 3;
 }
 
-function tickAviso() {
+// Os avisos de item perigoso só saem com a partida ativa. Fora dela a fila é descartada: um item comprado
+// no fim de uma partida não pode aparecer no começo da outra.
+function tickAviso(l) {
   montarAviso();
   if (!valido(aviso.painel) || agoraSeg < aviso.ate) return;
+  if (!l.ativa) { aviso.fila = []; mostrarPainel(aviso.painel, false); return; }
   var a = aviso.fila.shift();
   if (!a) { mostrarPainel(aviso.painel, false); return; }
   aviso.painel.SetHasClass("DUPerigo3", a.perigo >= 3);
+  aviso.painel.RemoveClass("DUAvisoSoTexto");
+  imagensAviso(a.heroi, dados.itensPorId[a.itemId]);
   aviso.titulo.text = T("aviso.comprou", esc(a.heroi), "<b>" + esc(a.nomeItem) + "</b>");
   aviso.texto.text = esc(a.alerta);
   mostrarPainel(aviso.painel, true);
-  aviso.ate = agoraSeg + (CONFIG.segundosAviso || 7);
-  som("UI.Quickbuy.DragDrop");
+  aviso.ate = agoraSeg + (ajustes.avisoSeg || CONFIG.segundosAviso || 7);
+  if (ajustes.avisoSom) som("UI.Quickbuy.DragDrop");
 }

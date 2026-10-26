@@ -2,6 +2,20 @@
    (citadel_hud_hero_shop.css, citadel_shop_mod_view.css).
    Panorama NÃO aceita: seletores de irmão (+ ~), ::, :not(), :nth-*. O build recusa esses casos. */
 
+/* ---------------- estado do jogo ----------------
+   Fora da partida (hideout, contagem inicial, fim de partida, HUD escondido) o jogo marca o HUD com estas
+   classes e esconde o HUD dele; o do mod some junto. O JS também fecha tudo na transição (90-principal.js),
+   o CSS garante que nada pisca antes disso. A central de configurações pode abrir no hideout. */
+.InHideout .DUFaixa, .InHideout .DUAviso, .InHideout .DUMapa, .InHideout .DUDica,
+.connectedToHideout .DUFaixa, .connectedToHideout .DUAviso, .connectedToHideout .DUMapa, .connectedToHideout .DUDica,
+.GameStatePreGame .DUFaixa, .GameStatePreGame .DUAviso, .GameStatePreGame .DUMapa, .GameStatePreGame .DUDica,
+.GameStatePreGameWait .DUFaixa, .GameStatePreGameWait .DUAviso, .GameStatePreGameWait .DUMapa, .GameStatePreGameWait .DUDica,
+.GameStatePostGame .DUFaixa, .GameStatePostGame .DUAviso, .GameStatePostGame .DUMapa, .GameStatePostGame .DUDica,
+.HudHidden .DUFaixa, .HudHidden .DUAviso, .HudHidden .DUMapa, .HudHidden .DUDica
+{
+    visibility: collapse;
+}
+
 /* ---------------- comuns ---------------- */
 .DUBotao, .DUAbaModo
 {
@@ -91,8 +105,9 @@
     height: 75px;
     horizontal-align: right;
     margin-right: 10px;
-    background-image: url("s2r://panorama/images/icons/icon_eye.vsvg");
-    background-size: 38px 38px;
+    /* a roda da logo do mod (mod/imagens/marca.png), em silhueta escura como os ícones das abas do jogo */
+    background-image: url("s2r://panorama/images/deadlock_utils/marca_png.vtex");
+    background-size: 40px 40px;
     background-repeat: no-repeat;
     background-position: center;
     wash-color: #2b2219;
@@ -142,7 +157,7 @@
 }
 .DUAbaTitulo
 {
-    font-family: oracle;
+    font-family: VALVEOracle, Reaver, sans-serif;
     font-size: 30px;
     font-style: italic;
     font-weight: bold;
@@ -261,7 +276,7 @@
 .DUCartazTitulo
 {
     vertical-align: center;
-    font-family: block;
+    font-family: VALVEPulp, Noto Sans, sans-serif;
     font-size: 40px;
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -276,7 +291,7 @@
 {
     vertical-align: top;
     margin: 6px 0px 0px 14px;
-    font-family: "Retail Demo";
+    font-family: Retail Demo, Noto Sans, sans-serif;
     font-style: italic;
     font-weight: bold;
     font-size: 20px;
@@ -323,7 +338,7 @@
 .DUAbaSecao
 {
     margin: 14px 0px 4px 16px;
-    font-family: oracle;
+    font-family: VALVEOracle, Reaver, sans-serif;
     font-size: 24px;
     font-style: italic;
     font-weight: bold;
@@ -484,7 +499,7 @@
 {
     width: 100%;
     max-height: 30px;
-    font-family: oracle;
+    font-family: VALVEOracle, Reaver, sans-serif;
     font-size: 13px;
     font-weight: bold;
     line-height: 92%;
@@ -615,7 +630,7 @@
 .DUHeroiNome
 {
     width: 100%;
-    font-family: oracle;
+    font-family: VALVEOracle, Reaver, sans-serif;
     font-size: 12px;
     font-weight: bold;
     text-align: center;
@@ -628,7 +643,7 @@
 }
 .DUHeroiEditado
 {
-    font-family: block;
+    font-family: VALVEPulp, Noto Sans, sans-serif;
     font-size: 9px;
     letter-spacing: 1px;
     text-transform: uppercase;
@@ -687,7 +702,7 @@
     width: fill-parent-flow(1.0);
     vertical-align: center;
     margin-left: 6px;
-    font-family: block;
+    font-family: VALVEPulp, Noto Sans, sans-serif;
     font-size: 13px;
     letter-spacing: 1px;
     text-transform: uppercase;
@@ -700,7 +715,7 @@
 }
 .DUEditor .DUBotao Label
 {
-    font-family: block;
+    font-family: VALVEPulp, Noto Sans, sans-serif;
     font-size: 15px;
     font-weight: normal;
     letter-spacing: 1px;
@@ -716,7 +731,7 @@
 }
 .DUEditorColunas Label
 {
-    font-family: block;
+    font-family: VALVEPulp, Noto Sans, sans-serif;
     font-size: 12px;
     letter-spacing: 1px;
     text-transform: uppercase;
@@ -789,7 +804,7 @@
 {
     width: 182px;
     vertical-align: center;
-    font-family: oracle;
+    font-family: VALVEOracle, Reaver, sans-serif;
     font-size: 17px;
     font-weight: bold;
     text-overflow: shrink;
@@ -816,7 +831,7 @@
 {
     horizontal-align: center;
     vertical-align: center;
-    font-family: numericBlock;
+    font-family: VALVEPulp, Noto Sans, sans-serif;
     font-size: 15px;
     color: #FFEFD7aa;
 }
@@ -876,7 +891,7 @@
     width: 100%;
     height: 20px;
     margin: 0px 0px 0px 8px;
-    font-family: block;
+    font-family: VALVEPulp, Noto Sans, sans-serif;
     font-size: 13px;
     letter-spacing: 1px;
     color: #1f5d52;
@@ -924,7 +939,7 @@
 .DUEditor .DUCatalogoAba Label
 {
     vertical-align: center;
-    font-family: "Swear Text Demo";
+    font-family: Retail Text Demo, Noto Sans, sans-serif;
     font-size: 19px;
     font-weight: bold;
     text-transform: none;
@@ -963,7 +978,7 @@
 {
     vertical-align: center;
     margin-right: 8px;
-    font-family: block;
+    font-family: VALVEPulp, Noto Sans, sans-serif;
     font-size: 13px;
     letter-spacing: 1px;
     text-transform: uppercase;
@@ -1002,7 +1017,7 @@
 {
     vertical-align: center;
     margin-right: 10px;
-    font-family: block;
+    font-family: VALVEPulp, Noto Sans, sans-serif;
     font-size: 16px;
     letter-spacing: 1px;
     text-transform: uppercase;
@@ -1016,7 +1031,7 @@
 .DUCatalogoTierCusto
 {
     vertical-align: center;
-    font-family: numericBlock;
+    font-family: VALVEPulp, Noto Sans, sans-serif;
     font-size: 16px;
     font-weight: bold;
     color: #1f5d52;
@@ -1270,7 +1285,7 @@
 }
 .DUDicaNome
 {
-    font-family: oracle;
+    font-family: VALVEOracle, Reaver, sans-serif;
     font-weight: bold;
     font-size: 36px;
     color: #FFEFD7;
@@ -1295,7 +1310,7 @@
 }
 .DUDicaCusto
 {
-    font-family: numericBlock;
+    font-family: VALVEPulp, Noto Sans, sans-serif;
     font-weight: bold;
     font-size: 20px;
     color: #99FFD6;
@@ -1400,51 +1415,90 @@
 {
     padding: 4px 18px 0px 18px;
 }
-/* ---------------- aviso de item perigoso ---------------- */
+/* ---------------- aviso de item perigoso (e avisos do mod) ----------------
+   Faixa escura com o retrato do inimigo e o ícone do item; borda laranja (perigoso) ou vermelha (muito). */
 .DUAviso
 {
-    width: 540px;
+    width: 620px;
     horizontal-align: center;
     vertical-align: top;
-    margin-top: 150px;
-    padding: 10px 16px;
-    flow-children: down;
-    background-color: #1c1714ee;
-    border: 1px solid #e0773a;
-    border-radius: 8px;
+    margin-top: 196px; /* abaixo do placar (~130px) e do painel de objetivos */
+    flow-children: right;
+    padding: 10px 18px 10px 12px;
+    background-color: gradient( linear, 0% 0%, 100% 0%, from( #2a1b13f2 ), to( #13100df2 ) );
+    border-left: 5px solid #e0773a;
+    border-radius: 6px;
+    box-shadow: 0px 4px 18px #000000bb;
 }
 .DUAviso.DUPerigo3
 {
+    border-left: 5px solid #e04848;
+    background-color: gradient( linear, 0% 0%, 100% 0%, from( #3c1613f2 ), to( #1a0d0bf2 ) );
+}
+.DUAviso.DUAvisoSoTexto
+{
+    border-left: 5px solid #d9b26a;
+    background-color: gradient( linear, 0% 0%, 100% 0%, from( #22201af2 ), to( #10130Df2 ) );
+}
+.DUAvisoHeroi
+{
+    width: 54px;
+    height: 54px;
+    vertical-align: center;
+    margin-right: 8px;
+    border-radius: 27px;
     border: 2px solid #e04848;
-    background-color: #2a1412ee;
+    background-color: #1a1714;
+}
+.DUAvisoItem
+{
+    width: 54px;
+    height: 54px;
+    vertical-align: center;
+    margin-right: 14px;
+    border-radius: 6px;
+    border: 2px solid #FFEFD755;
+    background-color: #3a342c;
+}
+.DUAvisoItem_weapon { background-color: #6a4310; }
+.DUAvisoItem_vitality { background-color: #3f600f; }
+.DUAvisoItem_spirit { background-color: #5e3a7c; }
+.DUAvisoTextos
+{
+    width: fill-parent-flow(1.0);
+    flow-children: down;
+    vertical-align: center;
 }
 .DUAvisoTitulo
 {
-    horizontal-align: center;
     font-size: 19px;
     color: #ece4d4;
 }
 .DUAvisoTexto
 {
-    horizontal-align: center;
-    text-align: center;
     margin-top: 3px;
     font-size: 15px;
     color: #c9bfae;
+}
+.DUAvisoSoTexto .DUAvisoTitulo, .DUAvisoSoTexto .DUAvisoTexto
+{
+    horizontal-align: center;
+    text-align: center;
 }
 
 /* ---------------- mapa (M) ---------------- */
 /* O minimapa é declarado no hud.xml, onde este CSS vale: tirar a classe DUMapaAberto da raiz do HUD
    devolve SEMPRE o tamanho original. O #hud_minimap (que desenha o mapa) tem 360px no CSS do jogo e
    380px com placar aberto; os seletores aqui têm 2 ids para vencer os do jogo. 820 = TAM_MAPA no JS.
-   Fica encostado no topo para a barra de habilidades (embaixo) cobrir o mínimo possível. */
+   Centralizado na tela (o pai, .clamp_width, é a área útil inteira): no tamanho médio o mapa fica logo
+   abaixo do placar; menor, sobra espaço igual em cima e embaixo. */
 .DUMapaAberto #minimap_persp
 {
     width: 900px;
     height: 900px;
     horizontal-align: center;
-    vertical-align: top;
-    margin-top: 10px;
+    vertical-align: center;
+    margin-top: 0px;
     margin-bottom: 0px;
     margin-right: 0px;
     z-index: 50;
@@ -1487,6 +1541,31 @@
 .DUMini150 #minimap_persp { ui-scale: 150%; }
 /* com o mapa grande aberto o tamanho é o das regras acima (precisa vir depois das .DUMini*) */
 .DUMapaAberto #minimap_persp { ui-scale: 100%; }
+/* transparência (configurações > Mapa). Opacidade no próprio #hud_minimap não pega no jogo (o painel C++
+   cuida da dele); nos painéis comuns do #minimap_container pega. Vai na moldura, no desfoque e na caixa
+   do mapa, ou seja, em tudo do container menos a camada .DUIconesMapa, onde os heróis ficam nítidos
+   (50-mapa.js). Minimapa normal: DU_miniOpac<n>; mapa grande: DU_mapaOpac<n> (OPACIDADES_MAPA). */
+.DU_miniOpac85 #minimap_container #minimap_frame, .DU_miniOpac85 #minimap_container #minimap_blur, .DU_miniOpac85 #minimap_container #HudMinimapContainer { opacity: 0.85; }
+.DU_miniOpac70 #minimap_container #minimap_frame, .DU_miniOpac70 #minimap_container #minimap_blur, .DU_miniOpac70 #minimap_container #HudMinimapContainer { opacity: 0.7; }
+.DU_miniOpac55 #minimap_container #minimap_frame, .DU_miniOpac55 #minimap_container #minimap_blur, .DU_miniOpac55 #minimap_container #HudMinimapContainer { opacity: 0.55; }
+.DU_miniOpac40 #minimap_container #minimap_frame, .DU_miniOpac40 #minimap_container #minimap_blur, .DU_miniOpac40 #minimap_container #HudMinimapContainer { opacity: 0.4; }
+.DUMapaAberto #minimap_container #minimap_frame, .DUMapaAberto #minimap_container #minimap_blur, .DUMapaAberto #minimap_container #HudMinimapContainer { opacity: 1; }
+.DUMapaAberto.DU_mapaOpac85 #minimap_container #minimap_frame, .DUMapaAberto.DU_mapaOpac85 #minimap_container #minimap_blur, .DUMapaAberto.DU_mapaOpac85 #minimap_container #HudMinimapContainer { opacity: 0.85; }
+.DUMapaAberto.DU_mapaOpac70 #minimap_container #minimap_frame, .DUMapaAberto.DU_mapaOpac70 #minimap_container #minimap_blur, .DUMapaAberto.DU_mapaOpac70 #minimap_container #HudMinimapContainer { opacity: 0.7; }
+.DUMapaAberto.DU_mapaOpac55 #minimap_container #minimap_frame, .DUMapaAberto.DU_mapaOpac55 #minimap_container #minimap_blur, .DUMapaAberto.DU_mapaOpac55 #minimap_container #HudMinimapContainer { opacity: 0.55; }
+.DUMapaAberto.DU_mapaOpac40 #minimap_container #minimap_frame, .DUMapaAberto.DU_mapaOpac40 #minimap_container #minimap_blur, .DUMapaAberto.DU_mapaOpac40 #minimap_container #HudMinimapContainer { opacity: 0.4; }
+/* camada dos heróis: no #minimap_container, centralizada como o #HudMinimapContainer (tamanho e ajuste
+   fino de posição vêm do JS) e virada como o minimapa (.invert_map.HudMinimap no hud_minimap.css) */
+.DUIconesMapa
+{
+    horizontal-align: center;
+    vertical-align: center;
+    overflow: noclip;
+}
+.DUIconesMapa.invert_map
+{
+    transform: scaleY(-1) scaleX(-1);
+}
 .DUMapaAberto #minimap_persp #minimap_hints
 {
     visibility: collapse;
@@ -1602,7 +1681,7 @@
 }
 .DUMapaTitulo
 {
-    font-family: oracle;
+    font-family: VALVEOracle, Reaver, sans-serif;
     font-size: 26px;
     font-weight: bold;
     text-transform: uppercase;
@@ -1732,70 +1811,655 @@
     color: #1f5d52;
 }
 
-/* ---------------- configurações (aba da loja > Configurações) ---------------- */
-.DUAjLinha
+/* ---------------- central de configurações (76-central.js, layout central.xml) ----------------
+   Janela no papel da loja (catalog_shop_generic_bg2) com a barra lateral escura, como a navegação da loja.
+   offBlack = #10130D, offWhite = #FFEFD7, dourado dos botões = #d9b26a. */
+.DUCentral
+{
+    width: 100%;
+    height: 100%;
+    background-color: #000000a8;
+    z-index: 210;
+}
+.DUCentralJanela
+{
+    width: 1380px;
+    height: 860px;
+    horizontal-align: center;
+    vertical-align: center;
+    flow-children: right;
+    background-color: #b9a684;
+    background-image: url("s2r://panorama/images/shop/catalog/catalog_shop_generic_bg2_psd.vtex");
+    background-size: 100% 100%;
+    border-radius: 6px;
+    box-shadow: #000000dd 0px 8px 40px 0px;
+}
+.DUCentralLateral
+{
+    width: 270px;
+    height: 100%;
+    flow-children: down;
+    background-color: gradient( linear, 0% 0%, 0% 100%, from( #1d201aF7 ), to( #10130DF7 ) );
+    border-right: 3px solid #d9b26a;
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
+}
+.DUCentralMarca
+{
+    width: 100%;
+    flow-children: down;
+    padding: 16px 0px 12px 0px;
+    border-bottom: 1px solid #FFEFD722;
+}
+/* logo do mod: mod/imagens/logo.png (520x339) virou textura no build */
+.DUCentralLogo
+{
+    width: 200px;
+    height: 130px;
+    horizontal-align: center;
+    background-image: url("s2r://panorama/images/deadlock_utils/logo_png.vtex");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.DUCentralVersao
+{
+    horizontal-align: center;
+    margin-top: 4px;
+    font-family: Retail Demo, Noto Sans, sans-serif;
+    font-style: italic;
+    font-weight: bold;
+    font-size: 14px;
+    color: #FFEFD780;
+}
+/* ícones das seções (barra lateral e cartaz do topo). Declarados aqui, e não pelo JS: imagem posta pelo
+   JS em painel recém-criado só aparecia depois de um clique */
+.DUCentralSecaoIcone, .DUCartazConteudo .DUCartazIcone
+{
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.DUSecIcone_geral { background-image: url("s2r://panorama/images/icons/icon_gear.vsvg"); }
+.DUSecIcone_mira { background-image: url("s2r://panorama/images/icons/properties/gun.vsvg"); }
+.DUSecIcone_vida { background-image: url("s2r://panorama/images/icons/properties/health.vsvg"); }
+.DUSecIcone_timers { background-image: url("s2r://panorama/images/icons/icon_watch.vsvg"); }
+.DUSecIcone_mapa { background-image: url("s2r://panorama/images/icons/icon_lanes.vsvg"); }
+.DUSecIcone_pontos { background-image: url("s2r://panorama/images/icons/icon_pin.vsvg"); }
+.DUSecIcone_atalhos { background-image: url("s2r://panorama/images/icons/keyboard.vsvg"); }
+.DUSecIcone_tracker { background-image: url("s2r://panorama/images/icons/icon_graph.vsvg"); }
+.DUSecIcone_backup { background-image: url("s2r://panorama/images/icons/icon_copy.vsvg"); }.DUCentralSecoes
+{
+    width: 100%;
+    height: fill-parent-flow(1.0);
+    flow-children: down;
+    padding: 10px 0px;
+    overflow: squish scroll;
+}
+.DUCentralSecao
+{
+    width: 100%;
+    height: 50px;
+    flow-children: right;
+    padding: 0px 16px 0px 14px;
+    border-left: 4px solid #00000000;
+    transition-property: background-color;
+    transition-duration: 0.1s;
+}
+.DUCentralSecao:hover
+{
+    background-color: #FFEFD716;
+}
+.DUCentralSecao.DUCentralSecaoAtiva
+{
+    background-color: gradient( linear, 0% 0%, 100% 0%, from( #e6c27c ), to( #c99a4c ) );
+    border-left: 4px solid #FFEFD7;
+}
+.DUCentralSecaoIcone
+{
+    width: 24px;
+    height: 24px;
+    vertical-align: center;
+    margin-right: 14px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    wash-color: #FFEFD7;
+}
+.DUCentralSecaoAtiva .DUCentralSecaoIcone
+{
+    wash-color: #10130D;
+}
+.DUCentralSecaoNome
+{
+    vertical-align: center;
+    font-family: VALVEOracle, Reaver, sans-serif;
+    font-size: 18px;
+    font-weight: bold;
+    color: #FFEFD7cc;
+}
+.DUCentralSecaoAtiva .DUCentralSecaoNome
+{
+    color: #10130D;
+}
+.DUCentralPonte
+{
+    width: 100%;
+    padding: 12px 16px 14px 18px;
+    font-size: 13px;
+    color: #FFEFD799;
+    border-top: 1px solid #FFEFD722;
+}
+.DUCentralPonte.DUCentralPonteOk
+{
+    color: #8EDA3B;
+}
+.DUCentralMain
+{
+    width: fill-parent-flow(1.0);
+    height: 100%;
+    flow-children: down;
+}
+.DUCentralTopo
+{
+    width: 100%;
+    height: 96px;
+    flow-children: right;
+    padding: 0px 18px 0px 4px;
+    overflow: noclip;
+}
+.DUCentralCabeca
+{
+    width: fill-parent-flow(1.0);
+    height: 100%;
+    overflow: noclip;
+}
+.DUCentralBusca
+{
+    width: 300px;
+    height: 40px;
+    vertical-align: center;
+    flow-children: right;
+    margin-left: 14px;
+}
+.DUCentralLupa
+{
+    vertical-align: center;
+    margin-right: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #10130Dcc;
+}
+.DUCentralBuscaCampo
+{
+    width: fill-parent-flow(1.0);
+    vertical-align: center;
+}
+.DUCentralFechar
+{
+    width: 40px;
+    height: 40px;
+    vertical-align: center;
+    margin-left: 12px;
+    border-radius: 50%;
+    background-color: #10130Ddd;
+    transition-property: background-color;
+    transition-duration: 0.1s;
+}
+.DUCentralFechar:hover
+{
+    background-color: #a8322a;
+}
+.DUCentralFechar Label
+{
+    horizontal-align: center;
+    vertical-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    color: #FFEFD7;
+}
+.DUCentralCorpo
+{
+    width: 100%;
+    height: fill-parent-flow(1.0);
+    flow-children: right;
+}
+.DUCentralLista
+{
+    width: fill-parent-flow(1.0);
+    height: 100%;
+    flow-children: down;
+    overflow: squish scroll;
+    padding: 0px 18px 24px 16px;
+}
+.DUCentralLista VerticalScrollBar .ScrollThumb
+{
+    background-color: #10130D80;
+}
+.DUCentralPrevia
+{
+    width: 320px;
+    height: 100%;
+    flow-children: down;
+    padding: 0px 24px 0px 6px;
+}
+.DUCentralDica
+{
+    width: 100%;
+    padding: 9px 22px;
+    font-size: 13px;
+    color: #CDCDCD;
+    background-color: #10130De6;
+    border-top: 2px solid #EC971999;
+    border-bottom-right-radius: 6px;
+}
+
+/* linhas da central */
+.DUCfgSecaoBusca
+{
+    margin: 14px 0px 2px 2px;
+    font-family: VALVEPulp, Noto Sans, sans-serif;
+    font-size: 28px;
+    text-transform: uppercase;
+    color: #10130D;
+}
+.DUCfgGrupo
 {
     width: 100%;
     flow-children: right;
-    margin: 0px 0px 4px 12px;
-    padding: 8px 12px;
-    border-radius: 3px;
-    background-color: #10130D14;
+    margin: 14px 0px 6px 0px;
 }
-.DUAjLinha:hover
+.DUCfgGrupoNome
+{
+    margin-right: 10px;
+    font-family: VALVEOracle, Reaver, sans-serif;
+    font-size: 15px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #6b4417;
+}
+.DUCfgGrupoLinha
+{
+    width: fill-parent-flow(1.0);
+    height: 2px;
+    vertical-align: center;
+    background-color: #6b441755;
+}
+.DUCfgLinha
+{
+    width: 100%;
+    flow-children: right;
+    margin-bottom: 4px;
+    padding: 9px 14px;
+    border-radius: 4px;
+    background-color: #10130D12;
+    transition-property: background-color;
+    transition-duration: 0.08s;
+}
+.DUCfgLinha:hover
 {
     background-color: #10130D26;
 }
-.DUAjTextos
+.DUCfgTextos
 {
     width: fill-parent-flow(1.0);
     flow-children: down;
     vertical-align: center;
+    margin-right: 14px;
 }
-.DUAjNome
+.DUCfgNome
 {
     font-size: 17px;
     font-weight: bold;
     color: #10130D;
 }
-.DUAjDesc
+.DUCfgDesc
 {
+    margin-top: 1px;
     font-size: 13px;
     color: #10130Dbb;
 }
-.DUAjOpcoes
+.DUCfgControle
 {
     flow-children: right;
     vertical-align: center;
 }
-.DUAjOpcao
+/* linhas largas: o controle vai embaixo do texto, ocupando a largura toda */
+.DUCfgLarga
+{
+    flow-children: down;
+}
+.DUCfgLarga .DUCfgTextos
+{
+    width: 100%;
+    margin-right: 0px;
+}
+.DUCfgLarga .DUCfgControle
+{
+    width: 100%;
+    flow-children: right-wrap;
+    vertical-align: top;
+    margin-top: 8px;
+}
+.DUCfgLinha_codigo .DUCfgControle
+{
+    flow-children: down;
+}
+.DUCfgVazio
+{
+    margin-top: 20px;
+}
+/* interruptor */
+.DUCfgSwitch
+{
+    width: 50px;
+    height: 26px;
+    vertical-align: center;
+    border-radius: 13px;
+    background-color: #3b3426;
+    box-shadow: 0px 1px 3px #00000066;
+    transition-property: background-color;
+    transition-duration: 0.12s;
+}
+.DUCfgSwitch.DUCfgOn
+{
+    background-color: #1f8a6c;
+}
+.DUCfgSwitchBola
+{
+    width: 20px;
+    height: 20px;
+    margin: 3px;
+    border-radius: 10px;
+    background-color: #FFEFD7;
+    box-shadow: 0px 1px 3px #000000aa;
+    transition-property: transform;
+    transition-duration: 0.12s;
+}
+.DUCfgOn .DUCfgSwitchBola
+{
+    transform: translateX(24px);
+}
+.DUCfgSwitchTexto
+{
+    width: 100px;
+    vertical-align: center;
+    margin-left: 10px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #10130Daa;
+}
+.DUCfgOpcao
 {
     padding: 5px 12px;
     margin: 0px 0px 0px 6px;
 }
-.DUAjGrade
+/* número: - barra + */
+.DUBotao.DUCfgPasso
 {
-    width: 100%;
-    flow-children: right-wrap;
-    margin-left: 12px;
+    width: 32px;
+    height: 30px;
+    padding: 0px;
+    margin: 0px;
+    vertical-align: center;
 }
-.DUAjCamada
+.DUCfgPasso Label
+{
+    horizontal-align: center;
+    vertical-align: center;
+    font-size: 18px;
+}
+.DUCfgBarra
+{
+    width: 170px;
+    height: 30px;
+    margin: 0px 6px;
+    vertical-align: center;
+    border-radius: 3px;
+    background-color: #10130D33;
+}
+.DUCfgBarraCheia
+{
+    height: 100%;
+    border-radius: 3px;
+    background-color: gradient( linear, 0% 0%, 100% 0%, from( #c99a4c ), to( #e6c27c ) );
+}
+.DUCfgBarraValor
+{
+    horizontal-align: center;
+    vertical-align: center;
+    font-size: 15px;
+    font-weight: bold;
+    color: #10130D;
+}
+.DUCfgPadrao
+{
+    width: 110px;
+    vertical-align: center;
+    margin-left: 8px;
+    font-size: 12px;
+    color: #10130D99;
+}
+.DUCfgPadrao:hover
+{
+    color: #10130D;
+}
+/* cor: paleta + campo + amostra */
+.DUCfgCor
+{
+    width: 24px;
+    height: 24px;
+    margin-right: 5px;
+    vertical-align: center;
+    border-radius: 4px;
+    border: 2px solid #10130D55;
+    transition-property: pre-transform-scale2d;
+    transition-duration: 0.08s;
+}
+.DUCfgCor:hover
+{
+    pre-transform-scale2d: 1.15;
+}
+.DUCfgCor.DUCfgCorSel
+{
+    border: 3px solid #10130D;
+    pre-transform-scale2d: 1.15;
+}
+.DUCfgHex
+{
+    width: 96px;
+    margin-left: 6px;
+    vertical-align: center;
+}
+.DUCfgCorAtual
+{
+    width: 34px;
+    height: 30px;
+    margin-left: 6px;
+    vertical-align: center;
+    border-radius: 4px;
+    border: 2px solid #10130D;
+}
+/* chips (vários interruptores) */
+.DUCfgChip
+{
+    flow-children: right;
+    margin: 0px 6px 6px 0px;
+}
+.DUCfgChipIcone
+{
+    width: 18px;
+    height: 18px;
+    margin-right: 6px;
+    vertical-align: center;
+}
+/* camadas do mapa */
+.DUCfgCamada
 {
     width: 32%;
     height: 34px;
     margin: 0px 1% 4px 0px;
 }
-/* cada tipo de ponto: liga no mapa grande ("Mapa") e no minimapa ("Mini") separadamente */
-.DUAjChip
+.DUCfgChipMini
 {
     padding: 3px 8px;
     margin: 0px 0px 0px 4px;
     vertical-align: center;
 }
-.DUAjChip Label
+.DUCfgChipMini Label
 {
     font-size: 12px;
 }
+/* teclas */
+.DUCfgTecla
+{
+    min-width: 70px;
+}
+.DUCfgTecla Label
+{
+    horizontal-align: center;
+}
+.DUCfgTeclas
+{
+    width: 100%;
+    flow-children: right-wrap;
+    margin: 0px 0px 8px 0px;
+    padding: 8px 12px;
+    background-color: #10130D26;
+    border-radius: 4px;
+}
+.DUCfgTeclasDica
+{
+    width: 100%;
+    margin-bottom: 6px;
+}
+.DUCfgTeclaOpcao
+{
+    min-width: 52px;
+    margin: 0px 6px 6px 0px;
+    padding: 5px 8px;
+}
+.DUCfgTeclaOpcao Label
+{
+    horizontal-align: center;
+}
+.DUCfgTeclaUsada
+{
+    opacity: 0.35;
+}
+/* conta Steam e backup */
+.DUCfgCampo
+{
+    width: 220px;
+    vertical-align: center;
+    margin-right: 6px;
+}
+.DUCfgConta
+{
+    margin-top: 3px;
+    font-weight: bold;
+}
+.DUCfgCodigoAcoes
+{
+    flow-children: right;
+    margin-bottom: 8px;
+}
+.DUCfgCodigoAcoes .DUCfgOpcao
+{
+    margin: 0px 6px 0px 0px;
+}
+.DUCfgCodigo
+{
+    width: 100%;
+}
+.DUCfgCodigoMsg
+{
+    margin-top: 6px;
+    font-weight: bold;
+}
+.DUCfgSobre
+{
+    font-size: 14px;
+    line-height: 140%;
+}
+/* prévia */
+.DUCfgPreviaTitulo
+{
+    margin: 22px 0px 8px 0px;
+    font-family: VALVEOracle, Reaver, sans-serif;
+    font-size: 15px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #6b4417;
+}
+.DUCfgPreviaMira
+{
+    width: 266px;
+    height: 266px;
+    border: 3px solid #10130D;
+    border-radius: 6px;
+    box-shadow: 0px 3px 10px #00000088;
+}
+.DUCfgPreviaEscuro
+{
+    width: 50%;
+    height: 100%;
+    background-color: gradient( linear, 0% 0%, 0% 100%, from( #2b3b45 ), to( #11171b ) );
+}
+.DUCfgPreviaClaro
+{
+    width: 50%;
+    height: 100%;
+    horizontal-align: right;
+    background-color: gradient( linear, 0% 0%, 0% 100%, from( #ddd3bb ), to( #9c937c ) );
+}
+.DUCfgPreviaDesenho
+{
+    width: 260px;
+    height: 260px;
+}
+.DUCfgPreviaDica
+{
+    margin-top: 8px;
+    font-size: 13px;
+    color: #10130Dbb;
+}
+.DUCfgPreviaVida
+{
+    width: 100%;
+    height: 30px;
+    flow-children: right;
+    margin-bottom: 8px;
+}
+.DUCfgPreviaPct
+{
+    width: 48px;
+    vertical-align: center;
+    font-size: 15px;
+    font-weight: bold;
+    color: #10130D;
+}
+.DUCfgPreviaBarra
+{
+    width: fill-parent-flow(1.0);
+    height: 22px;
+    vertical-align: center;
+    border-radius: 3px;
+    border: 1px solid #10130D;
+    background-color: #10130Dcc;
+}
+.DUCfgPreviaCheia
+{
+    height: 100%;
+    border-radius: 2px;
+    background-image: url("s2r://panorama/images/hud/healthbar/healthbar_fill_texture_png.vtex");
+    background-size: cover;
+}
+/* botão "Pontos no minimapa" do painel do mapa */
 .DUMapaMiniBotao
 {
     padding: 3px 10px;
@@ -1806,56 +2470,136 @@
 {
     font-size: 13px;
 }
-.DUAjAcoes
+
+/* ---------------- mira personalizada (80-mira.js, layout mira.xml) ----------------
+   Fica dentro do .ability_element_gun do jogo (500x500 no centro); os traços são posicionados pelo JS. */
+.DUMira
 {
-    flow-children: right;
-    margin: 8px 0px 4px 12px;
+    width: 500px;
+    height: 500px;
+    horizontal-align: center;
+    vertical-align: center;
 }
-.DUAjTeclas
+.DUMiraDesenho
+{
+    width: 500px;
+    height: 500px;
+}
+/* vida perto da mira (82-vida.js): centralizada e deslocada pelo JS (embaixo, esquerda ou direita) */
+.DUVidaMira
+{
+    width: 120px;
+    flow-children: down;
+    horizontal-align: center;
+    vertical-align: center;
+}
+.DUVidaMiraBarra
 {
     width: 100%;
-    flow-children: right-wrap;
-    margin: 0px 0px 8px 12px;
-    padding: 8px 12px;
-    background-color: #10130D26;
+    height: 8px;
     border-radius: 3px;
+    border: 1px solid #000000;
+    background-color: #000000aa;
+    box-shadow: 0px 0px 3px #000000aa;
 }
-.DUAjTeclasDica
+.DUVidaMiraCheia
 {
-    width: 100%;
-    margin-bottom: 6px;
+    height: 100%;
+    border-radius: 2px;
+    background-color: #FFEFD7;
 }
-.DUAjTecla
-{
-    min-width: 52px;
-    margin: 0px 6px 6px 0px;
-    padding: 5px 8px;
-}
-.DUAjTecla Label
+.DUVidaMiraTexto
 {
     horizontal-align: center;
+    margin-top: 1px;
+    font-family: VALVEOracle, Reaver, Noto Sans, sans-serif;
+    font-size: 15px;
+    font-weight: bold;
+    color: #FFEFD7;
+    text-shadow: 1px 1px 2px 1.0 #000000;
 }
-.DUAjTeclaUsada
+/* vida instantânea: preenchimento próprio dentro do #health_bar do jogo (vertical, de baixo para cima) */
+.DUVidaBarra
 {
-    opacity: 0.35;
+    width: 100%;
+    height: 100%;
 }
-.DUAjCampo
+.DUVidaBarraCheia
 {
-    width: 200px;
+    width: 100%;
+    height: 100%;
+    vertical-align: bottom;
+    background-color: #FFEFD7;
+    background-image: url("s2r://panorama/images/hud/healthbar/healthbar_fill_texture_png.vtex");
+    background-size: cover;
+}
+
+/* ---------------- timers no minimapa (84-timers.js, layout minitimers.xml) ----------------
+   O tempo do buff em cima de cada ponte, só na visão detalhada do minimapa (Tab ou mapa M), como o timer do
+   chefe do meio do jogo. Camada filha do #hud_minimap: herda o tamanho e a inversão do mapa. */
+.DUMiniTimers
+{
+    width: 100%;
+    height: 100%;
+    z-index: 7;
+}
+.DUMiniTimer
+{
+    width: 80px;
+    text-align: center;
+    font-family: VALVEPulp, Noto Sans, sans-serif;
+    font-size: 13px;
+    font-weight: bold;
+    color: #FFEFD7;
+    text-shadow: 0px 0px 2px 3.0 #000000;
+    opacity: 0.85;
+}
+.DUInvertido .DUMiniTimer
+{
+    transform: scaleX(-1) scaleY(-1);
+}
+.DUMiniTimerAlerta .DUMiniTimer
+{
+    color: #ffd24a;
+    opacity: 1;
+}
+/* timers no painel do mapa */
+.DUMapaTimers
+{
+    width: 100%;
+    flow-children: down;
+}
+.DUMapaLinhaTimer
+{
+    height: 28px;
+    padding: 2px 6px;
+    border-radius: 3px;
+}
+.DUMapaLinhaTimer.DUMapaTimerChat:hover
+{
+    background-color: #2b221933;
+}
+.DUMapaTimerIcone
+{
+    width: 22px;
+    height: 22px;
     vertical-align: center;
-    margin-right: 6px;
+    margin-right: 8px;
+    wash-color: #3a2c1c;
 }
-.DUAjConta
+.DUMapaLinhaTimer .DUMapaRotulo, .DUMapaLinhaTimer .DUMapaValor
+{
+    vertical-align: center;
+}
+.DUMapaTimerAlerta .DUMapaValor
+{
+    color: #b5541b;
+}
+.DUMapaChatDica
 {
     margin-top: 2px;
-    font-weight: bold;
-}
-.DUAjRodape
-{
-    margin: 10px 0px 20px 12px;
-    font-size: 14px;
+    font-size: 12px;
     font-style: italic;
-    color: #10130Dcc;
 }
 
 /* ---------------- tracker ---------------- */

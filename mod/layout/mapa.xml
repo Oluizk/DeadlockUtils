@@ -5,18 +5,9 @@
 	<Panel class="DUMapa" hittest="false">
 		<Panel class="DUMapaCaixa">
 			<Label class="DUMapaTitulo" text="@mapa.titulo" />
-			<Panel class="DUMapaLinha">
-				<Label class="DUMapaRotulo" text="@mapa.partida" />
-				<Label id="DUMapaRelogio" class="DUMapaValor" text="--:--" />
-			</Panel>
-			<Panel class="DUMapaLinha">
-				<Label class="DUMapaRotulo" text="@mapa.ponte" />
-				<Label id="DUMapaPonte" class="DUMapaValor" text="--:--" />
-			</Panel>
-			<Panel class="DUMapaLinha">
-				<Label class="DUMapaRotulo" text="@mapa.midboss" />
-				<Label id="DUMapaMidboss" class="DUMapaValor" html="true" text="-" />
-			</Panel>
+			<!-- timers (84-timers.js): uma linha por objetivo, clique manda o tempo no chat do time -->
+			<Panel id="DUMapaTimers" class="DUMapaTimers" />
+			<Label id="DUMapaChatDica" class="DUMapaDica DUMapaChatDica" text="@mapa.chatDica" />
 			<Panel class="DUMapaLinha DUMapaTamanho">
 				<Label id="DUMapaTamRotulo" class="DUMapaRotulo" text="@mapa.tamanho" />
 				<Button id="DUMapaMenor" class="DUMapaBotao"><Label text="-" /></Button>
@@ -26,6 +17,20 @@
 			<Panel class="DUMapaLinha DUMapaTamanho">
 				<Label id="DUMapaMiniRotulo" class="DUMapaRotulo" text="@mapa.pontosMini" />
 				<Button id="DUMapaMiniPontos" class="DUAbaModo DUMapaMiniBotao"><Label text=" " /></Button>
+			</Panel>
+			<!-- transparência: os mesmos valores de configurações > Mapa (- = mais transparente) -->
+			<Label class="DUMapaSubtitulo" text="@cfg.g.transparencia" />
+			<Panel class="DUMapaLinha DUMapaTamanho">
+				<Label class="DUMapaRotulo" text="@aj.mapaGrande" />
+				<Button id="DUMapaOpacMenos" class="DUMapaBotao"><Label text="-" /></Button>
+				<Label id="DUMapaOpacValor" class="DUMapaTamValor" text=" " />
+				<Button id="DUMapaOpacMais" class="DUMapaBotao"><Label text="+" /></Button>
+			</Panel>
+			<Panel class="DUMapaLinha DUMapaTamanho">
+				<Label class="DUMapaRotulo" text="@aj.minimapa" />
+				<Button id="DUMapaMiniOpacMenos" class="DUMapaBotao"><Label text="-" /></Button>
+				<Label id="DUMapaMiniOpacValor" class="DUMapaTamValor" text=" " />
+				<Button id="DUMapaMiniOpacMais" class="DUMapaBotao"><Label text="+" /></Button>
 			</Panel>
 			<Label class="DUMapaSubtitulo" text="@mapa.mostrar" />
 			<Panel id="DUMapaFiltros" class="DUMapaFiltros" />

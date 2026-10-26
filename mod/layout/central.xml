@@ -1,0 +1,37 @@
+<root>
+	<styles>
+		<include src="s2r://panorama/styles/deadlock_utils.vcss_c" />
+	</styles>
+	<!-- Central de configurações (76-central.js): barra lateral com as seções, cartaz da seção, pesquisa,
+	     lista de opções (montada a partir de SECOES_CFG em 75-ajustes.js) e prévia ao vivo. -->
+	<Panel class="DUCentral">
+		<Panel class="DUCentralJanela">
+			<Panel class="DUCentralLateral">
+				<!-- logo do mod (mod/imagens/logo.png, virou textura no build) -->
+				<Panel class="DUCentralMarca">
+					<Panel class="DUCentralLogo" />
+					<Label id="DUCentralVersao" class="DUCentralVersao" text=" " />
+				</Panel>
+				<Panel id="DUCentralSecoes" class="DUCentralSecoes" />
+				<Label id="DUCentralPonte" class="DUCentralPonte" html="true" text=" " />
+			</Panel>
+			<Panel class="DUCentralMain">
+				<Panel class="DUCentralTopo">
+					<Panel id="DUCentralCabeca" class="DUCentralCabeca" />
+					<Panel class="DUCentralBusca">
+						<Label class="DUCentralLupa" text="@cfg.buscar" />
+						<TextEntry id="DUCentralBuscaCampo" class="DUTexto DUCentralBuscaCampo" maxchars="40" />
+					</Panel>
+					<Button id="DUCentralFechar" class="DUCentralFechar">
+						<Label text="X" />
+					</Button>
+				</Panel>
+				<Panel class="DUCentralCorpo">
+					<Panel id="DUCentralLista" class="DUCentralLista" />
+					<Panel id="DUCentralPrevia" class="DUCentralPrevia" />
+				</Panel>
+				<Label class="DUCentralDica" html="true" text="@cfg.dica" />
+			</Panel>
+		</Panel>
+	</Panel>
+</root>

@@ -111,6 +111,40 @@ public static class S2Resource
         return Write(TypeVersion(template), list);
     }
 
+    // Textura (.vtex_c) no formato 16 (PNG_RGBA8888), o mesmo das imagens "_png" do Panorama: o arquivo é o
+    // cabeçalho (blocos RED2 + DATA, tamanho no 1º uint) seguido do PNG puro. Do modelo troca largura e
+    // altura e zera o "fallback" (miniatura DXT mostrada enquanto carrega; zero = transparente).
+    public static byte[] CompileTexturePng(byte[] png, byte[] template)
+    {
+        if (png.Length < 24 || png[1] != 'P' || png[2] != 'N' || png[3] != 'G') throw new Exception("não é um PNG");
+        int headerSize = (int)BitConverter.ToUInt32(template, 0);
+        var head = new byte[headerSize];
+        Buffer.BlockCopy(template, 0, head, 0, headerSize);
+        ushort hv, tv;
+        S2Block data = null;
+        foreach (var b in Blocks(head, out hv, out tv)) if (b.Type == "DATA") data = b;
+        if (data == null) throw new Exception("modelo de textura sem DATA");
+        int o = (int)data.Offset;
+        if (head[o + 26] != 16) throw new Exception("modelo de textura não é PNG_RGBA8888 (formato " + head[o + 26] + ")");
+        int w = (png[16] << 24) | (png[17] << 16) | (png[18] << 8) | png[19];
+        int h = (png[20] << 24) | (png[21] << 16) | (png[22] << 8) | png[23];
+        if (w <= 0 || h <= 0 || w > 4096 || h > 4096) throw new Exception("tamanho de PNG inválido: " + w + "x" + h);
+        BitConverter.GetBytes((ushort)w).CopyTo(head, o + 20);
+        BitConverter.GetBytes((ushort)h).CopyTo(head, o + 22);
+        head[o + 27] = 1; // um mip
+        int extraOff = (int)BitConverter.ToUInt32(head, o + 32), extraCount = (int)BitConverter.ToUInt32(head, o + 36);
+        int p = o + 32 + extraOff;
+        for (int i = 0; i < extraCount; i++, p += 12)
+        {
+            uint type = BitConverter.ToUInt32(head, p), off = BitConverter.ToUInt32(head, p + 4), size = BitConverter.ToUInt32(head, p + 8);
+            if (type == 1) Array.Clear(head, p + 4 + (int)off, (int)size); // FALLBACK_BITS
+        }
+        var outb = new byte[headerSize + png.Length];
+        Buffer.BlockCopy(head, 0, outb, 0, headerSize);
+        Buffer.BlockCopy(png, 0, outb, headerSize, png.Length);
+        return outb;
+    }
+
     public static byte[] Block(byte[] file, string type)
     {
         ushort hv, tv;

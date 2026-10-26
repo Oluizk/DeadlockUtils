@@ -284,15 +284,16 @@ function ajustarJogador(forcar) {
   // Os painéis aparecem/somem (visão, morte, renascer): procura de novo a cada segundo.
   if (!forcar && Date.now() - mapa.jogadorEm < 1000) return;
   mapa.jogadorEm = Date.now();
-  porClasse(minimapa(), "player").forEach(function (p) {
+  botoesMapa("player").forEach(function (p) {
     if (mapa.jogador.indexOf(p) < 0 && temClasse(p, "map_button")) mapa.jogador.push(p);
   });
   mapa.jogador = mapa.jogador.filter(valido);
   // Mapa grande: os dois ajustes do mapa. Minimapa normal: só o seu ícone (o do jogo é 15%, enorme
   // quando o minimapa está ampliado); os outros heróis ficam como o jogo desenha.
+  // Mod desligado (F8): os tamanhos do jogo.
   var grande = mapa.aberto;
-  var tamEu = grande ? TAM_JOGADOR_MAPA : (ajustes.miniEu || "15%");
-  var escOutros = grande ? ESCALA_HEROIS_MAPA : "1";
+  var tamEu = !modLigado ? "15%" : grande ? TAM_JOGADOR_MAPA : (ajustes.miniEu || "15%");
+  var escOutros = grande && modLigado ? ESCALA_HEROIS_MAPA : "1";
   var chave = tamEu + "|" + escOutros + "|" + mapa.jogador.length;
   if (!forcar && chave === mapa.chaveJogador) return; // nada mudou: não mexe nos estilos à toa
   mapa.chaveJogador = chave;
@@ -317,9 +318,9 @@ function montarPainelMapa() {
   if (mapa.falhou || valido(mapa.painel)) return;
   mapa.painel = painelComLayout(hud, "DU_Mapa", "mapa");
   if (!mapa.painel) { mapa.falhou = true; log("painel do mapa não carregou"); return; }
-  mapa.relogio = achar(mapa.painel, "DUMapaRelogio");
-  mapa.ponte = achar(mapa.painel, "DUMapaPonte");
-  mapa.midboss = achar(mapa.painel, "DUMapaMidboss");
+  mapa.timers = achar(mapa.painel, "DUMapaTimers");
+  mapa.chatDica = achar(mapa.painel, "DUMapaChatDica");
+  mapa.linhasTimer = null;
   mapa.filtros = achar(mapa.painel, "DUMapaFiltros");
   mapa.tamValor = achar(mapa.painel, "DUMapaTamValor");
   achar(mapa.painel, "DUMapaTamRotulo").text = T("aj.tamMapa");
@@ -329,6 +330,11 @@ function montarPainelMapa() {
   mapa.miniBotao = achar(mapa.painel, "DUMapaMiniPontos");
   achar(mapa.painel, "DUMapaMiniRotulo").text = T("aj.miniPontos");
   aoClicar(mapa.miniBotao, function () { ajustes.miniPontos = ajustes.miniPontos > 0 ? 0 : (ajustes.miniPontosAntes || 1); salvarAjustes(); desenharTamanhoMapa(); });
+  // transparência do mapa grande e do minimapa: - deixa mais transparente, + mais opaco
+  mapa.opacValor = achar(mapa.painel, "DUMapaOpacValor");
+  mapa.miniOpacValor = achar(mapa.painel, "DUMapaMiniOpacValor");
+  [["DUMapaOpacMenos", "mapaOpac", -1], ["DUMapaOpacMais", "mapaOpac", 1], ["DUMapaMiniOpacMenos", "miniOpac", -1], ["DUMapaMiniOpacMais", "miniOpac", 1]]
+    .forEach(function (b) { aoClicar(achar(mapa.painel, b[0]), function () { mudarOpacidadeMapa(b[1], b[2]); desenharTamanhoMapa(); }); });
   mostrarPainel(mapa.painel, false);
 }
 
@@ -340,6 +346,9 @@ function desenharTamanhoMapa() {
     var l = filhos(mapa.miniBotao)[0];
     if (l) l.text = ajustes.miniPontos > 0 ? T("aj.sim") : T("aj.nao");
   }
+  // opacidade em %: 100% = opaco (número em vez de "Opaco", que em russo não cabe nos 64px do valor)
+  if (valido(mapa.opacValor)) mapa.opacValor.text = ajustes.mapaOpac + "%";
+  if (valido(mapa.miniOpacValor)) mapa.miniOpacValor.text = ajustes.miniOpac + "%";
 }
 
 function desenharFiltros() {
@@ -363,7 +372,9 @@ function desenharFiltros() {
 // ---------- abrir / fechar ----------
 function abrirMapa() {
   var l = ultimaLeitura || lerPartida();
-  if (l.lojaAberta || !l.emPartida) return;
+  // Só na partida ativa: no pré-jogo (contagem inicial), no hideout e no fim de partida o jogo esconde o
+  // minimapa, e o mapa abriria vazio.
+  if (l.lojaAberta || !partidaAtiva(l.emPartida, estadoHud())) return;
   if (tracker.aberto) fecharTracker();
   montarPainelMapa();
   if (!pontos.filtros) carregarFiltros();
@@ -421,13 +432,35 @@ function proximoBuffPonte(seg) {
   return intervalo - ((seg - inicio) % intervalo);
 }
 
+// Timers no painel do mapa: os mesmos do painel de objetivos (84-timers.js), sempre todos, em linhas.
+// Com o mapa aberto o cursor está livre: clicar numa linha manda o tempo no chat do time.
 function atualizarPainelMapa(l) {
-  if (!mapa.aberto || !valido(mapa.painel)) return;
-  var s = l.segundos;
-  mapa.relogio.text = relogio(s);
-  var p = proximoBuffPonte(s);
-  mapa.ponte.text = p == null ? "-" : relogio(p);
-  mapa.midboss.text = l.textoMidboss ? esc(l.textoMidboss) : "-";
+  if (!mapa.aberto || !valido(mapa.painel) || !valido(mapa.timers)) return;
+  var est = timers.estados || (l.emPartida && l.segundos != null ? estadosTimers(lerObjetivos(l)) : null);
+  if (!mapa.linhasTimer) {
+    mapa.timers.RemoveAndDeleteChildren();
+    mapa.linhasTimer = {};
+    TIMERS_ORDEM.forEach(function (id) {
+      var linha = criar("Panel", mapa.timers, "", "DUMapaLinha DUMapaLinhaTimer");
+      var ic = imagem(linha, "DUMapaTimerIcone", "s2r://panorama/images/" + ICONE_TIMER[id]);
+      var nome = rotulo(linha, "DUMapaRotulo", esc(T("tm." + id)));
+      var valor = rotulo(linha, "DUMapaValor", "-");
+      aoClicar(linha, function () { anunciarTimer(id); });
+      mapa.linhasTimer[id] = { painel: linha, icone: ic, nome: nome, valor: valor, iconeAtual: ICONE_TIMER[id] };
+    });
+  }
+  mostrarPainel(mapa.chatDica, !!ajustes.timersChat);
+  TIMERS_ORDEM.forEach(function (id) {
+    var x = mapa.linhasTimer[id], e = est ? est[id] : null;
+    mostrarPainel(x.painel, !!e && !e.oculto);
+    if (!e || e.oculto) return;
+    x.valor.text = esc(e.valor) + (e.detalhe ? " <font color='#6b5a44'>" + esc(e.detalhe) + "</font>" : "");
+    x.nome.text = esc(e.nome || T("tm." + id));
+    x.painel.SetHasClass("DUMapaTimerAlerta", !!e.alerta);
+    x.painel.SetHasClass("DUMapaTimerChat", !!(ajustes.timersChat && e.chat));
+    var ic = e.icone || ICONE_TIMER[id];
+    if (ic !== x.iconeAtual) { x.iconeAtual = ic; try { x.icone.SetImage("s2r://panorama/images/" + ic); } catch (err) {} }
+  });
 }
 
 // ---------- os mesmos pontos no minimapa pequeno ----------
@@ -473,8 +506,102 @@ function garantirPontosMinimapa(leitura) {
   atualizarCamadaPontos();
 }
 
+// ---------- transparência do mapa (configurações > Mapa) ----------
+// O jogo desenha o fundo do minimapa por um material (minimap.vmat, client.dll) no próprio #hud_minimap, e
+// os ícones são filhos dele. Opacidade no #hud_minimap não pega no jogo (o painel C++ cuida da dele); nos
+// painéis comuns do #minimap_container (hud.xml) pega. Então a opacidade vai na moldura, no desfoque e no
+// #HudMinimapContainer (que contém o #hud_minimap), por classes DU_miniOpac<n> / DU_mapaOpac<n> na raiz
+// do HUD (75-ajustes.js; regras em mod/estilo.css).
+// Para os heróis (e o seu indicador) continuarem nítidos, o mod muda os ícones deles para uma camada
+// própria (#DU_IconesMapa) no #minimap_container, por cima do resto e fora do que fica transparente:
+// mesmo tamanho, mesmo lugar e as mesmas classes de estado do minimapa (o jogo vira o minimapa com
+// .invert_map e as regras dos ícones dependem dessas classes num ancestral). Os ícones mantêm o estilo
+// do layout do jogo, e o jogo continua posicionando cada um.
+// Só com a transparência ligada no modo atual; com o mapa opaco (ou F8) eles voltam para o minimapa.
+var CLASSES_COPIA_MINIMAPA = (function () {
+  var c = ["invert_map", "gScoreboardOpen", "gDetailView", "dl_midtown", "in_tunnels", "is_underground", "useZoomedMinimap", "forceShowMinimap"];
+  for (var z = -1; z <= 11; z++) c.push("zoomLevel" + z);
+  return c;
+})();
+function opacidadeMapaAgora() { return !modLigado ? 100 : mapa.aberto ? ajustes.mapaOpac : ajustes.miniOpac; }
+// Botões do minimapa com uma classe, estejam no minimapa ou na camada dos heróis.
+function botoesMapa(classe) {
+  var lista = porClasse(minimapa(), classe);
+  return valido(mapa.icones) ? lista.concat(porClasse(mapa.icones, classe)) : lista;
+}
+function vigiarIconesMapa() {
+  var mm = minimapa();
+  // o jogo recriou o minimapa: os ícones que ficaram na camada são do antigo
+  if (mapa.iconesMm && mapa.iconesMm !== mm) { devolverIconesMapa(); mapa.iconesMm = null; }
+  if (!(opacidadeMapaAgora() < 100) || !valido(mm)) { devolverIconesMapa(); return; }
+  var caixa = null, pai = null;
+  try { caixa = mm.GetParent(); pai = caixa.GetParent(); } catch (e) {}
+  if (!valido(caixa) || !valido(pai)) return;
+  if (!valido(mapa.icones) || mapa.iconesPai !== pai) {
+    // uma camada que ficou de antes (script recarregado) é apagada pelo painelComLayout: devolve os
+    // ícones dela primeiro, senão os heróis iriam junto
+    var velha = achar(pai, "DU_IconesMapa");
+    if (valido(velha)) porClasse(velha, "map_button").forEach(function (b) { try { b.SetParent(mm); } catch (e) {} });
+    mapa.icones = painelComLayout(pai, "DU_IconesMapa", "iconesmapa");
+    mapa.iconesPai = pai;
+    mapa.iconesMovidos = [];
+    mapa.iconesCaixa = null;
+    if (!mapa.icones) return;
+  }
+  mapa.iconesMm = mm;
+  mostrarPainel(mapa.icones, true);
+  alinharIconesMapa(mm, caixa, mapa.icones);
+  CLASSES_COPIA_MINIMAPA.forEach(function (c) { mapa.icones.SetHasClass(c, temClasse(mm, c) || temClasse(caixa, c)); });
+  porClasse(mm, "player").forEach(function (b) {
+    if (!temClasse(b, "map_button")) return;
+    try { b.SetParent(mapa.icones); mapa.iconesMovidos.push(b); } catch (e) {}
+  });
+  mapa.iconesMovidos = mapa.iconesMovidos.filter(valido);
+}
+// Mesmo tamanho e mesmo lugar do #hud_minimap, por correção: a camada fica no #minimap_container, o
+// minimapa no #HudMinimapContainer dentro dele (mesma escala), então a diferença entre os dois, medida
+// a cada ciclo, é o que falta ajustar. Funciona com o ui-scale do minimapa (DUMini*), com a animação de
+// abrir o mapa grande e com o minimapa com zoom, em que o #hud_minimap cresce e se desloca.
+function alinharIconesMapa(mm, caixa, ov) {
+  var mw = mm.actuallayoutwidth, mh = mm.actuallayoutheight;
+  if (!(mw > 0 && mh > 0)) return;
+  var c = mapa.iconesCaixa, ow = ov.actuallayoutwidth, oh = ov.actuallayoutheight;
+  if (!c) {
+    var esc = mm.actualuiscale_x || 1;
+    c = mapa.iconesCaixa = { w: Math.round(mw / esc), h: Math.round(mh / esc), x: 0, y: 0 };
+  } else if (ow > 0 && oh > 0) {
+    // px de layout por pixel real, medido na própria camada
+    var kx = c.w / ow, ky = c.h / oh;
+    var dw = mw - ow, dh = mh - oh;
+    var dx = (caixa.actualxoffset + mm.actualxoffset - ov.actualxoffset) || 0;
+    var dy = (caixa.actualyoffset + mm.actualyoffset - ov.actualyoffset) || 0;
+    if (Math.abs(dw) < 1 && Math.abs(dh) < 1 && Math.abs(dx) < 1 && Math.abs(dy) < 1) return;
+    c.w = Math.min(4000, Math.round(c.w + dw * kx));
+    c.h = Math.min(4000, Math.round(c.h + dh * ky));
+    c.x += Math.round(dx * kx);
+    c.y += Math.round(dy * ky);
+  } else return;
+  try {
+    ov.style.width = c.w + "px";
+    ov.style.height = c.h + "px";
+    ov.style.position = c.x + "px " + c.y + "px 0px";
+  } catch (e) {}
+}
+function devolverIconesMapa() {
+  var dono = mapa.iconesMm;
+  (mapa.iconesMovidos || []).forEach(function (b) {
+    if (!valido(b)) return;
+    // se o minimapa de onde o ícone veio não existe mais, o ícone ficou órfão (o novo tem os dele)
+    try { if (valido(dono)) b.SetParent(dono); else b.DeleteAsync(0); } catch (e) {}
+  });
+  mapa.iconesMovidos = [];
+  if (valido(mapa.icones)) mostrarPainel(mapa.icones, false);
+}
+
 // Chamado pelo loop rápido: fecha quando a loja abre ou o jogador saiu do placar por fora.
 function vigiarMapa(estado) {
+  // um erro aqui não pode parar o resto do loop rápido (mapa, Tab, loja, mira...)
+  try { vigiarIconesMapa(); } catch (e) { if (!mapa.erroIcones) { mapa.erroIcones = true; log("camada dos heróis: " + e); } }
   vigiarMarcas();
   if (modLigado) ajustarJogador(false);
   if (valido(pontos.painel) && pontos.painel.visible !== false) atualizarCamadaPontos(); // segue a animação de abrir/fechar

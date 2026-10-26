@@ -61,20 +61,25 @@ function chaveIcone(src) {
 }
 
 // ---------- criação de painéis ----------
+// $.CreatePanel(tipo, pai, id, propriedades): o jogo marca $.CreatePanelWithProperties como obsoleto (e
+// escreve um aviso no console a cada painel). Se esta versão não aceitar propriedades, cai na antiga.
 function criar(tipo, pai, id, classes, props) {
   var p = null;
   try {
-    if (props && $.CreatePanelWithProperties) p = $.CreatePanelWithProperties(tipo, pai, id || "", props);
-    else p = $.CreatePanel(tipo, pai, id || "");
+    p = props ? $.CreatePanel(tipo, pai, id || "", props) : $.CreatePanel(tipo, pai, id || "");
   } catch (e) {
-    try { p = $.CreatePanel(tipo, pai, id || ""); } catch (e2) { log("CreatePanel(" + tipo + ") falhou: " + e2); return null; }
+    try { p = props && $.CreatePanelWithProperties ? $.CreatePanelWithProperties(tipo, pai, id || "", props) : $.CreatePanel(tipo, pai, id || ""); }
+    catch (e2) { log("CreatePanel(" + tipo + ") falhou: " + e2); return null; }
   }
   if (p && classes) classes.split(" ").forEach(function (c) { if (c) p.AddClass(c); });
   return p;
 }
 function rotulo(pai, classes, texto) {
   var l = criar("Label", pai, "", classes, { html: "true" });
-  if (l) { try { l.text = texto; } catch (e) {} }
+  if (l) {
+    try { l.html = true; } catch (e) {} // garante <b>/<font> mesmo se as propriedades não tiverem pegado
+    try { l.text = texto; } catch (e) {}
+  }
   return l;
 }
 function imagem(pai, classes, src) {

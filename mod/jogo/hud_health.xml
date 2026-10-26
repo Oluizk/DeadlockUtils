@@ -1,0 +1,14 @@
+<!-- Deadlock Utils: barra de vida do jogo (panorama/layout/hud_health.xml).
+     Põe um preenchimento próprio dentro do #health_bar para a "vida instantânea": o jogo anima o
+     preenchimento dele (enche/esvazia aos poucos, ProgressBarWithMiddle); o nosso segue o número de vida
+     na hora (82-vida.js). Mesma textura do jogo; a máscara do #health_bar recorta os dois igual.
+     Estilos em mod/jogo/vida.css. Formato das diretivas: ver mod/jogo/citadel_hud_top_bar.xml. -->
+
+<!-- DU:estilo deadlock_utils_vida -->
+
+<!-- DU:trocar <ProgressBarWithMiddle id="health_bar" class="large_progress_bar" vertical="true" /> -->
+				<ProgressBarWithMiddle id="health_bar" class="large_progress_bar" vertical="true">
+					<Panel id="DUVidaPropria" class="DUVidaPropria" hittest="false">
+						<Panel id="DUVidaPropriaCheia" class="DUVidaPropriaCheia" />
+					</Panel>
+				</ProgressBarWithMiddle>

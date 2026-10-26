@@ -30,6 +30,7 @@ function montarAbaLoja() {
     return false;
   }
   mostrarPainel(c, false);
+  mostrarPainel(b, modLigado && ajustes.abaLoja);
   evento(b, "onmouseactivate", function () { loja.reabrir = false; ativarAba(!loja.ativa); });
   dica(b, T("dica.botaoNav"));
 
@@ -43,7 +44,6 @@ function montarAbaLoja() {
   loja.detalhe = achar(c, "DUDetalhe");
   loja.vistaRecs = achar(c, "DUVistaRecs");
   loja.vistaEditor = achar(c, "DUVistaEditor");
-  loja.vistaAjustes = achar(c, "DUVistaAjustes");
   // Cartazes (componente em 15-cartaz.js): o cabeçalho e um por seção, com texto traduzível.
   var topo = achar(c, "DUAbaTopo");
   loja.cTopo = cartaz(topo, { titulo: "Deadlock Utils", sub: T("cartaz.topo.sub"), tema: "vermelho", tamanho: "grande" });
@@ -60,7 +60,7 @@ function montarAbaLoja() {
   loja.detalhe.text = T("detalhe.inicial");
   aoClicar(achar(c, "DUBotaoRecs"), function () { trocarVista("recs"); });
   aoClicar(achar(c, "DUBotaoEditar"), function () { trocarVista("editor"); });
-  aoClicar(achar(c, "DUBotaoAjustes"), function () { trocarVista("ajustes"); });
+  aoClicar(achar(c, "DUBotaoAjustes"), function () { abrirCentral(); }); // central de configurações (76-central.js)
   log("aba da loja criada (layout ok: " + [loja.status, loja.ameacas, loja.build, loja.counters, loja.detalhe].every(valido) + ")");
   if (ultimoResultado) desenharAba(ultimoResultado, ultimaLeitura);
   return true;
@@ -86,13 +86,10 @@ function trocarVista(v) {
   loja.vista = v;
   mostrarPainel(loja.vistaRecs, v === "recs");
   mostrarPainel(loja.vistaEditor, v === "editor");
-  mostrarPainel(loja.vistaAjustes, v === "ajustes");
   achar(loja.conteudo, "DUBotaoRecs").SetHasClass("DUAbaModoAtivo", v === "recs");
   achar(loja.conteudo, "DUBotaoEditar").SetHasClass("DUAbaModoAtivo", v === "editor");
-  achar(loja.conteudo, "DUBotaoAjustes").SetHasClass("DUAbaModoAtivo", v === "ajustes");
   if (v !== "recs") { devolverNativos(); loja.assinatura = ""; }
   if (v === "editor") abrirEditor(loja.vistaEditor, loja.detalhe);
-  else if (v === "ajustes") abrirAjustes(loja.vistaAjustes);
   else if (ultimoResultado) desenharAba(ultimoResultado, ultimaLeitura);
 }
 
@@ -186,9 +183,11 @@ function slotItem(pai, rec, tipo) {
   return slot;
 }
 
+// A aba mostra o resultado já confirmado ("Comprando…" até lá); a fileira do Tab é que não espera.
 function comprarComAviso(it) {
+  var mostrar = function (ok, msg) { loja.detalhe.text = "<b>" + esc(nomeItem(it)) + "</b>: " + esc(msg); };
   loja.detalhe.text = esc(T("comprando", nomeItem(it)));
-  comprarItem(it.id, function (ok, msg) { loja.detalhe.text = "<b>" + esc(nomeItem(it)) + "</b>: " + esc(msg); });
+  comprarItem(it.id, function (ok, msg) { if (!ok) mostrar(ok, msg); }, mostrar);
 }
 
 function desenharTiers(alvo, lista, porTier, vazio, tipo) {
@@ -268,12 +267,13 @@ aoMudarResultado(function (r, l) { if (loja.ativa && loja.vista === "recs") dese
 // loja com a nossa aba aberta, ela é lembrada e reabre na próxima vez, como o jogo faz com as abas dele.
 function vigiarAbaLoja(e) {
   var aberta = !!(e.lojaAberta || temClasse(loja.shop, "gShopOpen"));
-  if (aberta && !loja.lojaAberta && loja.reabrir) {
+  if (aberta && !loja.lojaAberta && loja.reabrir && ajustes.abaLoja) {
     // espera o jogo terminar de abrir a loja (ele recoloca a classe da última aba dele)
     $.Schedule(0.1, function () { if (loja.reabrir && !loja.ativa && modLigado && temClasse(loja.shop, "gShopOpen")) ativarAba(true); });
   }
   loja.lojaAberta = aberta;
   if (!loja.ativa) return;
+  if (!ajustes.abaLoja) { loja.reabrir = false; ativarAba(false); return; }
   if (classeAbaDoJogo()) { loja.classeAnterior = ""; loja.reabrir = false; ativarAba(false); }
   else if (!aberta) { loja.reabrir = true; ativarAba(false); }
 }

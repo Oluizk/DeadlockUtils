@@ -2,8 +2,13 @@
 	<styles>
 		<include src="s2r://panorama/styles/deadlock_utils.vcss_c" />
 	</styles>
+	<!-- Aviso no topo: retrato do inimigo + ícone do item perigoso que ele comprou (ou só texto). -->
 	<Panel class="DUAviso" hittest="false">
-		<Label id="DUAvisoTitulo" class="DUAvisoTitulo" html="true" text=" " />
-		<Label id="DUAvisoTexto" class="DUAvisoTexto" html="true" text=" " />
+		<Image id="DUAvisoHeroi" class="DUAvisoHeroi" />
+		<Image id="DUAvisoItem" class="DUAvisoItem" />
+		<Panel class="DUAvisoTextos">
+			<Label id="DUAvisoTitulo" class="DUAvisoTitulo" html="true" text=" " />
+			<Label id="DUAvisoTexto" class="DUAvisoTexto" html="true" text=" " />
+		</Panel>
 	</Panel>
 </root>

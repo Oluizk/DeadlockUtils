@@ -30,6 +30,30 @@ function coletarImagens(p, prof, saida) {
   }
 }
 
+// ---------- estado do jogo ----------
+// O jogo marca o HUD com classes de estado, e o próprio CSS dele usa essas classes para esconder o HUD
+// no hideout, no pré-jogo (contagem "Iniciando a partida") e no fim da partida (hud.css). O mod segue as
+// mesmas: fora da partida ativa nada do mod aparece (mapa, Tab, avisos, timers).
+var ESTADOS_HUD = {
+  hideout: ["InHideout", "connectedToHideout", "inHideoutIntro"],
+  preJogo: ["GameStatePreGame", "GameStatePreGameWait", "PreGameHeroDraft"],
+  fimDeJogo: ["GameStatePostGame", "inPostGame", "GameStatePostGamePlayOfTheGame"],
+  oculto: ["HudHidden"],
+};
+// A classe pode estar na raiz do HUD ou num ancestral do placar.
+function classeNoHud(c) {
+  if (temClasse(hud, c)) return true;
+  var tb = topBar();
+  try { return valido(tb) && tb.BAscendantHasClass(c); } catch (e) { return false; }
+}
+function estadoHud() {
+  var e = {};
+  Object.keys(ESTADOS_HUD).forEach(function (k) { e[k] = ESTADOS_HUD[k].some(classeNoHud); });
+  return e;
+}
+// Partida rolando de verdade: tem jogadores no placar e o jogo não está em hideout/pré-jogo/fim.
+function partidaAtiva(emPartida, e) { return !!emPartida && !e.hideout && !e.preJogo && !e.fimDeJogo; }
+
 // Placar (Tab) aberto. Não dá para olhar só o #TopBar: com o mapa grande aberto o mod tira a classe
 // dele (ver 50-mapa.js). O #minimap_persp é um GlobalClassListener (aplica a classe num ancestral, não
 // em si mesmo), então olha os ancestrais dele; e o #hud_minimap, que tem o próprio listener.
@@ -163,8 +187,11 @@ function lerPartida() {
     else if (j.heroi) aliados.push(j.heroi);
   });
   var tb = topBar();
+  var estado = estadoHud();
+  var emPartida = timeA.length + timeB.length > 0;
   return {
     eu: euHeroi,
+    meuCartao: meuCartao || null,
     meuTime: meuTimeEhB ? "TeamEnemy" : "TeamFriendly",
     amigos: amigos,
     aliados: aliados,
@@ -173,7 +200,9 @@ function lerPartida() {
     almas: meuCartao ? lerAlmas(textoDe(achar(meuCartao.painel, "SoulsValue"))) : null,
     segundos: segundosDoRelogio(textoDe(achar(tb, "GameTime"))),
     textoMidboss: textoDe(achar(tb, "MidbossTimerLabel")),
-    emPartida: timeA.length + timeB.length > 0,
+    emPartida: emPartida,
+    estado: estado,
+    ativa: partidaAtiva(emPartida, estado),
     lojaAberta: temClasse(tb, "gShopOpen"),
     placarAberto: placarAberto(),
   };

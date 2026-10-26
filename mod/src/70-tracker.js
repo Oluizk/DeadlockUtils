@@ -20,7 +20,9 @@ function montarTracker() {
   return true;
 }
 
+// No hideout não há partida para mostrar (e o jogo esconde o HUD): não abre.
 function abrirTracker() {
+  if (!modLigado || estadoHud().hideout) return;
   if (!montarTracker()) return;
   if (mapa.aberto) fecharMapa();
   try { $.DispatchEvent("CitadelResumePlaying"); } catch (e) {} // fecha o menu ESC, se aberto
@@ -144,22 +146,28 @@ function desenharDetalheTracker(jogadores) {
   bloco(T("tr.historico"), hist);
 }
 
-// Botão "Tracker" no menu ESC da partida (usa as classes do próprio menu, então fica com o visual do jogo).
-// Fica na linha do "Comentários" (#SubOptions > .FeedbackRow), como item "minor" do próprio menu.
+// Botões "Deadlock Utils" (central de configurações) e "Tracker" no menu ESC da partida (usam as classes do
+// próprio menu, então ficam com o visual do jogo). Ficam na linha do "Comentários" (#SubOptions > .FeedbackRow),
+// como itens "minor" do próprio menu.
 var botaoEscPronto = false;
 function montarBotaoEsc() {
   if (botaoEscPronto) return;
   var menu = achar(hud, "EscapeMenu");
   if (!valido(menu)) return;
-  if (valido(achar(menu, "DUBotaoTracker"))) { botaoEscPronto = true; return; }
   var linha = porClasse(achar(menu, "SubOptions"), "FeedbackRow")[0] || achar(menu, "SubOptions");
   if (!valido(linha)) return;
-  var b = criar("Button", linha, "DUBotaoTracker", "nav_menu_item minor");
-  if (!b) return;
-  rotulo(b, "menuButtonLabel", "Tracker");
-  aoClicar(b, abrirTracker);
+  [["DUBotaoCentral", "Deadlock Utils", abrirCentral], ["DUBotaoTracker", "Tracker", abrirTracker]].forEach(function (x) {
+    if (valido(achar(menu, x[0]))) return;
+    var b = criar("Button", linha, x[0], "nav_menu_item minor");
+    if (!b) return;
+    rotulo(b, "menuButtonLabel", x[1]);
+    aoClicar(b, function () {
+      try { $.DispatchEvent("CitadelResumePlaying"); } catch (e) {} // fecha o menu ESC
+      x[2]();
+    });
+  });
   botaoEscPronto = true;
-  log("botão Tracker adicionado ao menu ESC");
+  log("botões Deadlock Utils e Tracker adicionados ao menu ESC");
 }
 
 // A página da ponte (mod/pagina/ponte.html, publicada) responde a origem em português.

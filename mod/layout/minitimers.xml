@@ -1,0 +1,7 @@
+<root>
+	<styles>
+		<include src="s2r://panorama/styles/deadlock_utils.vcss_c" />
+	</styles>
+	<!-- Timers no minimapa (84-timers.js): filha do #hud_minimap, um rótulo por ponte. -->
+	<Panel class="DUPontos DUMiniTimers" hittest="false" hittestchildren="false" />
+</root>

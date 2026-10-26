@@ -1,0 +1,39 @@
+<!-- Deadlock Utils: o que entra no placar do topo do jogo (panorama/layout/citadel_hud_top_bar.xml).
+     O build pega o original (mod/vendor/citadel_hud_top_bar.xml), põe cada bloco abaixo no ponto indicado
+     e recompila. Se um patch do jogo mudar o ponto, o build para com erro em vez de sair um HUD quebrado.
+     Diretivas: DU:estilo <css do mod> | DU:depois <trecho> | DU:antes <trecho> | DU:trocar <trecho>
+     (no trecho, espaço = qualquer espaço/quebra de linha do original).
+
+     Urna e buffs da ponte viram duas colunas a mais do lado do timer do Rejuvenator, com a mesma estrutura
+     dele (rejuvTimer, statusEffectImage, midbossTimerLabel): o CSS do próprio jogo desenha igual. Ids só
+     nossos (DU*): os ids do jogo (StatusEffectsBorder...) são procurados pelo código do jogo.
+     Estilos em mod/jogo/topo.css. Quem liga, desliga e escreve: 84-timers.js. -->
+
+<!-- DU:estilo deadlock_utils_topo -->
+
+<!-- DU:depois <Panel id="RejuvenatorCharges"> -->
+			<Panel id="DUUrna" class="DUObjetivo" hittest="false">
+				<Panel class="rejuvTimer">
+					<Panel class="DUObjBorda" />
+					<Panel class="DUObjFundo" />
+					<Panel class="statusEffectImage DUObjImagem" />
+				</Panel>
+				<Label class="midbossTimerLabel DUObjTempo" text=" " />
+			</Panel>
+
+<!-- DU:depois <Panel id="RejuvenatorEnemy"> <Panel class="rejuvIcon" /> </Panel> -->
+			<Panel id="DUPonte" class="DUObjetivo" hittest="false">
+				<Panel class="rejuvTimer">
+					<Panel class="DUObjBorda" />
+					<Panel class="DUObjFundo" />
+					<Panel class="statusEffectImage DUObjImagem" />
+				</Panel>
+				<Label class="midbossTimerLabel DUObjTempo" text=" " />
+			</Panel>
+
+<!-- vantagem de almas: do lado de fora do número do time que está na frente -->
+<!-- DU:depois <Panel id="TeamScoreFriendly" class="TeamScore"> <Panel class="ScoreBG" /> <Panel class="ScoreContainer"> -->
+					<Label id="DUVantagemEsq" class="DUVantagem" text=" " />
+
+<!-- DU:depois <Panel class="TeamIcon" /> <Label class="ScoreLabel" html="true" text="{s:team_networth}" /> -->
+					<Label id="DUVantagemDir" class="DUVantagem" text=" " />

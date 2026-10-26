@@ -1,0 +1,9 @@
+<root>
+	<styles>
+		<include src="s2r://panorama/styles/deadlock_utils.vcss_c" />
+	</styles>
+	<!-- Heróis nítidos com o mapa transparente (50-mapa.js): no #minimap_container, do mesmo tamanho e no
+	     mesmo lugar do #hud_minimap, fora dos painéis que ficam transparentes. A camada em si não pega
+	     clique; os ícones dos heróis continuam como no jogo. -->
+	<Panel class="DUIconesMapa" hittest="false" />
+</root>

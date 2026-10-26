@@ -29,18 +29,19 @@ INSTALL MANUALLY
   To remove: delete pak42_dir.vpk from the addons folder.
 
 LANGUAGE
-  English by default. To change: shop (B) > Deadlock Utils tab > Settings > Language
+  English by default. To change: Right Shift (settings) > General > Language
   (English, Português, Español, Русский). It changes right away.
 
 HOW TO USE
+  Right Shift or ESC menu          settings: crosshair, health bar, timers, map, hotkeys, backup
   Shop (B) > Deadlock Utils tab     your hero's build, counters to the enemy team, dangerous items
   Hold Tab                          recommended items above the investments (click to buy)
+  In the scoreboard                urn, bridge buffs and soul lead next to the Rejuvenator
   M                                 big map with timers, points of interest and filters
   F6 or ESC menu                    tracker (player ranks and history)
   F8                                turns the mod on and off
-  Settings (in the shop tab)        language, map and minimap sizes, points, hotkeys, tracker
 
-  Tracker: in Settings > Tracker, enter your Steam friend code (Steam > Friends > Add a Friend).
+  Tracker: in Right Shift > Tracker, enter your Steam friend code (Steam > Friends > Add a Friend).
 
 NOTES
   - The mod replaces the game HUD (hud.xml): another mod that does the same will not work with it.
@@ -77,18 +78,19 @@ INSTALAR NA MÃO
   Para remover: apague o pak42_dir.vpk da pasta addons.
 
 IDIOMA
-  Inglês por padrão. Para trocar: loja (B) > aba Deadlock Utils > Configurações > Idioma
+  Inglês por padrão. Para trocar: Shift direito (configurações) > Geral > Idioma
   (English, Português, Español, Русский). Muda na hora.
 
 COMO USAR
+  Shift direito ou menu ESC        configurações: mira, barra de vida, timers, mapa, teclas, backup
   Loja (B) > aba Deadlock Utils    build do seu herói, counters do time inimigo, itens perigosos
   Segurar Tab                       itens recomendados acima dos investimentos (clique compra)
+  No placar                         urna, buffs da ponte e vantagem de almas ao lado do Rejuvenator
   M                                 mapa grande com timers, pontos de interesse e filtros
   F6 ou menu ESC                    tracker (rank e histórico dos jogadores)
   F8                                liga e desliga o mod
-  Configurações (na aba da loja)    idioma, tamanhos do mapa e do minimapa, pontos, teclas, tracker
 
-  Tracker: em Configurações > Tracker, informe seu código de amigo da Steam
+  Tracker: em Shift direito > Tracker, informe seu código de amigo da Steam
   (Steam > Amigos > Adicionar um amigo).
 
 AVISOS

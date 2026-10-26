@@ -1,0 +1,16 @@
+<root>
+	<styles>
+		<include src="s2r://panorama/styles/deadlock_utils.vcss_c" />
+	</styles>
+	<!-- Mira personalizada (80-mira.js) e vida perto da mira (82-vida.js). Fica dentro do elemento da mira
+	     do jogo (500x500 no centro da tela): os traços são posicionados pelo JS a partir do centro. -->
+	<Panel class="DUMira" hittest="false" hittestchildren="false">
+		<Panel id="DUMiraDesenho" class="DUMiraDesenho" />
+		<Panel id="DUVidaMira" class="DUVidaMira DUEscondido">
+			<Panel class="DUVidaMiraBarra">
+				<Panel id="DUVidaMiraCheia" class="DUVidaMiraCheia" />
+			</Panel>
+			<Label id="DUVidaMiraTexto" class="DUVidaMiraTexto" text=" " />
+		</Panel>
+	</Panel>
+</root>

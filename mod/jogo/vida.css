@@ -1,0 +1,47 @@
+/* Deadlock Utils: estilos que entram na barra de vida do jogo (hud_health.xml, ver mod/jogo/hud_health.xml).
+   Ligados por classes que 82-vida.js põe na raiz do HUD. As cores escolhidas pelo jogador são postas
+   pelo JS (wash-color), porque o CSS não tem variáveis. */
+
+/* vida instantânea: o preenchimento do jogo (que anima) some e o nosso aparece */
+.DUVidaPropria
+{
+    width: 100%;
+    height: 100%;
+    visibility: collapse;
+}
+.DU_vidaInstantanea .DUVidaPropria
+{
+    visibility: visible;
+}
+.DUVidaPropriaCheia
+{
+    width: 100%;
+    height: 100%;
+    vertical-align: bottom;
+    background-color: #FFEFD7;
+    background-image: url("s2r://panorama/images/hud/healthbar/healthbar_fill_texture_png.vtex");
+    background-size: cover;
+}
+.DU_vidaInstantanea #health_bar .ProgressBarLeft,
+.DU_vidaInstantanea #health_bar .ProgressBarMiddle,
+.DU_vidaInstantanea #pending_incoming_damage,
+.DU_vidaInstantanea #pending_incoming_heal
+{
+    opacity: 0;
+}
+
+/* vida crítica: a barra pulsa (o jogo também pisca o número; isto só reforça a barra) */
+.DU_vidaPulso #health_bar .ProgressBarLeft,
+.DU_vidaPulso .DUVidaPropriaCheia
+{
+    animation-name: DUVidaPulso;
+    animation-duration: 0.8s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+}
+@keyframes 'DUVidaPulso'
+{
+    0% { brightness: 1; }
+    50% { brightness: 1.9; }
+    100% { brightness: 1; }
+}

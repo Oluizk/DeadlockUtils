@@ -1,0 +1,214 @@
+/* Deadlock Utils: estilos que entram no placar do topo do jogo (citadel_hud_top_bar.xml e
+   citadel_hud_top_bar_player.xml, ver mod/jogo/*.xml). Vêm depois do CSS do jogo, então ganham em empate.
+   Nada aqui usa os @define do jogo (offWhite etc.): não valem fora do arquivo onde foram criados.
+   Tudo começa desligado e é ligado por classes que o mod põe na raiz do HUD (DU_*), só durante a partida. */
+
+/* ---------- urna e buffs da ponte: colunas iguais à do timer do Rejuvenator ---------- */
+/* a coluna central cresce só quando uma das colunas do mod está ligada (sem elas, a largura do jogo) */
+.DU_tUrna #RejuvenatorCharges,
+.DU_tPonte #RejuvenatorCharges
+{
+    width: fit-children;
+}
+/* As colunas das cargas de Rejuvenator de cada time (#RejuvenatorFriendly/Enemy) ficam vazias quase a
+   partida toda, mas ocupam 70px cada: com elas a urna e a ponte iam parar colados nos retratos. Com as
+   colunas do mod ligadas, elas só ocupam espaço quando o time tem carga (RejuvCount_N, as mesmas classes
+   que fazem o ícone aparecer no CSS do jogo). */
+.DU_tUrna #RejuvenatorCharges #RejuvenatorFriendly, .DU_tUrna #RejuvenatorCharges #RejuvenatorEnemy,
+.DU_tPonte #RejuvenatorCharges #RejuvenatorFriendly, .DU_tPonte #RejuvenatorCharges #RejuvenatorEnemy
+{
+    width: 0px;
+    overflow: noclip;
+}
+#RejuvenatorCharges #RejuvenatorFriendly.RejuvCount_1, #RejuvenatorCharges #RejuvenatorFriendly.RejuvCount_2,
+#RejuvenatorCharges #RejuvenatorFriendly.RejuvCount_3, #RejuvenatorCharges #RejuvenatorFriendly.RejuvCount_4,
+#RejuvenatorCharges #RejuvenatorEnemy.RejuvCount_1, #RejuvenatorCharges #RejuvenatorEnemy.RejuvCount_2,
+#RejuvenatorCharges #RejuvenatorEnemy.RejuvCount_3, #RejuvenatorCharges #RejuvenatorEnemy.RejuvCount_4
+{
+    width: 70px;
+}
+#RejuvenatorCharges .DUObjetivo
+{
+    width: 56px;
+    height: 100%;
+    overflow: noclip;
+    visibility: collapse;
+    opacity: 0;
+    transition-property: opacity;
+    transition-duration: 0.35s;
+}
+.DU_tUrna #RejuvenatorCharges #DUUrna,
+.DU_tPonte #RejuvenatorCharges #DUPonte
+{
+    visibility: visible;
+    opacity: 1;
+}
+/* a borda e o fundo do círculo: as mesmas imagens do #StatusEffectsBorder / #StatusEffectInner do jogo */
+#RejuvenatorCharges .DUObjBorda
+{
+    width: 100%;
+    height: 100%;
+    background-image: url("s2r://panorama/images/hud/world_space/status_border.vsvg");
+    background-texture-size: 48px;
+    background-size: 100%;
+    wash-color: #FFEFD7;
+    opacity: 0.15;
+    z-index: -2;
+}
+#RejuvenatorCharges .DUObjFundo
+{
+    width: 100%;
+    height: 100%;
+    horizontal-align: center;
+    vertical-align: center;
+    background-image: url("s2r://panorama/images/hud/world_space/status_inner_psd.vtex");
+    background-size: 100%;
+    wash-color: #10130D;
+    opacity: 0.8;
+}
+/* ícone: contando = apagado (como o Rejuvenator em recarga); disponível = aceso e pulsando */
+#RejuvenatorCharges .DUObjetivo .statusEffectImage.DUObjImagem
+{
+    background-size: 80% 80%;
+    wash-color: #FFEFD7;
+    saturation: 0;
+    opacity: 0.3;
+    transition-property: opacity, wash-color;
+    transition-duration: 0.3s;
+}
+#RejuvenatorCharges #DUUrna .statusEffectImage.DUObjImagem
+{
+    background-image: url("s2r://panorama/images/minimap/soul_jar_marker_psd.vtex");
+    background-size: 100% 100%;
+    wash-color: none;
+}
+#RejuvenatorCharges #DUPonte .statusEffectImage.DUObjImagem
+{
+    background-image: url("s2r://panorama/images/hud/icons/powerup_gun.vsvg");
+}
+#RejuvenatorCharges #DUPonte.DUBuff_powerup_casting .statusEffectImage.DUObjImagem { background-image: url("s2r://panorama/images/hud/icons/powerup_spirit.vsvg"); }
+#RejuvenatorCharges #DUPonte.DUBuff_powerup_survival .statusEffectImage.DUObjImagem { background-image: url("s2r://panorama/images/hud/icons/powerup_survival.vsvg"); }
+#RejuvenatorCharges #DUPonte.DUBuff_powerup_movement .statusEffectImage.DUObjImagem { background-image: url("s2r://panorama/images/hud/icons/powerup_movement.vsvg"); }
+#RejuvenatorCharges #DUPonte.DUBuff_powerup_souls .statusEffectImage.DUObjImagem { background-image: url("s2r://panorama/images/minimap/powerup_souls_png.vtex"); }
+
+#RejuvenatorCharges .DUObjetivo.DUObjAlerta .statusEffectImage.DUObjImagem
+{
+    opacity: 0.65;
+    saturation: 0.6;
+}
+#RejuvenatorCharges .DUObjetivo.DUObjDisponivel .statusEffectImage.DUObjImagem
+{
+    opacity: 1;
+    saturation: 1;
+    animation-name: DUObjPulso;
+    animation-duration: 1.6s;
+    animation-iteration-count: infinite;
+}
+#RejuvenatorCharges #DUPonte.DUObjDisponivel .statusEffectImage.DUObjImagem { wash-color: #FFCC80; }
+#RejuvenatorCharges #DUPonte.DUObjDisponivel.DUBuff_powerup_casting .statusEffectImage.DUObjImagem { wash-color: #CE90FF; }
+#RejuvenatorCharges #DUPonte.DUObjDisponivel.DUBuff_powerup_survival .statusEffectImage.DUObjImagem { wash-color: #8EDA3B; }
+#RejuvenatorCharges #DUPonte.DUObjDisponivel.DUBuff_powerup_movement .statusEffectImage.DUObjImagem { wash-color: #7FD7FF; }
+#RejuvenatorCharges #DUPonte.DUObjDisponivel.DUBuff_powerup_souls .statusEffectImage.DUObjImagem { wash-color: none; }
+#RejuvenatorCharges .DUObjetivo.DUObjDisponivel .DUObjBorda
+{
+    opacity: 0.6;
+    wash-color: #ffd24a;
+}
+/* urna carregada: borda na cor do time que está levando */
+#RejuvenatorCharges #DUUrna.DUUrnaNos .statusEffectImage.DUObjImagem,
+#RejuvenatorCharges #DUUrna.DUUrnaEles .statusEffectImage.DUObjImagem
+{
+    opacity: 1;
+    saturation: 1;
+}
+#RejuvenatorCharges #DUUrna.DUUrnaNos .DUObjBorda { opacity: 0.8; wash-color: #7DDB5A; }
+#RejuvenatorCharges #DUUrna.DUUrnaEles .DUObjBorda { opacity: 0.8; wash-color: #FF5656; }
+
+/* o tempo embaixo: o mesmo rótulo do Rejuvenator (.midbossTimerLabel), visível só contando */
+#RejuvenatorCharges .DUObjetivo .midbossTimerLabel.DUObjTempo
+{
+    visibility: collapse;
+}
+#RejuvenatorCharges .DUObjetivo.DUObjContando .midbossTimerLabel.DUObjTempo
+{
+    visibility: visible;
+}
+#RejuvenatorCharges .DUObjetivo.DUObjAlerta .midbossTimerLabel.DUObjTempo
+{
+    opacity: 0.9;
+    color: #ffd24a;
+}
+@keyframes 'DUObjPulso'
+{
+    0% { pre-transform-scale2d: 1; brightness: 1; }
+    50% { pre-transform-scale2d: 1.12; brightness: 1.35; }
+    100% { pre-transform-scale2d: 1; brightness: 1; }
+}
+
+/* ---------- vantagem de almas: etiqueta ao lado do número do time que está na frente ----------
+   Fundo escuro próprio: texto verde/vermelho direto em cima da caixa laranja/azul do time ficava ilegível
+   (e a sombra borrada deixava as letras sujas). */
+.TeamNetworth .DUVantagem
+{
+    vertical-align: center;
+    margin: 1px 5px 0px 5px;
+    padding: 1px 5px 0px 5px;
+    border-radius: 3px;
+    background-color: #0b0d0ad9;
+    font-family: VALVEOracle, Reaver, sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    color: #FFEFD7;
+    visibility: collapse;
+}
+.DU_tAlmas .TeamNetworth .DUVantagem.DUVisivel
+{
+    visibility: visible;
+}
+.TeamNetworth .DUVantagem.DUVantagemNos { color: #8EDA3B; }
+.TeamNetworth .DUVantagem.DUVantagemEles { color: #FF6B5B; }
+.GameStatePreGame .TeamNetworth .DUVantagem.DUVisivel,
+.GameStatePreGameWait .TeamNetworth .DUVantagem.DUVisivel
+{
+    visibility: collapse;
+}
+
+/* ---------- nível dos heróis sempre visível (o jogo só mostra com o placar aberto) ---------- */
+.DU_topoNiveis .HeroLevelBacker
+{
+    visibility: visible;
+    opacity: 0.95;
+}
+/* cor comparada ao seu nível: classes DU_nv_* postas em cada cartão pelo mod */
+.DU_topoNivelCor .DU_nv_m2 .HeroLevelBacker { border: 1.5px solid #4a8fe0; }
+.DU_topoNivelCor .DU_nv_m1 .HeroLevelBacker { border: 1.5px solid #8cc0ff; }
+.DU_topoNivelCor .DU_nv_p1 .HeroLevelBacker { border: 1.5px solid #ffb35c; }
+.DU_topoNivelCor .DU_nv_p2 .HeroLevelBacker { border: 1.5px solid #ff5656; }
+.DU_topoNivelCor .DU_nv_m2 .HeroLevelLabel { color: #8cc0ff; }
+.DU_topoNivelCor .DU_nv_m1 .HeroLevelLabel { color: #c4ddff; }
+.DU_topoNivelCor .DU_nv_p1 .HeroLevelLabel { color: #ffcf8f; }
+.DU_topoNivelCor .DU_nv_p2 .HeroLevelLabel { color: #ff8a8a; }
+/* as regras do jogo que escondem o nível continuam valendo (vêm depois, mesmo peso) */
+.gamemode_streetbrawl .HeroLevelBacker,
+.GameStatePreGameWait .HeroLevelBacker
+{
+    visibility: collapse;
+}
+
+/* ---------- inimigo fora da visão do seu time: retrato apagado ----------
+   O jogo marca com HealthVisible o herói cuja vida o seu time está vendo. O mod só liga DU_topoVisao
+   depois de confirmar na partida que essa classe existe e fica em volta do retrato. */
+.DU_topoVisao .enemy #HeroImageArea
+{
+    opacity: 0.4;
+    saturation: 0.15;
+    transition-property: opacity, saturation;
+    transition-duration: 0.4s;
+}
+.DU_topoVisao .HealthVisible #HeroImageArea,
+.DU_topoVisao .Dead #HeroImageArea
+{
+    opacity: 1;
+    saturation: 1;
+}
