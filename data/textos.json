@@ -267,7 +267,11 @@
     "ed.compartilharSub": "send to friends",
     "dica.ativo": "Active",
     "dica.passivo": "Passive",
-    "mapa.qtd": "{1} on the map"
+    "mapa.qtd": "{1} on the map",
+    "aj.idioma": "Language",
+    "aj.idioma.sub": "of the mod",
+    "aj.idioma.nome": "Mod language",
+    "aj.idioma.desc": "Changes all the mod's texts right away. Item names follow the game's translation."
   },
   "pt": {
     "cartaz.topo.sub": "os itens certos, na hora certa!",
@@ -536,7 +540,11 @@
     "ed.compartilharSub": "mande para os amigos",
     "dica.ativo": "Ativo",
     "dica.passivo": "Passivo",
-    "mapa.qtd": "{1} no mapa"
+    "mapa.qtd": "{1} no mapa",
+    "aj.idioma": "Idioma",
+    "aj.idioma.sub": "do mod (language)",
+    "aj.idioma.nome": "Idioma do mod",
+    "aj.idioma.desc": "Muda todos os textos do mod na hora. Os nomes dos itens seguem a tradução do jogo."
   },
   "es": {
     "cartaz.topo.sub": "¡los objetos justos, en el momento justo!",
@@ -805,7 +813,11 @@
     "ed.compartilharSub": "envíalo a tus amigos",
     "dica.ativo": "Activo",
     "dica.passivo": "Pasivo",
-    "mapa.qtd": "{1} en el mapa"
+    "mapa.qtd": "{1} en el mapa",
+    "aj.idioma": "Idioma",
+    "aj.idioma.sub": "del mod (language)",
+    "aj.idioma.nome": "Idioma del mod",
+    "aj.idioma.desc": "Cambia todos los textos del mod al momento. Los nombres de objetos siguen la traducción del juego."
   },
   "ru": {
     "cartaz.topo.sub": "нужные предметы в нужный момент!",
@@ -1074,6 +1086,10 @@
     "ed.compartilharSub": "отправьте друзьям",
     "dica.ativo": "Активный",
     "dica.passivo": "Пассивный",
-    "mapa.qtd": "На карте: {1}"
+    "mapa.qtd": "На карте: {1}",
+    "aj.idioma": "Язык",
+    "aj.idioma.sub": "мода (language)",
+    "aj.idioma.nome": "Язык мода",
+    "aj.idioma.desc": "Сразу меняет все тексты мода. Названия предметов берутся из перевода игры."
   }
 }

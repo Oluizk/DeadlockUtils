@@ -15,7 +15,7 @@ param(
 )
 . (Join-Path $PSScriptRoot "jogo.ps1")
 
-$VersaoMod = "1.2.0"
+$VersaoMod = "1.3.0"
 $Nome = "deadlock_utils"
 $utf8 = New-Object Text.UTF8Encoding $false
 function Ler([string]$rel) { [IO.File]::ReadAllText((Join-Path $Raiz $rel), [Text.Encoding]::UTF8).TrimStart([char]0xFEFF) }

@@ -114,7 +114,7 @@ Gerado por `tools\atualizar-builds.ps1` a partir dos dados de popularidade que o
 
 ## 7. Traduções
 
-O mod tem inglês (padrão), português (pt-BR), espanhol e russo; quem instala escolhe no `install.bat`.
+O mod tem inglês (padrão), português (pt-BR), espanhol e russo; o jogador troca em Configurações > Idioma (o `install.bat` da raiz também grava um idioma padrão no `.vpk`).
 
 - **Interface: `data/textos.json`.** Um bloco por idioma (`"en"`, `"pt"`, `"es"`, `"ru"`) com as mesmas chaves. `{1}` e `{2}` são trocados pelo herói, a fase etc. Chave que faltar num idioma usa o texto em inglês. Nos layouts (`mod/layout/*.xml`), um Label com `text="@chave"` usa a chave daqui. Os títulos dos cartazes da aba (`cartaz.*`) ficam melhores curtos: são escritos em letras grandes. Nomes das camadas do mapa: `camada.<id>` e `camada.<id>.desc`.
 - **Regras: `data/rules/*.json`.** `titulo`, `motivo`, `alerta` e `dica` são objetos `{ "en": "...", "pt": "...", "es": "...", "ru": "..." }`. Um texto simples (`"motivo": "..."`) também funciona: aparece igual em todos os idiomas. Ao traduzir, use os nomes oficiais dos itens no idioma (estão em `game\citadel\resource\localization\citadel_gc_mod_names\`).

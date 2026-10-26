@@ -66,6 +66,22 @@ function montarAbaLoja() {
   return true;
 }
 
+// Troca de idioma: refaz os textos da aba sem recriar a estrutura (a aba pode estar aberta).
+function traduzirAbaLoja() {
+  if (!valido(loja.conteudo)) return;
+  textoCartaz(loja.cTopo, null, T("cartaz.topo.sub"));
+  textoCartaz(loja.cPerigo, T("cartaz.perigo"), T("cartaz.perigo.sub"));
+  textoCartaz(loja.cBuild, T("cartaz.build"), T("cartaz.build.semHeroi"));
+  textoCartaz(loja.cCounters, T("cartaz.counters"), T("cartaz.counters.sub"));
+  achar(loja.conteudo, "DUBotaoRecsTexto").text = T("botao.recomendados");
+  achar(loja.conteudo, "DUBotaoEditarTexto").text = T("botao.editar");
+  achar(loja.conteudo, "DUBotaoAjustesTexto").text = T("botao.ajustes");
+  dica(loja.botao, T("dica.botaoNav"));
+  loja.detalhe.text = T("detalhe.inicial");
+  loja.assinatura = "";
+  trocarVista(loja.vista);
+}
+
 function trocarVista(v) {
   loja.vista = v;
   mostrarPainel(loja.vistaRecs, v === "recs");

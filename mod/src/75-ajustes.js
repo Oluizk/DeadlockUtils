@@ -16,6 +16,7 @@ var AJUSTES_PADRAO = {
   miniPontos: 1,         // pontos no minimapa normal: 0 desligado, 1..3 tamanho dos ícones
   contaSteam: 0,         // código de amigo da Steam (SteamID3) para o tracker; 0 = o do build (data/config.json)
   miniPontosAntes: 1,    // tamanho escolhido antes de desligar (o botão do painel do mapa religa nele)
+  idioma: "",            // en, pt, es, ru; "" = o gravado no .vpk (inglês, ou o que o install.bat escolheu)
   teclas: {
     mapa: ((DU_DATA.config || {}).teclas || {}).mapa || "",
     tracker: ((DU_DATA.config || {}).teclas || {}).tracker || "",
@@ -75,6 +76,30 @@ function aplicarAjustes() {
   ajustarJogador(true);
   if (mapa.aberto) mostrarPainel(mapa.painel, ajustes.mapaPainel);
   Object.keys(ajustes.teclas).forEach(function (a) { registrarTecla(ajustes.teclas[a]); });
+  trocarIdioma(ajustes.idioma);
+}
+
+// Troca o idioma na hora: traduz as regras de novo, refaz os textos da aba da loja e apaga os painéis
+// com texto (faixa do Tab, aviso, tooltip, mapa, tracker), que são recriados no idioma novo quando aparecem.
+function trocarIdioma(novo) {
+  if (["en", "pt", "es", "ru"].indexOf(novo) < 0) novo = idiomaDoMod();
+  if (novo === IDIOMA) return;
+  IDIOMA = novo;
+  dados = dadosNoIdioma(IDIOMA);
+  traduzirCamadasMapa();
+  fecharMapa();
+  fecharTracker();
+  esconderDica();
+  [faixa, aviso, dicaItem, mapa, tracker].forEach(function (o) {
+    if (valido(o.painel)) o.painel.DeleteAsync(0);
+    o.painel = null;
+  });
+  faixa.visivel = false;
+  editor.rascunho = null;
+  assinaturaAnterior = "";
+  traduzirAbaLoja();
+  if (ultimaLeitura) atualizarRecomendacoes(ultimaLeitura, true);
+  log("idioma: " + IDIOMA);
 }
 
 // Botões +/- de tamanho no painel do mapa (e na tela de configurações).
@@ -128,6 +153,11 @@ function desenharAjustes() {
   p.RemoveAndDeleteChildren();
   var mudar = function (k) { return function (v) { ajustes[k] = v; if (k === "miniPontos" && v > 0) ajustes.miniPontosAntes = v; salvarAjustes(); }; };
   var simNao = [[true, T("aj.sim")], [false, T("aj.nao")]];
+
+  // Idioma primeiro, com o nome de cada idioma na própria língua (dá para achar mesmo sem entender o atual).
+  cartaz(p, { titulo: T("aj.idioma"), sub: T("aj.idioma.sub"), tema: "vermelho" });
+  linhaAjuste(p, T("aj.idioma.nome"), T("aj.idioma.desc"),
+    [["en", "English"], ["pt", "Português (BR)"], ["es", "Español"], ["ru", "Русский"]], IDIOMA, mudar("idioma"));
 
   cartaz(p, { titulo: T("aj.mapaGrande"), sub: T("aj.mapaGrande.sub"), tema: "teal" });
   linhaAjuste(p, T("aj.tamMapa"), T("aj.tamMapa.desc"), [[700, T("aj.pequeno")], [820, T("aj.medio")], [940, T("aj.grande")]], ajustes.mapaTam, mudar("mapaTam"));

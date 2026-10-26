@@ -17,15 +17,18 @@ Mod de HUD para o **Deadlock** (Valve), feito em Panorama (a UI do próprio jogo
 
 **Para jogar** (não precisa compilar nada):
 
-1. Baixe o `DeadlockUtils-vX.Y.Z.zip` na página de [Releases](https://github.com/Oluizk/DeadlockUtils/releases) (ou no GameBanana) e extraia.
-2. Feche o Deadlock e dê dois cliques em **`install.bat`**. Escolha o idioma do mod: **English** (padrão, Enter), **Português (pt-BR)**, **Español** ou **Русский**. Ele acha o jogo, habilita a pasta de addons no `gameinfo.gi` (com backup) e copia o mod para `game\citadel\addons\pak42_dir.vpk`. No fim ele mostra o seu código de amigo da Steam, para o tracker.
-3. Abra o jogo. No tracker, informe o código em loja (B) > Deadlock Utils > Configurações > Tracker.
+O mod é um único arquivo, `pak42_dir.vpk`.
 
-Para trocar o idioma, rode o `install.bat` de novo (ele já sugere o idioma atual). **`uninstall.bat`** remove o mod e volta o `gameinfo.gi` ao original (se não houver outros mods).
+- **Com um gerenciador de mods** (mais fácil): botão de instalação em 1 clique no GameBanana (Deadlock Mod Manager, Grimoire, HELLCAT). Abra o jogo pelo gerenciador ("Launch Modded").
+- **Na mão:** baixe o `DeadlockUtils-vX.Y.Z.zip` na página de [Releases](https://github.com/Oluizk/DeadlockUtils/releases), copie o `pak42_dir.vpk` para `game\citadel\addons\` e habilite a pasta de addons no `gameinfo.gi` (passo a passo no `README.txt` do zip). Para remover, apague o arquivo.
 
-**A partir do código** (para quem mexe no mod): o **`install.bat`** da raiz compila e instala (com a mesma escolha de idioma); o **`uninstall.bat`** remove. Para gerar o pacote de publicação: `powershell -ExecutionPolicy Bypass -File tools\empacotar.ps1` (cria `dist\DeadlockUtils-vX.Y.Z.zip` sem a sua conta Steam gravada).
+**Idioma:** inglês por padrão. Troque em loja (B) > Deadlock Utils > **Configurações > Idioma** (English, Português, Español, Русский); muda na hora e fica salvo.
 
-> **Depois de cada atualização do Deadlock** rode o instalador de novo (a Steam restaura o `gameinfo.gi`). Se o patch mexer no HUD, recompile com `powershell -ExecutionPolicy Bypass -File tools\build-mod.ps1 -AtualizarHud`.
+**Tracker:** informe seu código de amigo da Steam em loja (B) > Deadlock Utils > Configurações > Tracker.
+
+**A partir do código** (para quem mexe no mod): o **`install.bat`** da raiz compila e instala (habilita os addons no `gameinfo.gi` com backup e pergunta o idioma padrão); o **`uninstall.bat`** remove. Para gerar o pacote de publicação: `powershell -ExecutionPolicy Bypass -File tools\empacotar.ps1` (cria `dist\DeadlockUtils-vX.Y.Z.zip` com o `.vpk` e o `README.txt`, sem a sua conta Steam gravada).
+
+> **Depois de cada atualização do Deadlock** a Steam pode restaurar o `gameinfo.gi`: o gerenciador de mods refaz sozinho; na mão, refaça a edição. Se o patch mexer no HUD, recompile com `powershell -ExecutionPolicy Bypass -File tools\build-mod.ps1 -AtualizarHud`.
 
 ### Teclas
 
@@ -64,7 +67,7 @@ O `data/config.json` já aponta para esse endereço (`"urlPonte"`). Num fork, tr
 - `teclas.mapa` / `teclas.tracker`: teclas criadas pelo mod (`""` para não criar). **Alt+T não é usado** porque T é o Push-to-Talk do jogo: Alt+T abriria o microfone junto.
 - `urlPonte`: endereço **HTTPS** onde `mod/pagina/ponte.html` está publicado (ex.: GitHub Pages do repositório). O navegador embutido do jogo só abre páginas HTTPS (build de out/2026); sem isso o tracker e o salvamento dos counters editados ficam desligados (o resto funciona).
 - `accountId`: seu id Steam (SteamID3). Se ficar `null`, o build detecta pela pasta `Steam\userdata`. O tracker usa isso para achar sua partida ao vivo e o histórico com cada jogador.
-- `idioma`: idioma padrão do build local (`"en"`, `"pt"`, `"es"` ou `"ru"`; vazio = inglês). Quem instala escolhe no `install.bat`, que grava o idioma no `.vpk` instalado.
+- `idioma`: idioma padrão do build local (`"en"`, `"pt"`, `"es"` ou `"ru"`; vazio = inglês). O jogador troca em Configurações > Idioma; o `install.bat` da raiz também grava um idioma padrão no `.vpk` instalado.
 - `itensPorSecao` (itens em cada seção do Tab), `segundosMarcaMapa` (quanto tempo a marca do mapa fica no minimapa), `buffPonteInicio`/`buffPonteIntervalo` (segundos), `segundosAviso`.
 
 ### Avisos
@@ -72,7 +75,7 @@ O `data/config.json` já aponta para esse endereço (`"urlPonte"`). Num fork, tr
 - O mod substitui o `hud.xml` do jogo: **outro mod que também substitua o `hud.xml` não funciona junto**.
 - A Valve não publicou regras sobre mods. Mods de HUD não tiveram banimentos até hoje; mas **timers e trackers são justamente o tipo de mod que a comunidade aponta como mais arriscado** (desde mar/2026 o matchmaking bloqueia mudanças de ConVars no `gameinfo.gi`; este mod mexe só nas SearchPaths). **Use por sua conta e risco.**
 - **Privacidade:** com `urlPonte` configurado, o mod abre essa página no navegador embutido do jogo (para o tracker e para salvar os counters editados), e o tracker envia ao `api.deadlock-api.com` os ids/nome Steam dos jogadores da partida.
-- Se o HUD não carregar, rode o `uninstall.bat`.
+- Se o HUD não carregar, apague o `pak42_dir.vpk` da pasta addons (ou desative no gerenciador de mods).
 
 ### Diagnóstico
 

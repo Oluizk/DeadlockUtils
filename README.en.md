@@ -19,11 +19,13 @@ An in-game HUD mod for **Deadlock** (Valve), built with Panorama, the game's own
 
 **To play** (no build needed):
 
-1. Download `DeadlockUtils-vX.Y.Z.zip` from [Releases](https://github.com/Oluizk/DeadlockUtils/releases) (or GameBanana) and extract it.
-2. Close Deadlock and double-click **`install.bat`**. Pick the mod language: **English** (default, Enter), **Português (pt-BR)**, **Español** or **Русский**. It finds the game, enables the addons folder in `gameinfo.gi` (with a backup) and copies the mod to `game\citadel\addons\pak42_dir.vpk`. At the end it shows your Steam friend code for the tracker.
+The mod is a single file, `pak42_dir.vpk`.
+
+1. **With a mod manager** (easiest): use the 1-click install button on GameBanana (Deadlock Mod Manager, Grimoire, HELLCAT) and launch the game from the manager ("Launch Modded").
+2. **Manually:** download `DeadlockUtils-vX.Y.Z.zip` from [Releases](https://github.com/Oluizk/DeadlockUtils/releases), copy `pak42_dir.vpk` to `game\citadel\addons\` and enable the addons folder in `gameinfo.gi` (steps in the zip's `README.txt`). To remove it, delete the file.
 3. Open the game. For the tracker, enter the code in shop (B) > Deadlock Utils > Settings > Tracker.
 
-To change the language, run `install.bat` again (it suggests the current one). **`uninstall.bat`** removes the mod and restores `gameinfo.gi` (if no other mods are installed). Manual install steps are in `README.txt` inside the zip.
+**Language:** English by default. Change it in shop (B) > Deadlock Utils > **Settings > Language** (English, Português, Español, Русский); it switches right away and is saved.
 
 > **After every Deadlock update**, run the installer again (Steam restores `gameinfo.gi`).
 
@@ -44,18 +46,18 @@ Deadlock's Panorama has no storage of its own, and the in-game browser only open
 
 ### Language
 
-English by default. The installer lets you pick **English, Português (pt-BR), Español or Русский**; everything is translated, including counter reasons and alerts, and item names come from the game's own localization. UI texts live in `data/textos.json` and rule texts in `data/rules/*.json` as `{ "en", "pt", "es", "ru" }`; see [CONTRIBUTING.md](CONTRIBUTING.md).
+English by default; pick **English, Português (pt-BR), Español or Русский** in Settings > Language; everything is translated, including counter reasons and alerts, and item names come from the game's own localization. UI texts live in `data/textos.json` and rule texts in `data/rules/*.json` as `{ "en", "pt", "es", "ru" }`; see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Notes
 
 - The mod replaces the game's `hud.xml`: **another mod that also replaces `hud.xml` will not work together with it**.
 - Valve has not published rules about mods. HUD mods have not led to bans so far, but timers and trackers are the kind of mod the community considers riskier. **Use it at your own risk.**
 - **Privacy:** the tracker sends the Steam ids/names of the players in your match to `api.deadlock-api.com`. No password is ever requested.
-- If the HUD does not load after a game update, run `uninstall.bat` and wait for a mod update.
+- If the HUD does not load after a game update, remove `pak42_dir.vpk` (or disable it in your mod manager) and wait for a mod update.
 
 ## For developers
 
-Build and install from source: `install.bat` in the repository root (same language prompt); `uninstall.bat` removes it. Create the release package: `powershell -ExecutionPolicy Bypass -File tools\empacotar.ps1` (writes `dist\DeadlockUtils-vX.Y.Z.zip`, without the builder's Steam account). Test without the game: `iniciar.bat`, then open `http://localhost:8765/test/hud-simulado.html`. More in the Portuguese README and in [CONTRIBUTING.md](CONTRIBUTING.md).
+Build and install from source: `install.bat` in the repository root (same language prompt); `uninstall.bat` removes it. Create the release package: `powershell -ExecutionPolicy Bypass -File tools\empacotar.ps1` (writes `dist\DeadlockUtils-vX.Y.Z.zip` with the `.vpk` and `README.txt`, without the builder's Steam account). Test without the game: `iniciar.bat`, then open `http://localhost:8765/test/hud-simulado.html`. More in the Portuguese README and in [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Credits
 

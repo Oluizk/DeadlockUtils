@@ -16,10 +16,13 @@ var mapa = { aberto: false, painel: null, falhou: false, abertoEm: 0, jogador: [
 var DADOS_MAPA = DU_DATA.mapa || { camadas: [], imagens: [] };
 // data/mapa.json é gerado em português; o nome/descrição de cada camada no idioma vem de textos.json
 // ("camada.<id>" e "camada.<id>.desc").
-DADOS_MAPA.camadas.concat(DADOS_MAPA.imagens).forEach(function (c) {
-  if (temTexto("camada." + c.id)) c.nome = T("camada." + c.id);
-  if (temTexto("camada." + c.id + ".desc")) c.desc = T("camada." + c.id + ".desc");
-});
+function traduzirCamadasMapa() {
+  DADOS_MAPA.camadas.concat(DADOS_MAPA.imagens).forEach(function (c) {
+    if (temTexto("camada." + c.id)) c.nome = T("camada." + c.id);
+    if (temTexto("camada." + c.id + ".desc")) c.desc = T("camada." + c.id + ".desc");
+  });
+}
+traduzirCamadasMapa();
 var TAM_MAPA = 820; // tem que bater com .DUMapaAberto #hud_minimap no estilo.css
 // O indicador do jogador local no CSS do jogo é 15% do minimapa (54px no mapa pequeno, enorme no grande).
 // Painéis do hud.xml que expandem com o placar (GlobalClassListener gScoreboardOpen) e cobririam o mapa.

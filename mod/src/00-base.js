@@ -6,7 +6,16 @@
 var PREFIXO = "[DeadlockUtils] ";
 var hud = $.GetContextPanel();
 var CONFIG = DU_DATA.config || {};
-var dados = DeadlockEngine.prepararDados(DeadlockEngine.localizar(DU_DATA, idiomaDoMod())); // textos das regras no idioma do mod
+// Regras com os textos em todos os idiomas: a troca de idioma no jogo (Configurações) traduz de novo a partir daqui.
+var REGRAS_BRUTAS = JSON.stringify({ regrasArquivos: DU_DATA.regrasArquivos, ameacas: DU_DATA.ameacas, countersHerois: DU_DATA.countersHerois });
+var dados = dadosNoIdioma(idiomaDoMod());
+function dadosNoIdioma(idioma) {
+  var r = DeadlockEngine.localizar(JSON.parse(REGRAS_BRUTAS), idioma);
+  DU_DATA.regrasArquivos = r.regrasArquivos;
+  DU_DATA.ameacas = r.ameacas;
+  DU_DATA.countersHerois = r.countersHerois;
+  return DeadlockEngine.prepararDados(DU_DATA);
+}
 
 function log(msg) { try { $.Msg(PREFIXO + msg); } catch (e) {} }
 function valido(p) {

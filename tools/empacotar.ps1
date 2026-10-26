@@ -1,8 +1,9 @@
 ﻿# Monta o pacote para publicar (GameBanana, Release do GitHub): dist\DeadlockUtils-vX.Y.Z.zip
 #   powershell -ExecutionPolicy Bypass -File tools\empacotar.ps1
-# O pacote leva o .vpk compilado SEM conta Steam (cada jogador informa a dele no jogo), o instalador
-# de um clique (tools\pacote) e o README em inglês e português. No fim, refaz o build normal para a
-# sua instalação local continuar com a sua conta.
+# O mod é só o .vpk (é o que o Deadlock Mod Manager e os outros gerenciadores instalam com um clique).
+# O zip leva o pak42_dir.vpk na raiz e um README.txt com a instalação manual. O .vpk sai SEM conta Steam
+# (cada jogador informa a dele no jogo) e em inglês (o idioma é escolhido no jogo, em Configurações).
+# No fim, refaz o build normal para a sua instalação local continuar com a sua conta.
 param([string]$Jogo)
 $ErrorActionPreference = "Stop"
 $Raiz = Split-Path -Parent $PSScriptRoot
@@ -22,15 +23,9 @@ $pasta = Join-Path $dist $nome
 if (Test-Path $pasta) { Remove-Item -Recurse -Force $pasta }
 New-Item -ItemType Directory -Force $pasta | Out-Null
 
-# Na raiz do pacote só o que o jogador clica (install.bat, uninstall.bat, README.txt); o resto em files\.
-$pacote = Join-Path $PSScriptRoot "pacote"
-$arquivos = Join-Path $pasta "files"
-New-Item -ItemType Directory -Force $arquivos | Out-Null
-Copy-Item (Join-Path $Raiz "build\pak42_dir.vpk") $arquivos
-foreach ($f in "instalar.ps1", "achar-deadlock.ps1") { Copy-Item (Join-Path $pacote $f) $arquivos }
-foreach ($f in "install.bat", "uninstall.bat") { Copy-Item (Join-Path $pacote $f) $pasta }
+Copy-Item (Join-Path $Raiz "build\pak42_dir.vpk") $pasta
 # README com a versão, em UTF-8 com BOM e CRLF (o Bloco de Notas mostra os acentos certo)
-$leia = [IO.File]::ReadAllText((Join-Path $pacote "README.txt"), [Text.Encoding]::UTF8).Replace("{VERSAO}", $versao)
+$leia = [IO.File]::ReadAllText((Join-Path $PSScriptRoot "pacote\README.txt"), [Text.Encoding]::UTF8).Replace("{VERSAO}", $versao)
 $leia = ($leia -replace "`r?`n", "`r`n")
 [IO.File]::WriteAllText((Join-Path $pasta "README.txt"), $leia, (New-Object Text.UTF8Encoding $true))
 
