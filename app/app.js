@@ -63,7 +63,7 @@
         buscarJson("data/rules/counters-herois.json"),
         ...ARQUIVOS_REGRAS.map(buscarJson),
       ]);
-      dados = DeadlockEngine.prepararDados({ items, heroes, regrasArquivos, ameacas, builds, countersHerois });
+      dados = DeadlockEngine.prepararDados(DeadlockEngine.localizar({ items, heroes, regrasArquivos, ameacas, builds, countersHerois }, "pt"));
     } catch (err) {
       document.body.prepend(el("div", { class: "erro-carga" },
         "Não consegui carregar os dados (", String(err.message), "). ",

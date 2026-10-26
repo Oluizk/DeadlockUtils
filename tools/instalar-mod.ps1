@@ -3,10 +3,11 @@
 param(
   [string]$Jogo,
   [int]$Pak = 42,
-  [switch]$Remover
+  [switch]$Remover,
+  [string]$Idioma = ""
 )
 $Raiz = Split-Path -Parent $PSScriptRoot
 $vpk = Join-Path $Raiz ("build\pak{0:D2}_dir.vpk" -f $Pak)
 if (-not $Remover -and -not (Test-Path $vpk)) { throw "Não achei $vpk. Rode tools\build-mod.ps1 primeiro." }
-& (Join-Path $PSScriptRoot "pacote\instalar.ps1") -Vpk $vpk -Jogo $Jogo -Pak $Pak -Remover:$Remover
+& (Join-Path $PSScriptRoot "pacote\instalar.ps1") -Vpk $vpk -Jogo $Jogo -Pak $Pak -Remover:$Remover -Idioma $Idioma
 exit $LASTEXITCODE

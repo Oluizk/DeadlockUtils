@@ -10,15 +10,15 @@ O que ele faz
 • Aviso de item perigoso quando um inimigo compra Nocaute, Relíquia Amaldiçoada, Refresher e parecidos.
 • Editor de counters: edite os counters de qualquer herói no jogo e compartilhe por um código curto.
 • Configurações: tamanhos do mapa e do minimapa, tamanho dos ícones, filtros, teclas.
-• Português, inglês e espanhol.
+• Inglês (padrão), português (pt-BR), espanhol e russo: o idioma é escolhido no instalador.
 
 Instalar
 
 1. Feche o Deadlock.
-2. Extraia o zip e rode Instalar.bat. Ele acha o jogo, habilita a pasta de addons no gameinfo.gi (com backup) e copia o mod.
+2. Extraia o zip e rode install.bat. Ele acha o jogo, habilita a pasta de addons no gameinfo.gi (com backup) e copia o mod.
 3. Para o tracker: loja (B) > Deadlock Utils > Configurações > Tracker, informe seu código de amigo da Steam (o instalador mostra o seu).
 
-Depois de atualizações do Deadlock, rode o instalador de novo. Para remover, rode Desinstalar.bat. Instalação manual no LEIA-ME.txt.
+Depois de atualizações do Deadlock, rode o instalador de novo. Para remover, rode uninstall.bat. Instalação manual no README.txt.
 
 Avisos
 

@@ -391,6 +391,18 @@ document.getElementById("b-curse").onclick = () => comprar(ini[4], "items/spirit
 document.getElementById("b-tempo").onclick = () => { const s = segundos() + 300; relogioLbl.text = Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); };
 function segundos() { const [m, s] = relogioLbl.text.split(":").map(Number); return m * 60 + s; }
 </script>
-<script src="../build/deadlock_utils.js"></script>
+<script>
+// ?idioma=pt|es|ru faz o que o instalador faz: troca o idioma gravado no script (DU_IDIOMA).
+(function () {
+  const idioma = new URLSearchParams(location.search).get("idioma");
+  const xhr = new XMLHttpRequest();
+  xhr.open("GET", "../build/deadlock_utils.js?" + Date.now(), false); xhr.send(); // sem cache: sempre o build novo
+  let js = xhr.responseText;
+  if (idioma) js = js.replace(/\/\*DU_IDIOMA\*\/"[a-z]{2}"/, '/*DU_IDIOMA*/"' + idioma + '"');
+  const s = document.createElement("script");
+  s.text = js + "\n//# sourceURL=deadlock_utils.js";
+  document.body.appendChild(s);
+})();
+</script>
 </body>
 </html>

@@ -6,7 +6,7 @@
 var PREFIXO = "[DeadlockUtils] ";
 var hud = $.GetContextPanel();
 var CONFIG = DU_DATA.config || {};
-var dados = DeadlockEngine.prepararDados(DU_DATA);
+var dados = DeadlockEngine.prepararDados(DeadlockEngine.localizar(DU_DATA, idiomaDoMod())); // textos das regras no idioma do mod
 
 function log(msg) { try { $.Msg(PREFIXO + msg); } catch (e) {} }
 function valido(p) {
@@ -94,7 +94,10 @@ function botao(pai, classes, texto, fn) {
 // próprio (mod/layout/*.xml) que inclui o nosso CSS.
 function carregarLayout(painel, nome) {
   var arq = "file://{resources}/layout/deadlock_utils_" + nome + ".xml";
-  try { return painel.BLoadLayout(arq, false, false) !== false; } catch (e) { log("BLoadLayout falhou (" + nome + "): " + e); return false; }
+  var ok;
+  try { ok = painel.BLoadLayout(arq, false, false) !== false; } catch (e) { log("BLoadLayout falhou (" + nome + "): " + e); return false; }
+  if (ok) traduzirPainel(painel);
+  return ok;
 }
 // Cria um painel já com o nosso layout. Se o layout não carregar, apaga e devolve null.
 function painelComLayout(pai, id, nome) {
@@ -123,7 +126,11 @@ function copiarTexto(t) {
 }
 
 // ---------- itens e heróis ----------
-function nomeItem(it) { return (it && (it.nome_pt || it.nome)) || "?"; }
+// Nome do item como o jogo mostra no idioma do mod (tirado da localização do jogo no build).
+function nomeItem(it) {
+  if (!it) return "?";
+  return ((DU_DATA.nomesItensIdioma || {})[IDIOMA] || {})[it.id] || (IDIOMA === "pt" && it.nome_pt) || it.nome || "?";
+}
 function iconeItem(it) {
   var lista = (it && it.icones) || [];
   var k = lista.filter(function (i) { return i.indexOf("items/") === 0; })[0] || lista[0];
@@ -143,8 +150,8 @@ function cartaoItem(pai, it, opcoes) {
   try { c.style.backgroundImage = fundoCartao(it); c.style.backgroundSize = "cover"; } catch (e) {}
   imagem(c, "DUCartaoIcone", iconeItem(it));
   rotulo(c, "DUCartaoNome", esc(nomeItem(it)));
-  if (it.ativo) rotulo(c, "DUCartaoAtivo", "ATIVO");
-  if (opcoes.selo) rotulo(c, "DUCartaoSelo DUSelo_" + opcoes.selo, opcoes.selo === "build" ? "BUILD" : "COUNTER");
+  if (it.ativo) rotulo(c, "DUCartaoAtivo", T("cartao.ativo"));
+  if (opcoes.selo) rotulo(c, "DUCartaoSelo DUSelo_" + opcoes.selo, T(opcoes.selo === "build" ? "cartao.build" : "cartao.counter"));
   if (opcoes.aoPassar) evento(c, "onmouseover", opcoes.aoPassar);
   if (opcoes.aoClicar) aoClicar(c, opcoes.aoClicar);
   return c;

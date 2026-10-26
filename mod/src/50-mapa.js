@@ -14,6 +14,12 @@
 
 var mapa = { aberto: false, painel: null, falhou: false, abertoEm: 0, jogador: [], jogadorEm: 0, semPlacar: {} };
 var DADOS_MAPA = DU_DATA.mapa || { camadas: [], imagens: [] };
+// data/mapa.json é gerado em português; o nome/descrição de cada camada no idioma vem de textos.json
+// ("camada.<id>" e "camada.<id>.desc").
+DADOS_MAPA.camadas.concat(DADOS_MAPA.imagens).forEach(function (c) {
+  if (temTexto("camada." + c.id)) c.nome = T("camada." + c.id);
+  if (temTexto("camada." + c.id + ".desc")) c.desc = T("camada." + c.id + ".desc");
+});
 var TAM_MAPA = 820; // tem que bater com .DUMapaAberto #hud_minimap no estilo.css
 // O indicador do jogador local no CSS do jogo é 15% do minimapa (54px no mapa pequeno, enorme no grande).
 // Painéis do hud.xml que expandem com o placar (GlobalClassListener gScoreboardOpen) e cobririam o mapa.
@@ -190,7 +196,7 @@ function mostrarDicaMapa(c, pt, i) {
   mostrarPainel(dicaItem.DUDicaContra, false);
   dicaItem.DUDicaMotivos.text = esc(c.desc || "");
   mostrarPainel(dicaItem.DUDicaMotivos, !!c.desc);
-  dicaItem.DUDicaRodape.text = marcas.lista[c.id + ":" + i] ? "Clique para desmarcar" : "Clique para marcar este local";
+  dicaItem.DUDicaRodape.text = T(marcas.lista[c.id + ":" + i] ? "mapa.desmarcar" : "mapa.marcar");
   // Posição pela conta (não pela posição do ícone): funciona também com o mapa invertido.
   try {
     var mm = minimapa();

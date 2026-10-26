@@ -12,9 +12,9 @@ var URL_PONTE = CONFIG.urlPonte || (typeof DU_URL_PONTE_TESTE !== "undefined" ? 
 
 function iniciarPonte() {
   if (ponte.painel || ponte.falhou) return;
-  if (!URL_PONTE) { falharPonte("urlPonte não configurada em data/config.json"); return; }
+  if (!URL_PONTE) { falharPonte(T("ponte.semUrl")); return; }
   var p = criar("CitadelHTMLPanel", hud, "DU_Ponte");
-  if (!p) { falharPonte("não consegui criar o CitadelHTMLPanel"); return; }
+  if (!p) { falharPonte(T("ponte.semPainel")); return; }
   ponte.painel = p;
   try {
     p.style.width = "2px"; p.style.height = "2px"; p.style.opacity = "0.01";
@@ -26,7 +26,7 @@ function iniciarPonte() {
   } catch (e) { falharPonte("RegisterEventHandler: " + e); return; }
   // Primeiro pedido: "info" (também testa armazenamento). Quando responder, a ponte está pronta.
   ponte.cbs["0"] = function (ok, texto) {
-    if (!ok) { falharPonte("página respondeu erro: " + texto); return; }
+    if (!ok) { falharPonte(T("ponte.erro", texto)); return; }
     ponte.pronto = true;
     try { ponte.info = JSON.parse(texto); } catch (e) { ponte.info = { bruto: texto }; }
     log("ponte de internet pronta: " + texto);
@@ -34,7 +34,7 @@ function iniciarPonte() {
     proximoPedido();
   };
   enviarPedido({ id: "0", fn: "info", args: [] });
-  $.Schedule(20, function () { if (!ponte.pronto) falharPonte("a página " + URL_PONTE + " não respondeu em 20s"); });
+  $.Schedule(20, function () { if (!ponte.pronto) falharPonte(T("ponte.semResposta", URL_PONTE)); });
 }
 
 function falharPonte(motivo) {
@@ -56,7 +56,7 @@ function enviarPedido(pedido) {
     if (ponte.ocupado === id && ponte.cbs[id]) {
       var cb = ponte.cbs[id]; delete ponte.cbs[id];
       ponte.ocupado = null;
-      cb(false, "tempo esgotado");
+      cb(false, T("ponte.tempo"));
       proximoPedido();
     }
   });
@@ -93,7 +93,7 @@ function receberTitulo(titulo) {
 // Chama uma função da página. cb(ok, textoOuJson)
 function ponteChamar(nome, args, cb) {
   iniciarPonte();
-  if (ponte.falhou) { if (cb) cb(false, ponte.motivo || "ponte indisponível"); return; }
+  if (ponte.falhou) { if (cb) cb(false, ponte.motivo || T("ponte.indisponivel")); return; }
   var id = String(++ponte.seq);
   if (cb) ponte.cbs[id] = cb;
   ponte.fila.push({ id: id, fn: nome, args: args || [] });

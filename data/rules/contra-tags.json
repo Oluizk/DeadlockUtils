@@ -3,193 +3,193 @@
   "regras": [
     {
       "id": "anti-cura",
-      "titulo": "Inimigos com muita cura própria",
+      "titulo": { "en": "Enemies with lots of self-healing", "pt": "Inimigos com muita cura própria", "es": "Enemigos con mucha autocuración", "ru": "Враги с сильным самолечением" },
       "quando": { "inimigos_tag": "sustain" },
       "recomendar": [
-        { "item": "toxic-bullets", "peso": 3, "meu_heroi_tag": "gun", "motivo": "Sangramento por % de vida + reduz cura recebida em 35% (enquanto sangra)." },
-        { "item": "healbane", "peso": 3, "meu_heroi_tag": "spirit", "motivo": "Seu dano spirit corta 35% da cura do alvo por 8s. Barato (T2)." },
-        { "item": "decay", "peso": 2, "meu_heroi_tag": "spirit", "motivo": "Ativo: dano contínuo e -50% de cura recebida no alvo." },
-        { "item": "spirit-burn", "peso": 2, "meu_heroi_tag": "spirit", "motivo": "Burst de spirit causa queimadura com -70% de cura recebida." },
-        { "item": "inhibitor", "peso": 2, "meu_heroi_tag": "gun", "motivo": "Tiros acumulam debuff: -30% dano causado e -40% cura recebida." }
+        { "item": "toxic-bullets", "peso": 3, "meu_heroi_tag": "gun", "motivo": { "en": "Bleed based on % health + 35% less healing received (while bleeding).", "pt": "Sangramento por % de vida + reduz cura recebida em 35% (enquanto sangra).", "es": "Sangrado por % de vida + reduce la curación recibida un 35% (mientras sangra).", "ru": "Кровотечение от % здоровья + снижает получаемое лечение на 35% (пока длится кровотечение)." } },
+        { "item": "healbane", "peso": 3, "meu_heroi_tag": "spirit", "motivo": { "en": "Your spirit damage cuts the target's healing by 35% for 8s. Cheap (T2).", "pt": "Seu dano spirit corta 35% da cura do alvo por 8s. Barato (T2).", "es": "Tu daño espiritual reduce un 35% la curación del objetivo durante 8s. Barato (T2).", "ru": "Ваш урон спиритизмом снижает лечение цели на 35% на 8 с. Дёшево (T2)." } },
+        { "item": "decay", "peso": 2, "meu_heroi_tag": "spirit", "motivo": { "en": "Active: damage over time and -50% healing received on the target.", "pt": "Ativo: dano contínuo e -50% de cura recebida no alvo.", "es": "Activo: daño continuo y -50% de curación recibida en el objetivo.", "ru": "Активный: периодический урон и -50% получаемого лечения у цели." } },
+        { "item": "spirit-burn", "peso": 2, "meu_heroi_tag": "spirit", "motivo": { "en": "Spirit burst applies a burn with -70% healing received.", "pt": "Burst de spirit causa queimadura com -70% de cura recebida.", "es": "Un burst de daño espiritual causa una quemadura con -70% de curación recibida.", "ru": "Бёрст спиритизмом поджигает цель: -70% получаемого лечения." } },
+        { "item": "inhibitor", "peso": 2, "meu_heroi_tag": "gun", "motivo": { "en": "Shots stack a debuff: -30% damage dealt and -40% healing received.", "pt": "Tiros acumulam debuff: -30% dano causado e -40% cura recebida.", "es": "Los disparos acumulan un efecto negativo: -30% de daño infligido y -40% de curación recibida.", "ru": "Выстрелы накапливают дебафф: -30% наносимого урона и -40% получаемого лечения." } }
       ]
     },
     {
       "id": "anti-suporte",
-      "titulo": "Inimigos que curam aliados",
+      "titulo": { "en": "Enemies that heal allies", "pt": "Inimigos que curam aliados", "es": "Enemigos que curan a sus aliados", "ru": "Враги, лечащие союзников" },
       "quando": { "inimigos_tag": "healer" },
       "recomendar": [
-        { "item": "healbane", "peso": 3, "meu_heroi_tag": "spirit", "motivo": "Reduz a cura que o suporte inimigo aplica nos alvos que você acerta." },
-        { "item": "toxic-bullets", "peso": 3, "meu_heroi_tag": "gun", "motivo": "Corta a cura que o suporte joga no alvo que você está focando." },
-        { "item": "decay", "peso": 2, "meu_heroi_tag": "spirit", "motivo": "Ativo: -50% de cura recebida no alvo que o suporte está salvando." },
-        { "item": "inhibitor", "peso": 1, "meu_heroi_tag": "gun", "motivo": "Tiros acumulam -40% de cura recebida." },
-        { "item": "silence-wave", "peso": 2, "motivo": "Silenciar o suporte numa luta corta toda a cura do time inimigo." },
-        { "item": "focus-lens", "peso": 2, "motivo": "Silence de 4,5s num alvo: ótimo para travar o curador." },
-        { "item": "cursed-relic", "peso": 2, "motivo": "Interrompe, silencia e desarma o suporte (e remove buffs)." }
+        { "item": "healbane", "peso": 3, "meu_heroi_tag": "spirit", "motivo": { "en": "Reduces the healing the enemy support puts on targets you hit.", "pt": "Reduz a cura que o suporte inimigo aplica nos alvos que você acerta.", "es": "Reduce la curación que el apoyo enemigo aplica a los objetivos que golpeas.", "ru": "Снижает лечение от вражеской поддержки на целях, по которым вы попадаете." } },
+        { "item": "toxic-bullets", "peso": 3, "meu_heroi_tag": "gun", "motivo": { "en": "Cuts the healing the support throws on the target you're focusing.", "pt": "Corta a cura que o suporte joga no alvo que você está focando.", "es": "Corta la curación que el apoyo lanza al objetivo que estás focuseando.", "ru": "Режет лечение, которое поддержка кидает на цель в вашем фокусе." } },
+        { "item": "decay", "peso": 2, "meu_heroi_tag": "spirit", "motivo": { "en": "Active: -50% healing received on the target the support is trying to save.", "pt": "Ativo: -50% de cura recebida no alvo que o suporte está salvando.", "es": "Activo: -50% de curación recibida en el objetivo que el apoyo intenta salvar.", "ru": "Активный: -50% получаемого лечения у цели, которую спасает поддержка." } },
+        { "item": "inhibitor", "peso": 1, "meu_heroi_tag": "gun", "motivo": { "en": "Shots stack -40% healing received.", "pt": "Tiros acumulam -40% de cura recebida.", "es": "Los disparos acumulan -40% de curación recibida.", "ru": "Выстрелы накапливают -40% получаемого лечения." } },
+        { "item": "silence-wave", "peso": 2, "motivo": { "en": "Silencing the support in a fight shuts down all the enemy team's healing.", "pt": "Silenciar o suporte numa luta corta toda a cura do time inimigo.", "es": "Silenciar al apoyo en una pelea corta toda la curación del equipo enemigo.", "ru": "Безмолвие на поддержке в драке отрезает всё лечение вражеской команды." } },
+        { "item": "focus-lens", "peso": 2, "motivo": { "en": "4.5s silence on one target: great for locking down the healer.", "pt": "Silence de 4,5s num alvo: ótimo para travar o curador.", "es": "Silencio de 4,5s a un objetivo: ideal para bloquear al curandero.", "ru": "Безмолвие на 4,5 с по одной цели: отлично, чтобы выключить хилера." } },
+        { "item": "cursed-relic", "peso": 2, "motivo": { "en": "Interrupts, silences and disarms the support (and purges buffs).", "pt": "Interrompe, silencia e desarma o suporte (e remove buffs).", "es": "Interrumpe, silencia y desarma al apoyo (y elimina sus mejoras).", "ru": "Прерывает, накладывает безмолвие и обезоруживает поддержку (и снимает баффы)." } }
       ]
     },
     {
       "id": "anti-cc",
-      "titulo": "Inimigos com muito stun / CC",
+      "titulo": { "en": "Enemies with lots of stun / CC", "pt": "Inimigos com muito stun / CC", "es": "Enemigos con mucho aturdimiento / CC", "ru": "Враги с большим количеством оглушений / контроля" },
       "quando": { "inimigos_tag": "stun", "min": 2 },
       "recomendar": [
-        { "item": "debuff-reducer", "peso": 3, "motivo": "Barato: -25% de duração em todos os debuffs (stun, slow, silence)." },
-        { "item": "reactive-barrier", "peso": 2, "motivo": "Ganha barreira automática quando é atordoado, silenciado ou imobilizado." },
-        { "item": "dispel-magic", "peso": 2, "motivo": "Ativo: remove efeitos negativos, cura e dá velocidade." },
-        { "item": "unstoppable", "peso": 2, "motivo": "5,5s imune a stun/silence/sleep/root/disarm. Use antes de entrar." },
-        { "item": "spellbreaker", "peso": 2, "motivo": "+25% resistência a debuff e reduz grande dano spirit." },
-        { "item": "counterspell", "peso": 1, "motivo": "Parry bloqueia habilidades e itens inimigos se você acertar o timing." }
+        { "item": "debuff-reducer", "peso": 3, "motivo": { "en": "Cheap: -25% duration on all debuffs (stun, slow, silence).", "pt": "Barato: -25% de duração em todos os debuffs (stun, slow, silence).", "es": "Barato: -25% de duración de todos los efectos negativos (aturdimiento, ralentización, silencio).", "ru": "Дёшево: -25% длительности всех дебаффов (оглушение, замедление, безмолвие)." } },
+        { "item": "reactive-barrier", "peso": 2, "motivo": { "en": "Automatically gain a barrier when stunned, silenced or rooted.", "pt": "Ganha barreira automática quando é atordoado, silenciado ou imobilizado.", "es": "Obtienes una barrera automática al ser aturdido, silenciado o inmovilizado.", "ru": "Автоматически даёт барьер при оглушении, безмолвии или оцепенении." } },
+        { "item": "dispel-magic", "peso": 2, "motivo": { "en": "Active: removes debuffs, heals and gives move speed.", "pt": "Ativo: remove efeitos negativos, cura e dá velocidade.", "es": "Activo: elimina efectos negativos, cura y da velocidad.", "ru": "Активный: снимает отрицательные эффекты, лечит и даёт скорость." } },
+        { "item": "unstoppable", "peso": 2, "motivo": { "en": "5.5s immune to stun/silence/sleep/root/disarm. Pop it before going in.", "pt": "5,5s imune a stun/silence/sleep/root/disarm. Use antes de entrar.", "es": "5,5s de inmunidad a aturdir/silenciar/dormir/inmovilizar/desarmar. Úsalo antes de entrar.", "ru": "5,5 с невосприимчивости к оглушению/безмолвию/сну/оцепенению/обезоруживанию. Жмите перед заходом." } },
+        { "item": "spellbreaker", "peso": 2, "motivo": { "en": "+25% Debuff Resist and reduces big spirit hits.", "pt": "+25% resistência a debuff e reduz grande dano spirit.", "es": "+25% de resistencia a desventajas y reduce los golpes fuertes de daño espiritual.", "ru": "+25% сопр. отриц. эффектам и снижает крупный урон спиритизмом." } },
+        { "item": "counterspell", "peso": 1, "motivo": { "en": "Parry that blocks enemy abilities and items if you time it right.", "pt": "Parry bloqueia habilidades e itens inimigos se você acertar o timing.", "es": "Contrataque que bloquea habilidades y objetos enemigos si aciertas el momento.", "ru": "Парирование блокирует вражеские способности и предметы, если попасть в тайминг." } }
       ]
     },
     {
       "id": "anti-silence",
-      "titulo": "Inimigos que silenciam / desarmam",
+      "titulo": { "en": "Enemies that silence / disarm", "pt": "Inimigos que silenciam / desarmam", "es": "Enemigos que silencian / desarman", "ru": "Враги, накладывающие безмолвие / обезоруживание" },
       "quando": { "inimigos_tag": "silence" },
       "recomendar": [
-        { "item": "debuff-reducer", "peso": 2, "motivo": "Encurta silences e disarms." },
-        { "item": "reactive-barrier", "peso": 1, "motivo": "Barreira automática ao ser silenciado." },
-        { "item": "dispel-magic", "peso": 1, "motivo": "Remove o silence/disarm na hora." }
+        { "item": "debuff-reducer", "peso": 2, "motivo": { "en": "Shortens silences and disarms.", "pt": "Encurta silences e disarms.", "es": "Acorta silencios y desarmes.", "ru": "Сокращает безмолвие и обезоруживание." } },
+        { "item": "reactive-barrier", "peso": 1, "motivo": { "en": "Automatic barrier when silenced.", "pt": "Barreira automática ao ser silenciado.", "es": "Barrera automática al ser silenciado.", "ru": "Автоматический барьер при безмолвии." } },
+        { "item": "dispel-magic", "peso": 1, "motivo": { "en": "Removes silence/disarm instantly.", "pt": "Remove o silence/disarm na hora.", "es": "Elimina el silencio/desarme al instante.", "ru": "Мгновенно снимает безмолвие/обезоруживание." } }
       ]
     },
     {
       "id": "anti-slow",
-      "titulo": "Inimigos com muitos slows",
+      "titulo": { "en": "Enemies with lots of slows", "pt": "Inimigos com muitos slows", "es": "Enemigos con muchas ralentizaciones", "ru": "Враги с большим количеством замедлений" },
       "quando": { "inimigos_tag": "slow", "min": 3 },
       "recomendar": [
-        { "item": "fleetfoot", "peso": 1, "meu_heroi_tag": "gun", "motivo": "Ativo: velocidade + resistência a slow." },
-        { "item": "debuff-reducer", "peso": 1, "motivo": "Slows duram menos." },
-        { "item": "magic-carpet", "peso": 1, "motivo": "Fuga voando e imune a slows durante o efeito." }
+        { "item": "fleetfoot", "peso": 1, "meu_heroi_tag": "gun", "motivo": { "en": "Active: move speed + slow resist.", "pt": "Ativo: velocidade + resistência a slow.", "es": "Activo: velocidad + resistencia a ralentizaciones.", "ru": "Активный: скорость + сопротивление замедлению." } },
+        { "item": "debuff-reducer", "peso": 1, "motivo": { "en": "Slows don't last as long.", "pt": "Slows duram menos.", "es": "Las ralentizaciones duran menos.", "ru": "Замедления длятся меньше." } },
+        { "item": "magic-carpet", "peso": 1, "motivo": { "en": "Fly away to escape, immune to slows while it lasts.", "pt": "Fuga voando e imune a slows durante o efeito.", "es": "Huida volando e inmunidad a ralentizaciones durante el efecto.", "ru": "Побег по воздуху с невосприимчивостью к замедлениям во время действия." } }
       ]
     },
     {
       "id": "anti-dot",
-      "titulo": "Inimigos com dano contínuo (DoT / sangramento)",
+      "titulo": { "en": "Enemies with damage over time (DoT / bleed)", "pt": "Inimigos com dano contínuo (DoT / sangramento)", "es": "Enemigos con daño continuo (DoT / sangrado)", "ru": "Враги с периодическим уроном (DoT / кровотечение)" },
       "quando": { "inimigos_tag": "dot", "min": 2 },
       "recomendar": [
-        { "item": "debuff-reducer", "peso": 1, "motivo": "Efeitos negativos acabam mais rápido." },
-        { "item": "dispel-magic", "peso": 1, "motivo": "Limpa os DoTs ativos." },
-        { "item": "spirit-shielding", "peso": 1, "motivo": "Barreira contra dano spirit, que absorve a maioria dos DoTs." }
+        { "item": "debuff-reducer", "peso": 1, "motivo": { "en": "Debuffs wear off faster.", "pt": "Efeitos negativos acabam mais rápido.", "es": "Los efectos negativos terminan antes.", "ru": "Отрицательные эффекты заканчиваются быстрее." } },
+        { "item": "dispel-magic", "peso": 1, "motivo": { "en": "Cleanses active DoTs.", "pt": "Limpa os DoTs ativos.", "es": "Limpia los DoT activos.", "ru": "Снимает активные DoT." } },
+        { "item": "spirit-shielding", "peso": 1, "motivo": { "en": "Spirit damage barrier, which soaks up most DoTs.", "pt": "Barreira contra dano spirit, que absorve a maioria dos DoTs.", "es": "Barrera contra daño espiritual, que absorbe la mayoría de los DoT.", "ru": "Барьер от урона спиритизмом, поглощает большинство DoT." } }
       ]
     },
     {
       "id": "anti-spirit",
-      "titulo": "Time inimigo com muito dano spirit",
+      "titulo": { "en": "Enemy team with lots of spirit damage", "pt": "Time inimigo com muito dano spirit", "es": "Equipo enemigo con mucho daño espiritual", "ru": "Вражеская команда с большим уроном спиритизмом" },
       "quando": { "inimigos_tag": "spirit", "min": 2 },
       "recomendar": [
-        { "item": "spirit-shielding", "peso": 2, "motivo": "Barreira contra dano spirit, barata (T2)." },
-        { "item": "spirit-resilience", "peso": 3, "motivo": "Resistência a spirit sólida no T3." },
-        { "item": "witchmail", "peso": 2, "motivo": "+22% resistência spirit e reduz seus cooldowns quando você leva burst." },
-        { "item": "spellbreaker", "peso": 2, "motivo": "Corta 65% do próximo grande hit de spirit." },
-        { "item": "silencer", "peso": 2, "meu_heroi_tag": "gun", "motivo": "Suas balas reduzem 25% do dano spirit do alvo e acumulam silence." },
-        { "item": "suppressor", "peso": 1, "meu_heroi_tag": "spirit", "motivo": "Dá resistência a bala e reduz cadência do alvo: bom se você também é spirit." }
+        { "item": "spirit-shielding", "peso": 2, "motivo": { "en": "Cheap spirit damage barrier (T2).", "pt": "Barreira contra dano spirit, barata (T2).", "es": "Barrera contra daño espiritual, barata (T2).", "ru": "Барьер от урона спиритизмом, дёшево (T2)." } },
+        { "item": "spirit-resilience", "peso": 3, "motivo": { "en": "Solid Spirit Resist at T3.", "pt": "Resistência a spirit sólida no T3.", "es": "Resistencia espiritual sólida en T3.", "ru": "Солидная сопротивляемость спиритизму на T3." } },
+        { "item": "witchmail", "peso": 2, "motivo": { "en": "+22% Spirit Resist and lowers your cooldowns when you get bursted.", "pt": "+22% resistência spirit e reduz seus cooldowns quando você leva burst.", "es": "+22% de resistencia espiritual y reduce tus tiempos de recarga cuando recibes burst.", "ru": "+22% сопротивляемости спиритизму и сокращает ваши перезарядки, когда вас бёрстят." } },
+        { "item": "spellbreaker", "peso": 2, "motivo": { "en": "Cuts 65% off the next big spirit hit.", "pt": "Corta 65% do próximo grande hit de spirit.", "es": "Reduce un 65% el siguiente golpe fuerte de daño espiritual.", "ru": "Срезает 65% следующего крупного удара спиритизмом." } },
+        { "item": "silencer", "peso": 2, "meu_heroi_tag": "gun", "motivo": { "en": "Your bullets cut the target's spirit damage by 25% and build up silence.", "pt": "Suas balas reduzem 25% do dano spirit do alvo e acumulam silence.", "es": "Tus balas reducen un 25% el daño espiritual del objetivo y acumulan silencio.", "ru": "Ваши пули снижают урон спиритизмом цели на 25% и накапливают безмолвие." } },
+        { "item": "suppressor", "peso": 1, "meu_heroi_tag": "spirit", "motivo": { "en": "Gives Bullet Resist and lowers the target's Fire Rate: good if you're spirit too.", "pt": "Dá resistência a bala e reduz cadência do alvo: bom se você também é spirit.", "es": "Da resistencia a balas y reduce la cadencia de tiro del objetivo: bueno si tú también vas de espiritual.", "ru": "Даёт сопротивляемость пулям и снижает скорострельность цели: хорошо, если вы тоже играете через спиритизм." } }
       ]
     },
     {
       "id": "anti-burst",
-      "titulo": "Inimigos de burst (explodem um alvo rápido)",
+      "titulo": { "en": "Burst enemies (delete a target fast)", "pt": "Inimigos de burst (explodem um alvo rápido)", "es": "Enemigos de burst (revientan a un objetivo rápido)", "ru": "Враги с бёрстом (быстро убивают цель)" },
       "quando": { "inimigos_tag": "burst", "min": 2 },
       "recomendar": [
-        { "item": "spellbreaker", "peso": 1, "motivo": "Reduz o primeiro grande hit de spirit." },
-        { "item": "ethereal-shift", "peso": 2, "motivo": "4s invulnerável: anula o combo inteiro se usado na hora." },
-        { "item": "extra-health", "peso": 1, "motivo": "Vida extra barata deixa o combo inimigo sem matar." },
-        { "item": "divine-barrier", "peso": 1, "motivo": "Salva um aliado do burst (limpa debuffs + barreira)." }
+        { "item": "spellbreaker", "peso": 1, "motivo": { "en": "Reduces the first big spirit hit.", "pt": "Reduz o primeiro grande hit de spirit.", "es": "Reduce el primer golpe fuerte de daño espiritual.", "ru": "Снижает первый крупный удар спиритизмом." } },
+        { "item": "ethereal-shift", "peso": 2, "motivo": { "en": "4s invulnerable: negates the whole combo if timed right.", "pt": "4s invulnerável: anula o combo inteiro se usado na hora.", "es": "4s invulnerable: anula todo el combo si lo usas a tiempo.", "ru": "4 с неуязвимости: сводит на нет всё комбо, если нажать вовремя." } },
+        { "item": "extra-health", "peso": 1, "motivo": { "en": "Cheap extra health so the enemy combo doesn't kill you.", "pt": "Vida extra barata deixa o combo inimigo sem matar.", "es": "Vida extra barata: el combo enemigo deja de matarte.", "ru": "Дешёвое доп. здоровье: вражеское комбо перестаёт убивать." } },
+        { "item": "divine-barrier", "peso": 1, "motivo": { "en": "Saves an ally from burst (cleanses debuffs + barrier).", "pt": "Salva um aliado do burst (limpa debuffs + barreira).", "es": "Salva a un aliado del burst (limpia efectos negativos + barrera).", "ru": "Спасает союзника от бёрста (снимает дебаффы + барьер)." } }
       ]
     },
     {
       "id": "anti-arma",
-      "titulo": "Time inimigo com muito dano de arma",
+      "titulo": { "en": "Enemy team with lots of gun damage", "pt": "Time inimigo com muito dano de arma", "es": "Equipo enemigo con mucho daño de arma", "ru": "Вражеская команда с большим уроном от оружия" },
       "quando": { "inimigos_tag": "gun", "min": 3 },
       "recomendar": [
-        { "item": "battle-vest", "peso": 2, "motivo": "Resistência a bala barata (T2)." },
-        { "item": "weapon-shielding", "peso": 1, "motivo": "Barreira contra dano de arma (T2)." },
-        { "item": "bullet-resilience", "peso": 3, "motivo": "Resistência a bala forte no T3." },
-        { "item": "metal-skin", "peso": 3, "motivo": "Ativo: 5s imune a balas. Ganha trocas e foge de focus." },
-        { "item": "plated-armor", "peso": 2, "motivo": "Chance de desviar balas e de anular efeitos on-hit." },
-        { "item": "return-fire", "peso": 1, "motivo": "Devolve as balas para quem está atirando em você." },
-        { "item": "rusted-barrel", "peso": 1, "meu_heroi_tag": "spirit", "motivo": "Ativo barato: reduz cadência e resistência a bala do alvo." },
-        { "item": "suppressor", "peso": 1, "meu_heroi_tag": "spirit", "motivo": "Seu dano spirit reduz a cadência de tiro do inimigo." },
-        { "item": "disarming-hex", "peso": 1, "motivo": "Desarma o carry de arma por 4,25s." }
+        { "item": "battle-vest", "peso": 2, "motivo": { "en": "Cheap Bullet Resist (T2).", "pt": "Resistência a bala barata (T2).", "es": "Resistencia a balas barata (T2).", "ru": "Дешёвая сопротивляемость пулям (T2)." } },
+        { "item": "weapon-shielding", "peso": 1, "motivo": { "en": "Barrier against gun damage (T2).", "pt": "Barreira contra dano de arma (T2).", "es": "Barrera contra daño de arma (T2).", "ru": "Барьер от урона оружия (T2)." } },
+        { "item": "bullet-resilience", "peso": 3, "motivo": { "en": "Strong Bullet Resist at T3.", "pt": "Resistência a bala forte no T3.", "es": "Resistencia a balas fuerte en T3.", "ru": "Высокая сопротивляемость пулям на T3." } },
+        { "item": "metal-skin", "peso": 3, "motivo": { "en": "Active: 5s bullet immunity. Win trades and escape focus.", "pt": "Ativo: 5s imune a balas. Ganha trocas e foge de focus.", "es": "Activo: 5s inmune a las balas. Gana intercambios y escapa del focus.", "ru": "Активный: 5 с невосприимчивости к пулям. Выигрывайте размены и уходите из-под фокуса." } },
+        { "item": "plated-armor", "peso": 2, "motivo": { "en": "Chance to deflect bullets and negate on-hit effects.", "pt": "Chance de desviar balas e de anular efeitos on-hit.", "es": "Probabilidad de desviar balas y anular efectos al impactar.", "ru": "Шанс отразить пули и отменить эффекты при попадании." } },
+        { "item": "return-fire", "peso": 1, "motivo": { "en": "Sends bullets back at whoever is shooting you.", "pt": "Devolve as balas para quem está atirando em você.", "es": "Devuelve las balas a quien te está disparando.", "ru": "Возвращает пули тому, кто по вам стреляет." } },
+        { "item": "rusted-barrel", "peso": 1, "meu_heroi_tag": "spirit", "motivo": { "en": "Cheap active: lowers the target's Fire Rate and Bullet Resist.", "pt": "Ativo barato: reduz cadência e resistência a bala do alvo.", "es": "Activo barato: reduce la cadencia de tiro y la resistencia a balas del objetivo.", "ru": "Дешёвый активный: снижает скорострельность и сопротивляемость пулям цели." } },
+        { "item": "suppressor", "peso": 1, "meu_heroi_tag": "spirit", "motivo": { "en": "Your spirit damage lowers the enemy's Fire Rate.", "pt": "Seu dano spirit reduz a cadência de tiro do inimigo.", "es": "Tu daño espiritual reduce la cadencia de tiro del enemigo.", "ru": "Ваш урон спиритизмом снижает скорострельность врага." } },
+        { "item": "disarming-hex", "peso": 1, "motivo": { "en": "Disarms the gun carry for 4.25s.", "pt": "Desarma o carry de arma por 4,25s.", "es": "Desarma al carry de arma durante 4,25s.", "ru": "Обезоруживает керри на оружии на 4,25 с." } }
       ]
     },
     {
       "id": "anti-melee",
-      "titulo": "Inimigos corpo a corpo",
+      "titulo": { "en": "Melee enemies", "pt": "Inimigos corpo a corpo", "es": "Enemigos cuerpo a cuerpo", "ru": "Враги ближнего боя" },
       "quando": { "inimigos_tag": "melee", "min": 2 },
       "recomendar": [
-        { "item": "rebuttal", "peso": 2, "motivo": "Resistência melee, parry com menos cooldown e devolve o dano do parry." },
-        { "item": "slowing-bullets", "peso": 1, "meu_heroi_tag": "gun", "motivo": "Mantenha brigões longe de você." },
-        { "item": "cold-front", "peso": 1, "motivo": "Slow em área para kitar quem quer chegar perto." },
-        { "item": "torment-pulse", "peso": 1, "motivo": "Pune quem fica colado em você (+ resistência melee)." }
+        { "item": "rebuttal", "peso": 2, "motivo": { "en": "Melee Resist, lower parry cooldown and reflects the parried damage.", "pt": "Resistência melee, parry com menos cooldown e devolve o dano do parry.", "es": "Resistencia cuerpo a cuerpo, menos recarga del contrataque y devuelve el daño contratacado.", "ru": "Сопротивляемость в ближнем бою, быстрее перезарядка парирования и возврат парированного урона." } },
+        { "item": "slowing-bullets", "peso": 1, "meu_heroi_tag": "gun", "motivo": { "en": "Keep brawlers off you.", "pt": "Mantenha brigões longe de você.", "es": "Mantén a los luchadores lejos de ti.", "ru": "Держите любителей ближнего боя на расстоянии." } },
+        { "item": "cold-front", "peso": 1, "motivo": { "en": "AoE slow to kite anyone trying to get close.", "pt": "Slow em área para kitar quem quer chegar perto.", "es": "Ralentización en área para kitear a quien quiera acercarse.", "ru": "Замедление по области, чтобы кайтить тех, кто лезет вплотную." } },
+        { "item": "torment-pulse", "peso": 1, "motivo": { "en": "Punishes anyone glued to you (+ Melee Resist).", "pt": "Pune quem fica colado em você (+ resistência melee).", "es": "Castiga a quien se te pega (+ resistencia cuerpo a cuerpo).", "ru": "Наказывает тех, кто прилип к вам (+ сопротивляемость в ближнем бою)." } }
       ]
     },
     {
       "id": "anti-mobilidade",
-      "titulo": "Inimigos muito móveis",
+      "titulo": { "en": "Highly mobile enemies", "pt": "Inimigos muito móveis", "es": "Enemigos muy móviles", "ru": "Очень мобильные враги" },
       "quando": { "inimigos_tag": "mobility", "min": 2 },
       "recomendar": [
-        { "item": "slowing-hex", "peso": 2, "motivo": "Slow + silencia itens de movimento + aumenta gravidade." },
-        { "item": "capacitor", "peso": 1, "meu_heroi_tag": "gun", "motivo": "Slow forte e silencia itens de movimento." },
-        { "item": "slowing-bullets", "peso": 1, "meu_heroi_tag": "gun", "motivo": "Cada tiro deixa o alvo mais lento." },
-        { "item": "phantom-strike", "peso": 1, "motivo": "Teleporta até o alvo fugitivo e o puxa pro chão." }
+        { "item": "slowing-hex", "peso": 2, "motivo": { "en": "Slow + silences movement items + increases gravity.", "pt": "Slow + silencia itens de movimento + aumenta gravidade.", "es": "Ralentización + silencia objetos de movimiento + aumenta la gravedad.", "ru": "Замедление + блокирует предметы на передвижение + усиливает гравитацию." } },
+        { "item": "capacitor", "peso": 1, "meu_heroi_tag": "gun", "motivo": { "en": "Strong slow and silences movement items.", "pt": "Slow forte e silencia itens de movimento.", "es": "Ralentización fuerte y silencia objetos de movimiento.", "ru": "Сильное замедление и блокировка предметов на передвижение." } },
+        { "item": "slowing-bullets", "peso": 1, "meu_heroi_tag": "gun", "motivo": { "en": "Every shot slows the target down.", "pt": "Cada tiro deixa o alvo mais lento.", "es": "Cada disparo ralentiza al objetivo.", "ru": "Каждый выстрел замедляет цель." } },
+        { "item": "phantom-strike", "peso": 1, "motivo": { "en": "Teleport to the fleeing target and pull them to the ground.", "pt": "Teleporta até o alvo fugitivo e o puxa pro chão.", "es": "Te teletransporta hasta el objetivo que huye y lo tira al suelo.", "ru": "Телепортирует к убегающей цели и прижимает её к земле." } }
       ]
     },
     {
       "id": "anti-aereo",
-      "titulo": "Inimigos que ficam muito no ar",
+      "titulo": { "en": "Enemies that spend a lot of time airborne", "pt": "Inimigos que ficam muito no ar", "es": "Enemigos que pasan mucho tiempo en el aire", "ru": "Враги, которые много времени проводят в воздухе" },
       "quando": { "inimigos_tag": "airborne", "min": 1 },
       "recomendar": [
-        { "item": "knockdown", "peso": 2, "motivo": "Stun mais forte contra alvos no ar." },
-        { "item": "slowing-hex", "peso": 1, "motivo": "Aumenta a gravidade do alvo e trava itens de movimento." }
+        { "item": "knockdown", "peso": 2, "motivo": { "en": "Stronger stun against airborne targets.", "pt": "Stun mais forte contra alvos no ar.", "es": "Aturdimiento más fuerte contra objetivos en el aire.", "ru": "Более сильное оглушение против целей в воздухе." } },
+        { "item": "slowing-hex", "peso": 1, "motivo": { "en": "Increases the target's gravity and locks movement items.", "pt": "Aumenta a gravidade do alvo e trava itens de movimento.", "es": "Aumenta la gravedad del objetivo y bloquea objetos de movimiento.", "ru": "Усиливает гравитацию цели и блокирует предметы на передвижение." } }
       ]
     },
     {
       "id": "anti-canal",
-      "titulo": "Inimigos com ultimate canalizada",
+      "titulo": { "en": "Enemies with channeled ultimates", "pt": "Inimigos com ultimate canalizada", "es": "Enemigos con definitiva canalizada", "ru": "Враги с поддерживаемой ультой" },
       "quando": { "inimigos_tag": "channel-ult" },
       "recomendar": [
-        { "item": "knockdown", "peso": 2, "motivo": "Stun interrompe a ultimate canalizada." },
-        { "item": "silence-wave", "peso": 2, "motivo": "Silence em área corta a canalização." },
-        { "item": "cursed-relic", "peso": 2, "motivo": "Interrompe + silencia o alvo." },
-        { "item": "focus-lens", "peso": 1, "motivo": "Silencia um alvo por 4,5s." }
+        { "item": "knockdown", "peso": 2, "motivo": { "en": "Stun interrupts the channeled ultimate.", "pt": "Stun interrompe a ultimate canalizada.", "es": "El aturdimiento interrumpe la definitiva canalizada.", "ru": "Оглушение прерывает поддерживаемую ульту." } },
+        { "item": "silence-wave", "peso": 2, "motivo": { "en": "AoE silence cuts the channel.", "pt": "Silence em área corta a canalização.", "es": "Silencio en área que corta la canalización.", "ru": "Безмолвие по области прерывает поддержание." } },
+        { "item": "cursed-relic", "peso": 2, "motivo": { "en": "Interrupts + silences the target.", "pt": "Interrompe + silencia o alvo.", "es": "Interrumpe + silencia al objetivo.", "ru": "Прерывает + накладывает безмолвие на цель." } },
+        { "item": "focus-lens", "peso": 1, "motivo": { "en": "Silences one target for 4.5s.", "pt": "Silencia um alvo por 4,5s.", "es": "Silencia a un objetivo durante 4,5s.", "ru": "Накладывает безмолвие на цель на 4,5 с." } }
       ]
     },
     {
       "id": "anti-stealth",
-      "titulo": "Inimigos com invisibilidade",
+      "titulo": { "en": "Enemies with invisibility", "pt": "Inimigos com invisibilidade", "es": "Enemigos con invisibilidad", "ru": "Враги с невидимостью" },
       "quando": { "inimigos_tag": "stealth" },
       "recomendar": [
-        { "item": "torment-pulse", "peso": 1, "motivo": "Acerta automaticamente os inimigos mais próximos, mesmo quem chega escondido." },
-        { "item": "return-fire", "peso": 1, "motivo": "Revida automaticamente quando te emboscam com arma." }
+        { "item": "torment-pulse", "peso": 1, "motivo": { "en": "Automatically hits the nearest enemies, even ones sneaking up on you.", "pt": "Acerta automaticamente os inimigos mais próximos, mesmo quem chega escondido.", "es": "Golpea automáticamente a los enemigos más cercanos, incluso a quien llega oculto.", "ru": "Автоматически бьёт ближайших врагов, даже тех, кто подкрадывается." } },
+        { "item": "return-fire", "peso": 1, "motivo": { "en": "Automatically fires back when you get ambushed with guns.", "pt": "Revida automaticamente quando te emboscam com arma.", "es": "Responde automáticamente cuando te emboscan a tiros.", "ru": "Автоматически отвечает, когда вас подлавливают из оружия." } }
       ]
     },
     {
       "id": "anti-invocacoes",
-      "titulo": "Inimigos com invocações / torretas",
+      "titulo": { "en": "Enemies with summons / turrets", "pt": "Inimigos com invocações / torretas", "es": "Enemigos con invocaciones / torretas", "ru": "Враги с призывами / турелями" },
       "quando": { "inimigos_tag": "summons" },
       "recomendar": [
-        { "item": "ricochet", "peso": 1, "meu_heroi_tag": "gun", "motivo": "Balas ricocheteiam e limpam invocações junto com heróis." },
-        { "item": "tesla-bullets", "peso": 1, "meu_heroi_tag": "gun", "motivo": "Dano em cadeia limpa grupos de unidades." },
-        { "item": "alchemical-fire", "peso": 1, "motivo": "Dano em área crescente." }
+        { "item": "ricochet", "peso": 1, "meu_heroi_tag": "gun", "motivo": { "en": "Bullets bounce and clear summons along with heroes.", "pt": "Balas ricocheteiam e limpam invocações junto com heróis.", "es": "Las balas rebotan y limpian invocaciones junto con los héroes.", "ru": "Пули рикошетят и зачищают призванных существ вместе с героями." } },
+        { "item": "tesla-bullets", "peso": 1, "meu_heroi_tag": "gun", "motivo": { "en": "Chain damage clears groups of units.", "pt": "Dano em cadeia limpa grupos de unidades.", "es": "El daño en cadena limpia grupos de unidades.", "ru": "Цепной урон зачищает группы юнитов." } },
+        { "item": "alchemical-fire", "peso": 1, "motivo": { "en": "Ramping area damage.", "pt": "Dano em área crescente.", "es": "Daño en área creciente.", "ru": "Нарастающий урон по области." } }
       ]
     },
     {
       "id": "anti-tanque",
-      "titulo": "Inimigos tanques",
+      "titulo": { "en": "Tank enemies", "pt": "Inimigos tanques", "es": "Enemigos tanque", "ru": "Враги-танки" },
       "quando": { "inimigos_tag": "tank", "min": 1 },
       "recomendar": [
-        { "item": "toxic-bullets", "peso": 1, "meu_heroi_tag": "gun", "motivo": "Sangramento por % da vida máxima." },
-        { "item": "armor-piercer", "peso": 2, "meu_heroi_tag": "gun", "motivo": "Balas com chance de ignorar resistência a bala." },
-        { "item": "tankbuster", "peso": 2, "meu_heroi_tag": "spirit", "motivo": "Dano extra por % da vida atual que ignora resistência spirit." },
-        { "item": "decay", "peso": 1, "meu_heroi_tag": "spirit", "motivo": "Dano baseado na vida atual do alvo." },
-        { "item": "escalating-exposure", "peso": 1, "meu_heroi_tag": "spirit", "motivo": "Reduz a resistência spirit do alvo com o tempo." },
-        { "item": "bullet-resist-shredder", "peso": 1, "motivo": "Reduz a resistência a bala do alvo (ajuda o time todo)." }
+        { "item": "toxic-bullets", "peso": 1, "meu_heroi_tag": "gun", "motivo": { "en": "Bleed based on % max health.", "pt": "Sangramento por % da vida máxima.", "es": "Sangrado por % de vida máxima.", "ru": "Кровотечение от % макс. здоровья." } },
+        { "item": "armor-piercer", "peso": 2, "meu_heroi_tag": "gun", "motivo": { "en": "Bullets have a chance to ignore Bullet Resist.", "pt": "Balas com chance de ignorar resistência a bala.", "es": "Las balas tienen probabilidad de ignorar la resistencia a balas.", "ru": "Пули с шансом игнорировать сопротивляемость пулям." } },
+        { "item": "tankbuster", "peso": 2, "meu_heroi_tag": "spirit", "motivo": { "en": "Bonus damage based on % current health that ignores Spirit Resist.", "pt": "Dano extra por % da vida atual que ignora resistência spirit.", "es": "Daño extra por % de vida actual que ignora la resistencia espiritual.", "ru": "Доп. урон от % текущего здоровья, игнорирующий сопротивляемость спиритизму." } },
+        { "item": "decay", "peso": 1, "meu_heroi_tag": "spirit", "motivo": { "en": "Damage based on the target's current health.", "pt": "Dano baseado na vida atual do alvo.", "es": "Daño basado en la vida actual del objetivo.", "ru": "Урон зависит от текущего здоровья цели." } },
+        { "item": "escalating-exposure", "peso": 1, "meu_heroi_tag": "spirit", "motivo": { "en": "Lowers the target's Spirit Resist over time.", "pt": "Reduz a resistência spirit do alvo com o tempo.", "es": "Reduce la resistencia espiritual del objetivo con el tiempo.", "ru": "Со временем снижает сопротивляемость спиритизму цели." } },
+        { "item": "bullet-resist-shredder", "peso": 1, "motivo": { "en": "Lowers the target's Bullet Resist (helps the whole team).", "pt": "Reduz a resistência a bala do alvo (ajuda o time todo).", "es": "Reduce la resistencia a balas del objetivo (ayuda a todo el equipo).", "ru": "Снижает сопротивляемость пулям цели (помогает всей команде)." } }
       ]
     },
     {
       "id": "anti-escudos",
-      "titulo": "Inimigos que dão barreiras / escudos",
+      "titulo": { "en": "Enemies that give barriers / shields", "pt": "Inimigos que dão barreiras / escudos", "es": "Enemigos que dan barreras / escudos", "ru": "Враги, дающие барьеры / щиты" },
       "quando": { "inimigos_tag": "shield", "min": 2 },
       "recomendar": [
-        { "item": "cursed-relic", "peso": 1, "motivo": "Remove buffs do alvo além de silenciar e desarmar." }
+        { "item": "cursed-relic", "peso": 1, "motivo": { "en": "Purges the target's buffs on top of silencing and disarming.", "pt": "Remove buffs do alvo além de silenciar e desarmar.", "es": "Elimina las mejoras del objetivo además de silenciarlo y desarmarlo.", "ru": "Снимает баффы с цели, а также накладывает безмолвие и обезоруживает." } }
       ]
     }
   ]

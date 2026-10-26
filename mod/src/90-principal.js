@@ -58,8 +58,8 @@ function alternarMod() {
   modLigado = !modLigado;
   if (!modLigado) esconderTudo();
   else { mostrarPainel(loja.botao, true); assinaturaAnterior = ""; }
-  mostrarAvisoTexto(modLigado ? "Deadlock Utils <b>ligado</b>" : "Deadlock Utils <b>desligado</b>",
-    "Aperte " + ((CONFIG.teclas || {}).desligar || "F8") + " para " + (modLigado ? "desligar" : "ligar") + ".", true);
+  mostrarAvisoTexto("Deadlock Utils <b>" + T(modLigado ? "mod.ligado" : "mod.desligado") + "</b>",
+    T(modLigado ? "mod.apertePraDesligar" : "mod.apertePraLigar", (CONFIG.teclas || {}).desligar || "F8"), true);
   log("mod " + (modLigado ? "ligado" : "desligado"));
 }
 

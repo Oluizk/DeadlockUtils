@@ -4,32 +4,32 @@
 	</styles>
 	<Panel class="DUMapa" hittest="false">
 		<Panel class="DUMapaCaixa">
-			<Label class="DUMapaTitulo" text="Mapa" />
+			<Label class="DUMapaTitulo" text="@mapa.titulo" />
 			<Panel class="DUMapaLinha">
-				<Label class="DUMapaRotulo" text="Partida" />
+				<Label class="DUMapaRotulo" text="@mapa.partida" />
 				<Label id="DUMapaRelogio" class="DUMapaValor" text="--:--" />
 			</Panel>
 			<Panel class="DUMapaLinha">
-				<Label class="DUMapaRotulo" text="Próximo buff da ponte" />
+				<Label class="DUMapaRotulo" text="@mapa.ponte" />
 				<Label id="DUMapaPonte" class="DUMapaValor" text="--:--" />
 			</Panel>
 			<Panel class="DUMapaLinha">
-				<Label class="DUMapaRotulo" text="Chefe do meio" />
+				<Label class="DUMapaRotulo" text="@mapa.midboss" />
 				<Label id="DUMapaMidboss" class="DUMapaValor" html="true" text="-" />
 			</Panel>
 			<Panel class="DUMapaLinha DUMapaTamanho">
-				<Label id="DUMapaTamRotulo" class="DUMapaRotulo" text="Tamanho" />
+				<Label id="DUMapaTamRotulo" class="DUMapaRotulo" text="@mapa.tamanho" />
 				<Button id="DUMapaMenor" class="DUMapaBotao"><Label text="-" /></Button>
 				<Label id="DUMapaTamValor" class="DUMapaTamValor" text=" " />
 				<Button id="DUMapaMaior" class="DUMapaBotao"><Label text="+" /></Button>
 			</Panel>
 			<Panel class="DUMapaLinha DUMapaTamanho">
-				<Label id="DUMapaMiniRotulo" class="DUMapaRotulo" text="Pontos no minimapa" />
+				<Label id="DUMapaMiniRotulo" class="DUMapaRotulo" text="@mapa.pontosMini" />
 				<Button id="DUMapaMiniPontos" class="DUAbaModo DUMapaMiniBotao"><Label text=" " /></Button>
 			</Panel>
-			<Label class="DUMapaSubtitulo" text="Mostrar no mapa" />
+			<Label class="DUMapaSubtitulo" text="@mapa.mostrar" />
 			<Panel id="DUMapaFiltros" class="DUMapaFiltros" />
-			<Label class="DUMapaDica" html="true" text="Clique no mapa para sinalizar · M ou ESC fecha" />
+			<Label class="DUMapaDica" html="true" text="@mapa.ajuda" />
 			<Label id="DUMapaMaisOpcoes" class="DUMapaDica" html="true" text=" " />
 		</Panel>
 	</Panel>

@@ -20,10 +20,10 @@ An in-game HUD mod for **Deadlock** (Valve), built with Panorama, the game's own
 **To play** (no build needed):
 
 1. Download `DeadlockUtils-vX.Y.Z.zip` from [Releases](https://github.com/Oluizk/DeadlockUtils/releases) (or GameBanana) and extract it.
-2. Close Deadlock and double-click **`Instalar.bat`**. It finds the game, enables the addons folder in `gameinfo.gi` (with a backup) and copies `pak42_dir.vpk` to `game\citadel\addons\`. At the end it shows your Steam friend code for the tracker.
+2. Close Deadlock and double-click **`install.bat`**. Pick the mod language: **English** (default, Enter), **Português (pt-BR)**, **Español** or **Русский**. It finds the game, enables the addons folder in `gameinfo.gi` (with a backup) and copies the mod to `game\citadel\addons\pak42_dir.vpk`. At the end it shows your Steam friend code for the tracker.
 3. Open the game. For the tracker, enter the code in shop (B) > Deadlock Utils > Settings > Tracker.
 
-**`Desinstalar.bat`** removes the mod and restores `gameinfo.gi` (if no other mods are installed). Manual install steps are in `LEIA-ME.txt` inside the zip.
+To change the language, run `install.bat` again (it suggests the current one). **`uninstall.bat`** removes the mod and restores `gameinfo.gi` (if no other mods are installed). Manual install steps are in `README.txt` inside the zip.
 
 > **After every Deadlock update**, run the installer again (Steam restores `gameinfo.gi`).
 
@@ -44,18 +44,18 @@ Deadlock's Panorama has no storage of its own, and the in-game browser only open
 
 ### Language
 
-The mod uses the game's language (Portuguese, English or Spanish; anything else falls back to English). Translations live in `data/textos.json`; see [CONTRIBUTING.md](CONTRIBUTING.md). The counter reasons in `data/rules/` are in Portuguese for now.
+English by default. The installer lets you pick **English, Português (pt-BR), Español or Русский**; everything is translated, including counter reasons and alerts, and item names come from the game's own localization. UI texts live in `data/textos.json` and rule texts in `data/rules/*.json` as `{ "en", "pt", "es", "ru" }`; see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Notes
 
 - The mod replaces the game's `hud.xml`: **another mod that also replaces `hud.xml` will not work together with it**.
 - Valve has not published rules about mods. HUD mods have not led to bans so far, but timers and trackers are the kind of mod the community considers riskier. **Use it at your own risk.**
 - **Privacy:** the tracker sends the Steam ids/names of the players in your match to `api.deadlock-api.com`. No password is ever requested.
-- If the HUD does not load after a game update, run `Desinstalar.bat` and wait for a mod update.
+- If the HUD does not load after a game update, run `uninstall.bat` and wait for a mod update.
 
 ## For developers
 
-Build and install from source: `instalar-mod.bat`. Create the release package: `powershell -ExecutionPolicy Bypass -File tools\empacotar.ps1` (writes `dist\DeadlockUtils-vX.Y.Z.zip`, without the builder's Steam account). Test without the game: `iniciar.bat`, then open `http://localhost:8765/test/hud-simulado.html`. More in the Portuguese README and in [CONTRIBUTING.md](CONTRIBUTING.md).
+Build and install from source: `install.bat` in the repository root (same language prompt); `uninstall.bat` removes it. Create the release package: `powershell -ExecutionPolicy Bypass -File tools\empacotar.ps1` (writes `dist\DeadlockUtils-vX.Y.Z.zip`, without the builder's Steam account). Test without the game: `iniciar.bat`, then open `http://localhost:8765/test/hud-simulado.html`. More in the Portuguese README and in [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Credits
 

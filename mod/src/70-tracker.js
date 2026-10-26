@@ -62,7 +62,7 @@ function carregarTracker(forcar) {
     if (!ok) { tracker.erro = texto; tracker.dados = null; log("tracker: " + texto); }
     else {
       try { tracker.dados = JSON.parse(texto); tracker.erro = ""; }
-      catch (e) { tracker.erro = "resposta inválida"; tracker.dados = null; }
+      catch (e) { tracker.erro = T("tr.respostaInvalida"); tracker.dados = null; }
     }
     desenharTracker();
   });
@@ -79,13 +79,12 @@ function heroiDaClasse(c) { return classeParaHeroi[c] || c || "?"; }
 function desenharTracker() {
   if (!tracker.aberto || !valido(tracker.painel)) return;
   var jogadores = jogadoresDaPartida();
-  var st = !jogadores.length ? "Abra o tracker durante uma partida." :
-    tracker.carregando ? "Carregando dados do deadlock-api.com…" :
-    tracker.erro ? "Não consegui carregar: " + esc(tracker.erro) :
-    tracker.dados ? "Jogadores identificados por: " + esc(tracker.dados.origem) : "";
+  var st = !jogadores.length ? T("tr.foraDePartida") :
+    tracker.carregando ? T("tr.carregandoApi") :
+    tracker.erro ? T("tr.erro", esc(tracker.erro)) :
+    tracker.dados ? T("tr.origem", esc(origemTracker(tracker.dados.origem))) : "";
   if (!CONFIG.accountId) st += "  ·  " + T("tracker.semConta");
-  if (!CONFIG.urlPonte) st = "<font color='#a03020'><b>Tracker desligado:</b> o navegador do jogo só abre páginas HTTPS, e a página da ponte " +
-    "(mod/pagina/ponte.html) ainda não foi publicada. Veja \"Ativar o tracker\" no README.</font>";
+  if (!CONFIG.urlPonte) st = "<font color='#a03020'>" + T("tr.semPonte") + "</font>";
   tracker.status.text = st;
 
   [["amigo", tracker.amigos], ["inimigo", tracker.inimigos]].forEach(function (par) {
@@ -98,9 +97,9 @@ function desenharTracker() {
       imagem(b, "DUTrackerFoto", imagemHeroi(j.heroi));
       var tx = criar("Panel", b, "", "DUTrackerTextos");
       rotulo(tx, "DUTrackerNome", esc(j.nome || j.heroi || "?"));
-      rotulo(tx, "DUTrackerResumo", info && info.id ? esc(info.rank) + "  ·  " + pct(info.vitorias, info.partidas) + " vitórias" :
-        tracker.carregando ? "…" : "sem dados");
-      if (info && (info.contra || info.com)) rotulo(b, "DUTrackerHistorico", info.contra ? "JÁ ENFRENTOU" : "JÁ JOGOU JUNTO");
+      rotulo(tx, "DUTrackerResumo", info && info.id ? esc(info.rank) + "  ·  " + T("tr.vitorias", pct(info.vitorias, info.partidas)) :
+        tracker.carregando ? "…" : T("tr.semDados"));
+      if (info && (info.contra || info.com)) rotulo(b, "DUTrackerHistorico", T(info.contra ? "tr.jaEnfrentou" : "tr.jaJogouJunto"));
       aoClicar(b, function () { tracker.selecionado = chave; desenharTracker(); });
     });
   });
@@ -111,38 +110,38 @@ function desenharDetalheTracker(jogadores) {
   var d = tracker.detalhe;
   d.RemoveAndDeleteChildren();
   var j = jogadores.filter(function (x) { return x.time + "|" + x.heroi === tracker.selecionado; })[0];
-  if (!j) { rotulo(d, "DUAbaVazio", "Clique num jogador para ver os detalhes."); return; }
+  if (!j) { rotulo(d, "DUAbaVazio", T("tr.cliqueJogador")); return; }
   var info = infoDoJogador(j);
   var cab = criar("Panel", d, "", "DUTrackerDetCab");
   imagem(cab, "DUTrackerDetFoto", imagemHeroi(j.heroi));
   var tt = criar("Panel", cab, "", "DUAbaCabTextos");
   rotulo(tt, "DUAbaTitulo", esc(j.nome || "?"));
-  rotulo(tt, "DUAbaSub", esc(j.heroi) + (info && info.porNome ? "  ·  identificado pelo nome (pode estar errado)" : ""));
-  if (!info || !info.id) { rotulo(d, "DUAbaVazio", tracker.carregando ? "Carregando…" : "Jogador não encontrado no deadlock-api.com (perfil privado ou sem partidas registradas)."); return; }
+  rotulo(tt, "DUAbaSub", esc(j.heroi) + (info && info.porNome ? "  ·  " + T("tr.porNome") : ""));
+  if (!info || !info.id) { rotulo(d, "DUAbaVazio", tracker.carregando ? T("tr.carregando") : T("tr.naoEncontrado")); return; }
 
   function bloco(titulo, linhas) {
     rotulo(d, "DUAbaSecao", titulo);
     var caixa = criar("Panel", d, "", "DUTrackerBloco");
     linhas.forEach(function (l) { rotulo(caixa, "DUTrackerLinha", l); });
   }
-  bloco("Rank", ["<b>" + esc(info.rank) + "</b>", info.partidas + " partidas registradas · " + pct(info.vitorias, info.partidas) + " de vitórias"]);
-  if (info.atual) bloco("Com " + esc(j.heroi), [info.atual[0] + " partidas · " + pct(info.atual[1], info.atual[0]) + " de vitórias",
-    "Média de " + info.atual[2] + " abates / " + info.atual[3] + " mortes por partida"]);
-  else bloco("Com " + esc(j.heroi), ["Primeira vez (ou poucas) com esse herói."]);
-  rotulo(d, "DUAbaSecao", "Heróis mais jogados");
+  bloco(T("tr.rank"), ["<b>" + esc(info.rank) + "</b>", T("tr.partidasRegistradas", info.partidas, pct(info.vitorias, info.partidas))]);
+  if (info.atual) bloco(esc(T("tr.com", j.heroi)), [T("tr.partidasVitorias", info.atual[0], pct(info.atual[1], info.atual[0])),
+    T("tr.media", info.atual[2], info.atual[3])]);
+  else bloco(esc(T("tr.com", j.heroi)), [T("tr.primeiraVez")]);
+  rotulo(d, "DUAbaSecao", T("tr.maisJogados"));
   var tops = criar("Panel", d, "", "DUTrackerTops");
   (info.top || []).forEach(function (t) {
     var h = heroiDaClasse(t[0]);
     var c = criar("Panel", tops, "", "DUTrackerTop");
     imagem(c, "DUTrackerTopFoto", imagemHeroi(h));
-    rotulo(c, "DUTrackerLinha", "<b>" + esc(h) + "</b><br>" + t[1] + " partidas · " + pct(t[2], t[1]));
+    rotulo(c, "DUTrackerLinha", "<b>" + esc(h) + "</b><br>" + T("tr.partidasPct", t[1], pct(t[2], t[1])));
   });
   var hist = [];
-  if (CONFIG.accountId && info.id === CONFIG.accountId) hist.push("Este é você.");
-  else if (info.contra) hist.push("Contra você: " + info.contra[0] + " partida(s), você venceu " + info.contra[1] + " e perdeu " + (info.contra[0] - info.contra[1]) + ".");
-  if (info.com && !(CONFIG.accountId && info.id === CONFIG.accountId)) hist.push("Junto com você: " + info.com[0] + " partida(s), venceram " + info.com[1] + " e perderam " + (info.com[0] - info.com[1]) + ".");
-  if (!hist.length) hist.push(CONFIG.accountId ? "Vocês nunca se encontraram (nas partidas registradas)." : T("tracker.semConta"));
-  bloco("Histórico com você", hist);
+  if (CONFIG.accountId && info.id === CONFIG.accountId) hist.push(T("tr.ehVoce"));
+  else if (info.contra) hist.push(T("tr.contraVoce", info.contra[0], info.contra[1], info.contra[0] - info.contra[1]));
+  if (info.com && !(CONFIG.accountId && info.id === CONFIG.accountId)) hist.push(T("tr.junto", info.com[0], info.com[1], info.com[0] - info.com[1]));
+  if (!hist.length) hist.push(CONFIG.accountId ? T("tr.nunca") : T("tracker.semConta"));
+  bloco(T("tr.historico"), hist);
 }
 
 // Botão "Tracker" no menu ESC da partida (usa as classes do próprio menu, então fica com o visual do jogo).
@@ -161,4 +160,9 @@ function montarBotaoEsc() {
   aoClicar(b, abrirTracker);
   botaoEscPronto = true;
   log("botão Tracker adicionado ao menu ESC");
+}
+
+// A página da ponte (mod/pagina/ponte.html, publicada) responde a origem em português.
+function origemTracker(o) {
+  return o === "partida ao vivo" ? T("tr.origem.aoVivo") : o === "nenhuma" ? T("tr.origem.nenhuma") : o;
 }

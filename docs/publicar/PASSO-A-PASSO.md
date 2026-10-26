@@ -5,7 +5,7 @@ Tudo o que dava para preparar daqui já está pronto. Falta só o que precisa da
 ## 0. Antes de tudo
 
 - [ ] Rode `powershell -ExecutionPolicy Bypass -File tools\empacotar.ps1`. Ele gera `dist\DeadlockUtils-v1.0.0.zip` (sem a sua conta Steam gravada; o script confere isso e cancela se achar).
-- [ ] Teste o zip como um jogador novo faria: extraia numa pasta qualquer, rode `Desinstalar.bat`, depois `Instalar.bat`, abra o jogo e confira loja, Tab, mapa M e Configurações.
+- [ ] Teste o zip como um jogador novo faria: extraia numa pasta qualquer, rode `uninstall.bat`, depois `install.bat`, abra o jogo e confira loja, Tab, mapa M e Configurações.
 - [ ] Escolha uma licença para o repositório. Sugestão: **MIT** (simples, permite que outros usem e contribuam). No GitHub: **Add file > Create new file**, nome `LICENSE`, clique em **Choose a license template**.
 
 ## 1. Imagens e vídeo (o que mais faz diferença)

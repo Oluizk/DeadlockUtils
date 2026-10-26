@@ -10,15 +10,15 @@ What it does
 • Dangerous item alert when an enemy buys Knockdown, Cursed Relic, Refresher and similar items.
 • Counter editor: edit the counters for any hero in game and share them with a short code.
 • Settings: map and minimap sizes, icon sizes, filters, hotkeys.
-• Portuguese, English and Spanish.
+• English (default), Portuguese (pt-BR), Spanish and Russian: pick the language in the installer.
 
 Install
 
 1. Close Deadlock.
-2. Extract the zip and run Instalar.bat. It finds the game, enables the addons folder in gameinfo.gi (with a backup) and copies the mod.
+2. Extract the zip and run install.bat. It finds the game, enables the addons folder in gameinfo.gi (with a backup) and copies the mod.
 3. For the tracker: shop (B) > Deadlock Utils > Settings > Tracker, enter your Steam friend code (the installer shows it).
 
-Run the installer again after Deadlock updates. To uninstall, run Desinstalar.bat. Manual install steps are in LEIA-ME.txt.
+Run the installer again after Deadlock updates. To uninstall, run uninstall.bat. Manual install steps are in README.txt.
 
 Notes
 

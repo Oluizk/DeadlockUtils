@@ -113,18 +113,18 @@ var METODOS_COMPRA = [
 function comprarItem(itemId, aoTerminar) {
   var p = nativoDe(itemId);
   if (!p) { varrerNativos(true); p = nativoDe(itemId); }
-  if (!p) { log("compra: item " + itemId + " sem painel nativo na loja"); if (aoTerminar) aoTerminar(false, "abra a loja (B) uma vez para o mod achar os itens"); return; }
-  if (temClasse(p, "owned")) { if (aoTerminar) aoTerminar(true, "você já tem"); return; }
+  if (!p) { log("compra: item " + itemId + " sem painel nativo na loja"); if (aoTerminar) aoTerminar(false, T("compra.abraLoja")); return; }
+  if (temClasse(p, "owned")) { if (aoTerminar) aoTerminar(true, T("compra.jaTem")); return; }
   var ordem = nativos.metodoCompra >= 0 ? [nativos.metodoCompra] : METODOS_COMPRA.map(function (_, i) { return i; });
   (function tentar(k) {
-    if (k >= ordem.length) { log("compra: nenhum método funcionou para " + itemId); if (aoTerminar) aoTerminar(false, "o jogo recusou (longe da loja ou sem almas)"); return; }
+    if (k >= ordem.length) { log("compra: nenhum método funcionou para " + itemId); if (aoTerminar) aoTerminar(false, T("compra.recusou")); return; }
     try { METODOS_COMPRA[ordem[k]](p); } catch (e) { log("compra: método " + ordem[k] + " erro: " + e); }
     var checagens = 0;
     (function conferir() {
       if (temClasse(p, "owned")) {
         if (nativos.metodoCompra !== ordem[k]) log("compra: método " + ordem[k] + " funciona");
         nativos.metodoCompra = ordem[k];
-        if (aoTerminar) aoTerminar(true, "comprado");
+        if (aoTerminar) aoTerminar(true, T("compra.ok"));
         atualizarRecomendacoes(lerPartida(), true);
       } else if (++checagens < 6) $.Schedule(0.1, conferir);
       else tentar(k + 1);

@@ -12,24 +12,24 @@
 				</Panel>
 				<Panel class="DUAbaCabAcoes">
 					<Button id="DUTrackerAtualizar" class="DUAbaModo">
-						<Label text="Atualizar" />
+						<Label text="@tr.atualizar" />
 					</Button>
 					<Button id="DUTrackerFechar" class="DUAbaModo">
-						<Label text="Fechar" />
+						<Label text="@tr.fechar" />
 					</Button>
 				</Panel>
 			</Panel>
 			<Panel class="DUAbaLinha" />
 			<Panel class="DUTrackerCorpo">
 				<Panel class="DUTrackerTimes">
-					<Label class="DUAbaSecao" text="Seu time" />
+					<Label class="DUAbaSecao" text="@tr.seuTime" />
 					<Panel id="DUTrackerAmigos" class="DUTrackerLista" />
-					<Label class="DUAbaSecao" text="Inimigos" />
+					<Label class="DUAbaSecao" text="@tr.inimigos" />
 					<Panel id="DUTrackerInimigos" class="DUTrackerLista" />
 				</Panel>
 				<Panel id="DUTrackerDetalhe" class="DUTrackerDetalhe" />
 			</Panel>
-			<Label class="DUTrackerRodape" text="Dados: deadlock-api.com" />
+			<Label class="DUTrackerRodape" text="@tr.fonte" />
 		</Panel>
 	</Panel>
 </root>

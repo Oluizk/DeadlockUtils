@@ -15,7 +15,7 @@ param(
 )
 . (Join-Path $PSScriptRoot "jogo.ps1")
 
-$VersaoMod = "1.0.0"
+$VersaoMod = "1.1.0"
 $Nome = "deadlock_utils"
 $utf8 = New-Object Text.UTF8Encoding $false
 function Ler([string]$rel) { [IO.File]::ReadAllText((Join-Path $Raiz $rel), [Text.Encoding]::UTF8).TrimStart([char]0xFEFF) }
@@ -98,6 +98,22 @@ foreach ($arq in Get-ChildItem $locItens -Filter "*.txt") {
 $nomesItensJson = "{" + (($nomesItens.GetEnumerator() | Sort-Object Name | ForEach-Object {
   '"' + $_.Name.Replace('\', '\\').Replace('"', '\"') + '":"' + $_.Value + '"'
 }) -join ",") + "}"
+# Nome que o jogo mostra para cada item em cada idioma do mod (cartões, dicas, editor).
+$arqIdioma = [ordered]@{ en = "english"; pt = "brazilian"; es = "spanish"; ru = "russian" }
+$porIdioma = foreach ($i in $arqIdioma.Keys) {
+  $mapa = @{}
+  $arqLoc = Join-Path $locItens "citadel_gc_mod_names_$($arqIdioma[$i]).txt"
+  if (Test-Path $arqLoc) {
+    foreach ($linha in [IO.File]::ReadAllLines($arqLoc, [Text.Encoding]::UTF8)) {
+      if ($linha -match '^\s*"(upgrade_[a-z0-9_]+)"\s+"([^"]+)"') {
+        $id = $classeParaItem[$matches[1]]
+        if ($id -and -not $mapa.ContainsKey($id)) { $mapa[$id] = $matches[2].Trim() }
+      }
+    }
+  }
+  "`"$i`":{" + (($mapa.GetEnumerator() | Sort-Object Name | ForEach-Object { '"' + $_.Name + '":"' + $_.Value.Replace('\', '\\').Replace('"', '\"') + '"' }) -join ",") + "}"
+}
+$nomesItensIdiomaJson = "{" + ($porIdioma -join ",") + "}"
 Write-Host "Nomes de itens (todos os idiomas): $($nomesItens.Count)"
 # ID de cada item no jogo (para abrir o tooltip nativo com CitadelShowModTooltip).
 $idsJogoJson = "{" + (($itensDados | ForEach-Object { '"' + $_.id + '":' + [S2Hash]::Murmur2($_.classes[0]) }) -join ",") + "}"
@@ -117,6 +133,8 @@ if ($Distribuicao) {
   }
 }
 $configJson = $config | ConvertTo-Json -Depth 6 -Compress
+# Idioma padrão do build: inglês (o instalador troca depois). data/config.json "idioma" muda isso no build local.
+$idiomaBuild = if ($config.idioma -and @("en", "pt", "es", "ru") -contains $config.idioma) { $config.idioma } else { "en" }
 
 # 4) Script: dados + motor + módulos do mod (mod/src/*.js em ordem), num arquivo só.
 $arquivosRegras = Get-ChildItem (Join-Path $Raiz "data\rules") -Filter "*.json" |
@@ -136,6 +154,8 @@ $modulos = (Get-ChildItem (Join-Path $Raiz "mod\src") -Filter "*.js" | Sort-Obje
 }) -join "`n"
 $js = @"
 // Deadlock Utils v$VersaoMod, gerado por tools/build-mod.ps1. NÃO edite: edite mod/src/*.js e data/.
+// O instalador troca as 2 letras depois do marcador pelo idioma escolhido (en, pt, es, ru).
+var DU_IDIOMA = /*DU_IDIOMA*/"$idiomaBuild";
 var DU_DATA = {
 versao: "$VersaoMod",
 versaoJogo: "$versaoJogo",
@@ -152,6 +172,7 @@ $regrasJs
 ],
 nomesHerois: $nomesJson,
 nomesItens: $nomesItensJson,
+nomesItensIdioma: $nomesItensIdiomaJson,
 idsJogo: $idsJogoJson
 };
 $(Ler "app\engine.js")

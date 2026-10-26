@@ -3,302 +3,302 @@
   "itens": [
     {
       "item": "knockdown", "perigo": 3,
-      "alerta": "Stun atrasado: aplica stun 2s depois de marcar você (mais forte se você estiver no ar).",
-      "dica": "Viu a marca? Fique no chão e use Unstoppable / Dispel Magic / Ethereal Shift antes dos 2s. Não pule no momento errado.",
+      "alerta": { "en": "Delayed stun: stuns you 2s after marking you (stronger if you're airborne).", "pt": "Stun atrasado: aplica stun 2s depois de marcar você (mais forte se você estiver no ar).", "es": "Stun retardado: te aturde 2 s después de marcarte (más fuerte si estás en el aire).", "ru": "Отложенный стан: оглушает через 2 с после метки (сильнее, если вы в воздухе)." },
+      "dica": { "en": "See the mark? Stay grounded and use Unstoppable / Dispel Magic / Ethereal Shift before the 2s are up. Don't jump at the wrong time.", "pt": "Viu a marca? Fique no chão e use Unstoppable / Dispel Magic / Ethereal Shift antes dos 2s. Não pule no momento errado.", "es": "¿Ves la marca? Quédate en el suelo y usa Imparable / Disipador de Magia / Transformación Etérea antes de los 2 s. No saltes en mal momento.", "ru": "Видите метку? Оставайтесь на земле и используйте Неудержимость / Развеивание магии / Развоплощение до истечения 2 с. Не прыгайте не вовремя." },
       "counters": [
-        { "item": "debuff-reducer", "peso": 2, "motivo": "Stun dura menos." },
-        { "item": "reactive-barrier", "peso": 1, "motivo": "Barreira automática quando o stun acerta." },
-        { "item": "dispel-magic", "peso": 2, "motivo": "Limpa a marca antes do stun." },
-        { "item": "unstoppable", "peso": 1, "motivo": "Imune ao stun durante o efeito." }
+        { "item": "debuff-reducer", "peso": 2, "motivo": { "en": "Shorter stun.", "pt": "Stun dura menos.", "es": "El stun dura menos.", "ru": "Стан короче." } },
+        { "item": "reactive-barrier", "peso": 1, "motivo": { "en": "Automatic barrier when the stun lands.", "pt": "Barreira automática quando o stun acerta.", "es": "Barrera automática cuando te alcanza el stun.", "ru": "Автоматический барьер, когда срабатывает стан." } },
+        { "item": "dispel-magic", "peso": 2, "motivo": { "en": "Cleanses the mark before the stun.", "pt": "Limpa a marca antes do stun.", "es": "Limpia la marca antes del stun.", "ru": "Снимает метку до стана." } },
+        { "item": "unstoppable", "peso": 1, "motivo": { "en": "Stun immune while active.", "pt": "Imune ao stun durante o efeito.", "es": "Inmune al stun mientras dura el efecto.", "ru": "Иммунитет к стану на время действия." } }
       ]
     },
     {
       "item": "cursed-relic", "perigo": 3,
-      "alerta": "Curse: interrompe, silencia, desarma e remove seus buffs por ~3s.",
-      "dica": "Não use seus ativos defensivos primeiro se o portador estiver perto: eles podem ser removidos. Espere o Curse sair.",
+      "alerta": { "en": "Curse: interrupts, silences, disarms and strips your buffs for ~3s.", "pt": "Curse: interrompe, silencia, desarma e remove seus buffs por ~3s.", "es": "Maldición: interrumpe, silencia, desarma y elimina tus mejoras durante ~3 s.", "ru": "Проклятие: прерывает, накладывает безмолвие, обезоруживает и снимает ваши баффы на ~3 с." },
+      "dica": { "en": "Don't pop your defensive actives first if the holder is nearby: they can be stripped. Wait for the Curse to come out.", "pt": "Não use seus ativos defensivos primeiro se o portador estiver perto: eles podem ser removidos. Espere o Curse sair.", "es": "No uses tus activos defensivos primero si el portador está cerca: te los pueden quitar. Espera a que lance la Maldición.", "ru": "Не используйте защитные активки первыми, если носитель рядом: их могут снять. Дождитесь Проклятия." },
       "counters": [
-        { "item": "counterspell", "peso": 2, "motivo": "Parry bloqueia itens e habilidades inimigas." },
-        { "item": "debuff-reducer", "peso": 2, "motivo": "Curse dura menos." },
-        { "item": "spellbreaker", "peso": 1, "motivo": "+25% resistência a debuff." },
-        { "item": "divine-barrier", "peso": 1, "motivo": "Seu suporte pode limpar o Curse de você (ou você de um aliado)." }
+        { "item": "counterspell", "peso": 2, "motivo": { "en": "Counterspell parries enemy items and abilities.", "pt": "Parry bloqueia itens e habilidades inimigas.", "es": "Contrahechizo bloquea objetos y habilidades enemigas.", "ru": "Контрчары блокируют вражеские предметы и способности." } },
+        { "item": "debuff-reducer", "peso": 2, "motivo": { "en": "Shorter Curse.", "pt": "Curse dura menos.", "es": "La Maldición dura menos.", "ru": "Проклятие короче." } },
+        { "item": "spellbreaker", "peso": 1, "motivo": { "en": "+25% debuff resist.", "pt": "+25% resistência a debuff.", "es": "+25% de resistencia a desventajas.", "ru": "+25% к сопротивлению негативным эффектам." } },
+        { "item": "divine-barrier", "peso": 1, "motivo": { "en": "Your support can cleanse the Curse off you (or you off an ally).", "pt": "Seu suporte pode limpar o Curse de você (ou você de um aliado).", "es": "Tu apoyo puede quitarte la Maldición (o tú a un aliado).", "ru": "Ваш саппорт может снять с вас Проклятие (или вы с союзника)." } }
       ]
     },
     {
       "item": "silence-wave", "perigo": 2,
-      "alerta": "Projétil em área que silencia por 3s.",
-      "dica": "Projétil que se expande: não fiquem amontoados. Desvie pela lateral.",
+      "alerta": { "en": "AoE projectile that silences for 3s.", "pt": "Projétil em área que silencia por 3s.", "es": "Proyectil de área que silencia durante 3 s.", "ru": "Снаряд по площади, накладывает безмолвие на 3 с." },
+      "dica": { "en": "Expanding projectile: don't bunch up. Dodge to the side.", "pt": "Projétil que se expande: não fiquem amontoados. Desvie pela lateral.", "es": "Proyectil que se expande: no os agrupéis. Esquiva por los lados.", "ru": "Снаряд расширяется: не стойте кучей. Уходите в сторону." },
       "counters": [
-        { "item": "debuff-reducer", "peso": 2, "motivo": "Silence mais curto." },
-        { "item": "reactive-barrier", "peso": 1, "motivo": "Barreira ao ser silenciado." },
-        { "item": "counterspell", "peso": 1, "motivo": "Parry anula o efeito." }
+        { "item": "debuff-reducer", "peso": 2, "motivo": { "en": "Shorter silence.", "pt": "Silence mais curto.", "es": "Silencio más corto.", "ru": "Безмолвие короче." } },
+        { "item": "reactive-barrier", "peso": 1, "motivo": { "en": "Barrier when silenced.", "pt": "Barreira ao ser silenciado.", "es": "Barrera al ser silenciado.", "ru": "Барьер при безмолвии." } },
+        { "item": "counterspell", "peso": 1, "motivo": { "en": "Counterspell negates the effect.", "pt": "Parry anula o efeito.", "es": "Contrahechizo anula el efecto.", "ru": "Контрчары отменяют эффект." } }
       ]
     },
     {
       "item": "focus-lens", "perigo": 2,
-      "alerta": "Silence de 4,5s em um alvo + parte do dano volta quando o silence acaba.",
-      "dica": "Normalmente é usado em quem tem ultimate forte: guarde distância do portador.",
+      "alerta": { "en": "4.5s silence on one target + part of the damage comes back when the silence ends.", "pt": "Silence de 4,5s em um alvo + parte do dano volta quando o silence acaba.", "es": "Silencio de 4,5 s a un objetivo + parte del daño vuelve cuando acaba el silencio.", "ru": "Безмолвие на 4,5 с на одну цель + часть урона возвращается, когда безмолвие заканчивается." },
+      "dica": { "en": "Usually used on whoever has a strong ult: keep your distance from the holder.", "pt": "Normalmente é usado em quem tem ultimate forte: guarde distância do portador.", "es": "Suele usarse contra quien tiene una ulti fuerte: mantén la distancia con el portador.", "ru": "Обычно его применяют на тех, у кого сильная ульта: держите дистанцию от носителя." },
       "counters": [
-        { "item": "debuff-reducer", "peso": 2, "motivo": "Silence mais curto." },
-        { "item": "dispel-magic", "peso": 1, "motivo": "Remove o silence." },
-        { "item": "spirit-resilience", "peso": 1, "motivo": "Reduz o dano que explode no final." }
+        { "item": "debuff-reducer", "peso": 2, "motivo": { "en": "Shorter silence.", "pt": "Silence mais curto.", "es": "Silencio más corto.", "ru": "Безмолвие короче." } },
+        { "item": "dispel-magic", "peso": 1, "motivo": { "en": "Removes the silence.", "pt": "Remove o silence.", "es": "Elimina el silencio.", "ru": "Снимает безмолвие." } },
+        { "item": "spirit-resilience", "peso": 1, "motivo": { "en": "Reduces the damage that bursts at the end.", "pt": "Reduz o dano que explode no final.", "es": "Reduce el daño que estalla al final.", "ru": "Снижает урон, который взрывается в конце." } }
       ]
     },
     {
       "item": "phantom-strike", "perigo": 2,
-      "alerta": "Teleporta até você, te puxa pro chão e desarma.",
-      "dica": "Alvos isolados são presa fácil: fique perto do time quando o portador estiver vivo.",
+      "alerta": { "en": "Teleports to you, pulls you to the ground and disarms you.", "pt": "Teleporta até você, te puxa pro chão e desarma.", "es": "Se teletransporta hasta ti, te tira al suelo y te desarma.", "ru": "Телепортируется к вам, сбивает на землю и обезоруживает." },
+      "dica": { "en": "Isolated targets are easy prey: stay near your team while the holder is alive.", "pt": "Alvos isolados são presa fácil: fique perto do time quando o portador estiver vivo.", "es": "Los objetivos aislados son presa fácil: quédate cerca del equipo mientras el portador esté vivo.", "ru": "Одиночные цели легко поймать: держитесь рядом с командой, пока носитель жив." },
       "counters": [
-        { "item": "debuff-reducer", "peso": 1, "motivo": "Disarm mais curto." },
-        { "item": "counterspell", "peso": 1, "motivo": "Parry na hora do teleporte." }
+        { "item": "debuff-reducer", "peso": 1, "motivo": { "en": "Shorter disarm.", "pt": "Disarm mais curto.", "es": "Desarme más corto.", "ru": "Обезоруживание короче." } },
+        { "item": "counterspell", "peso": 1, "motivo": { "en": "Counterspell right as he teleports.", "pt": "Parry na hora do teleporte.", "es": "Contrahechizo justo cuando se teletransporta.", "ru": "Контрчары в момент телепорта." } }
       ]
     },
     {
       "item": "capacitor", "perigo": 2,
-      "alerta": "Slow forte + silencia seus itens de movimento.",
-      "dica": "Warp Stone / Majestic Leap / Fleetfoot não salvam você enquanto estiver afetado: saia antes.",
+      "alerta": { "en": "Strong slow + silences your movement items.", "pt": "Slow forte + silencia seus itens de movimento.", "es": "Ralentización fuerte + silencia tus objetos de movilidad.", "ru": "Сильное замедление + блокирует ваши предметы передвижения." },
+      "dica": { "en": "Warp Stone / Majestic Leap / Fleetfoot won't save you while affected: get out before it hits.", "pt": "Warp Stone / Majestic Leap / Fleetfoot não salvam você enquanto estiver afetado: saia antes.", "es": "Piedra de Teletransporte / Salto Majestuoso / Pies Ligeros no te salvan mientras estés afectado: sal antes.", "ru": "Камень переноса / Грациозный скачок / Проворная поступь не спасут вас под эффектом: уходите заранее." },
       "counters": [
-        { "item": "debuff-reducer", "peso": 1, "motivo": "Slow e silence mais curtos." },
-        { "item": "dispel-magic", "peso": 1, "motivo": "Limpa o slow e o silence de itens." }
+        { "item": "debuff-reducer", "peso": 1, "motivo": { "en": "Shorter slow and silence.", "pt": "Slow e silence mais curtos.", "es": "Ralentización y silencio más cortos.", "ru": "Замедление и безмолвие короче." } },
+        { "item": "dispel-magic", "peso": 1, "motivo": { "en": "Cleanses the slow and the item silence.", "pt": "Limpa o slow e o silence de itens.", "es": "Limpia la ralentización y el silencio de objetos.", "ru": "Снимает замедление и блокировку предметов." } }
       ]
     },
     {
       "item": "slowing-hex", "perigo": 1,
-      "alerta": "Slow + silencia itens de movimento + aumenta gravidade.",
-      "dica": "Não conte com item de fuga logo após levar o hex.",
+      "alerta": { "en": "Slow + silences movement items + increased gravity.", "pt": "Slow + silencia itens de movimento + aumenta gravidade.", "es": "Ralentización + silencia objetos de movilidad + aumenta la gravedad.", "ru": "Замедление + блокирует предметы передвижения + повышает гравитацию." },
+      "dica": { "en": "Don't count on escape items right after getting hexed.", "pt": "Não conte com item de fuga logo após levar o hex.", "es": "No cuentes con objetos de huida justo después de recibir el hechizo.", "ru": "Не рассчитывайте на предметы для побега сразу после чар." },
       "counters": [
-        { "item": "debuff-reducer", "peso": 1, "motivo": "Hex dura menos." }
+        { "item": "debuff-reducer", "peso": 1, "motivo": { "en": "Shorter hex.", "pt": "Hex dura menos.", "es": "El hechizo dura menos.", "ru": "Чары короче." } }
       ]
     },
     {
       "item": "disarming-hex", "perigo": 2,
-      "alerta": "Desarma por ~4s e reduz sua resistência a bala.",
-      "dica": "Se você é de arma, recue e use habilidades enquanto estiver desarmado.",
+      "alerta": { "en": "Disarms for ~4s and lowers your bullet resist.", "pt": "Desarma por ~4s e reduz sua resistência a bala.", "es": "Desarma durante ~4 s y reduce tu resistencia a balas.", "ru": "Обезоруживает на ~4 с и снижает сопротивляемость пулям." },
+      "dica": { "en": "If you're a gun hero, back off and use abilities while disarmed.", "pt": "Se você é de arma, recue e use habilidades enquanto estiver desarmado.", "es": "Si eres de armas, retrocede y usa habilidades mientras estés desarmado.", "ru": "Если вы играете от оружия, отступите и используйте способности, пока обезоружены." },
       "counters": [
-        { "item": "debuff-reducer", "peso": 1, "motivo": "Disarm mais curto." },
-        { "item": "dispel-magic", "peso": 1, "motivo": "Remove o disarm." }
+        { "item": "debuff-reducer", "peso": 1, "motivo": { "en": "Shorter disarm.", "pt": "Disarm mais curto.", "es": "Desarme más corto.", "ru": "Обезоруживание короче." } },
+        { "item": "dispel-magic", "peso": 1, "motivo": { "en": "Removes the disarm.", "pt": "Remove o disarm.", "es": "Elimina el desarme.", "ru": "Снимает обезоруживание." } }
       ]
     },
     {
       "item": "vortex-web", "perigo": 3,
-      "alerta": "Granada que puxa todo mundo junto e aplica slow: prepara combo de ultimate em área.",
-      "dica": "Espalhem-se. Se for puxado, use ativo defensivo imediatamente (ultimate inimiga vem em seguida).",
+      "alerta": { "en": "Grenade that pulls everyone together and slows: sets up an AoE ult combo.", "pt": "Granada que puxa todo mundo junto e aplica slow: prepara combo de ultimate em área.", "es": "Granada que agrupa a todos y ralentiza: prepara un combo de ulti en área.", "ru": "Граната стягивает всех в кучу и замедляет: подготовка к комбо ульты по площади." },
+      "dica": { "en": "Spread out. If you get pulled, use a defensive active right away (the enemy ult comes next).", "pt": "Espalhem-se. Se for puxado, use ativo defensivo imediatamente (ultimate inimiga vem em seguida).", "es": "Separaos. Si te atrapa, usa un activo defensivo de inmediato (la ulti enemiga viene después).", "ru": "Рассредоточьтесь. Если вас стянуло, сразу жмите защитную активку (следом прилетит вражеская ульта)." },
       "counters": [
-        { "item": "unstoppable", "peso": 1, "motivo": "Ignora o CC que vem depois." },
-        { "item": "debuff-reducer", "peso": 1, "motivo": "Slow mais curto." },
-        { "item": "ethereal-shift", "peso": 1, "motivo": "Fica invulnerável durante o combo." }
+        { "item": "unstoppable", "peso": 1, "motivo": { "en": "Ignores the follow-up CC.", "pt": "Ignora o CC que vem depois.", "es": "Ignora el CC que viene después.", "ru": "Игнорирует последующий контроль." } },
+        { "item": "debuff-reducer", "peso": 1, "motivo": { "en": "Shorter slow.", "pt": "Slow mais curto.", "es": "Ralentización más corta.", "ru": "Замедление короче." } },
+        { "item": "ethereal-shift", "peso": 1, "motivo": { "en": "Invulnerable during the combo.", "pt": "Fica invulnerável durante o combo.", "es": "Eres invulnerable durante el combo.", "ru": "Неуязвимость на время комбо." } }
       ]
     },
     {
       "item": "arctic-blast", "perigo": 2,
-      "alerta": "Explosão que congela e depois deixa lento; trava regeneração de stamina.",
-      "dica": "Não gaste toda a stamina antes de entrar na luta com o portador.",
+      "alerta": { "en": "Blast that freezes, then slows; stops stamina regen.", "pt": "Explosão que congela e depois deixa lento; trava regeneração de stamina.", "es": "Explosión que congela y luego ralentiza; bloquea la regeneración de aguante.", "ru": "Взрыв замораживает, затем замедляет; останавливает восстановление выносливости." },
+      "dica": { "en": "Don't burn all your stamina before fighting the holder.", "pt": "Não gaste toda a stamina antes de entrar na luta com o portador.", "es": "No gastes todo el aguante antes de pelear con el portador.", "ru": "Не тратьте всю выносливость перед боем с носителем." },
       "counters": [
-        { "item": "debuff-reducer", "peso": 1, "motivo": "Congelamento/slow mais curtos." }
+        { "item": "debuff-reducer", "peso": 1, "motivo": { "en": "Shorter freeze/slow.", "pt": "Congelamento/slow mais curtos.", "es": "Congelación/ralentización más cortas.", "ru": "Заморозка/замедление короче." } }
       ]
     },
     {
       "item": "echo-shard", "perigo": 2,
-      "alerta": "Repete uma habilidade (não-ultimate): espere dois stuns/combos seguidos.",
-      "dica": "Depois que o inimigo usar a habilidade principal, ela pode vir de novo imediatamente.",
+      "alerta": { "en": "Repeats an ability (non-ult): expect two stuns/combos in a row.", "pt": "Repete uma habilidade (não-ultimate): espere dois stuns/combos seguidos.", "es": "Repite una habilidad (no la ulti): espera dos stuns/combos seguidos.", "ru": "Повторяет способность (не ульту): ждите два стана/комбо подряд." },
+      "dica": { "en": "After the enemy uses their main ability, it can come again right away.", "pt": "Depois que o inimigo usar a habilidade principal, ela pode vir de novo imediatamente.", "es": "Después de que el enemigo use su habilidad principal, puede volver al instante.", "ru": "После основной способности врага она может сразу прилететь снова." },
       "counters": []
     },
     {
       "item": "refresher", "perigo": 3,
-      "alerta": "Reseta TODOS os cooldowns, inclusive a ultimate. Ultimate dupla!",
-      "dica": "Depois da 1ª ultimate, não assuma que acabou. Guarde um ativo defensivo.",
+      "alerta": { "en": "Resets ALL cooldowns, including the ult. Double ult!", "pt": "Reseta TODOS os cooldowns, inclusive a ultimate. Ultimate dupla!", "es": "Reinicia TODOS los tiempos de reutilización, incluida la ulti. ¡Ulti doble!", "ru": "Сбрасывает ВСЕ перезарядки, включая ульту. Двойная ульта!" },
+      "dica": { "en": "After the 1st ult, don't assume it's over. Save a defensive active.", "pt": "Depois da 1ª ultimate, não assuma que acabou. Guarde um ativo defensivo.", "es": "Tras la 1.ª ulti, no des por hecho que se acabó. Guarda un activo defensivo.", "ru": "После 1-й ульты не думайте, что всё кончилось. Придержите защитную активку." },
       "counters": [
-        { "item": "spellbreaker", "peso": 1, "motivo": "Reduz o burst spirit repetido." },
-        { "item": "spirit-resilience", "peso": 1, "motivo": "Aguenta a segunda rodada de habilidades." }
+        { "item": "spellbreaker", "peso": 1, "motivo": { "en": "Reduces the repeated spirit burst.", "pt": "Reduz o burst spirit repetido.", "es": "Reduce el burst espiritual repetido.", "ru": "Снижает повторный спиритический бёрст." } },
+        { "item": "spirit-resilience", "peso": 1, "motivo": { "en": "Survive the second round of abilities.", "pt": "Aguenta a segunda rodada de habilidades.", "es": "Aguanta la segunda ronda de habilidades.", "ru": "Помогает пережить второй раунд способностей." } }
       ]
     },
     {
       "item": "unstoppable", "perigo": 2,
-      "alerta": "5,5s imune a stun, silence, sleep, root e disarm.",
-      "dica": "NÃO gaste seu CC enquanto o Unstoppable estiver ativo. Espere acabar e aí use.",
+      "alerta": { "en": "5.5s immune to stun, silence, sleep, root and disarm.", "pt": "5,5s imune a stun, silence, sleep, root e disarm.", "es": "5,5 s inmune a stun, silencio, sueño, inmovilización y desarme.", "ru": "5,5 с иммунитета к стану, безмолвию, сну, обездвиживанию и обезоруживанию." },
+      "dica": { "en": "DON'T waste your CC while Unstoppable is active. Wait for it to end, then use it.", "pt": "NÃO gaste seu CC enquanto o Unstoppable estiver ativo. Espere acabar e aí use.", "es": "NO gastes tu CC mientras Imparable esté activo. Espera a que acabe y entonces úsalo.", "ru": "НЕ тратьте контроль, пока активна Неудержимость. Дождитесь окончания и тогда используйте." },
       "counters": []
     },
     {
       "item": "ethereal-shift", "perigo": 2,
-      "alerta": "4s invulnerável.",
-      "dica": "Não use ultimate/burst no alvo dentro do Ethereal Shift. Reposicione e espere ele sair.",
+      "alerta": { "en": "4s invulnerable.", "pt": "4s invulnerável.", "es": "4 s invulnerable.", "ru": "4 с неуязвимости." },
+      "dica": { "en": "Don't use ult/burst on a target inside Ethereal Shift. Reposition and wait for it to come out.", "pt": "Não use ultimate/burst no alvo dentro do Ethereal Shift. Reposicione e espere ele sair.", "es": "No uses ulti/burst en un objetivo dentro de Transformación Etérea. Reposiciónate y espera a que salga.", "ru": "Не тратьте ульту/бёрст на цель в Развоплощении. Смените позицию и дождитесь выхода." },
       "counters": []
     },
     {
       "item": "metal-skin", "perigo": 2,
-      "alerta": "5s imune a balas.",
-      "dica": "Se você é de arma, pare de atirar nele: mude de alvo ou use habilidades.",
+      "alerta": { "en": "5s immune to bullets.", "pt": "5s imune a balas.", "es": "5 s inmune a las balas.", "ru": "5 с иммунитета к пулям." },
+      "dica": { "en": "If you're a gun hero, stop shooting him: switch targets or use abilities.", "pt": "Se você é de arma, pare de atirar nele: mude de alvo ou use habilidades.", "es": "Si eres de armas, deja de dispararle: cambia de objetivo o usa habilidades.", "ru": "Если вы играете от оружия, не стреляйте в него: смените цель или используйте способности." },
       "counters": []
     },
     {
       "item": "divine-barrier", "perigo": 1,
-      "alerta": "Suporte pode limpar debuffs e dar barreira num aliado.",
-      "dica": "Force o Divine Barrier antes de usar seu CC mais importante.",
+      "alerta": { "en": "Support can cleanse debuffs and give an ally a barrier.", "pt": "Suporte pode limpar debuffs e dar barreira num aliado.", "es": "El apoyo puede limpiar desventajas y dar una barrera a un aliado.", "ru": "Саппорт может снять дебаффы и дать союзнику барьер." },
+      "dica": { "en": "Bait out Divine Barrier before using your key CC.", "pt": "Force o Divine Barrier antes de usar seu CC mais importante.", "es": "Fuerza la Barrera Divina antes de usar tu CC más importante.", "ru": "Вынудите использовать Божественный барьер, прежде чем тратить свой главный контроль." },
       "counters": []
     },
     {
       "item": "cheat-death", "perigo": 2,
-      "alerta": "Não morre por 4,5s ao levar dano letal (com dano/cura reduzidos).",
-      "dica": "Não gaste ult em quem acabou de ativar Cheat Death: espere os 4,5s e finalize depois.",
+      "alerta": { "en": "Can't die for 4.5s after taking lethal damage (with reduced damage/healing).", "pt": "Não morre por 4,5s ao levar dano letal (com dano/cura reduzidos).", "es": "No muere durante 4,5 s al recibir daño letal (con daño/curación reducidos).", "ru": "Не умирает 4,5 с после смертельного урона (со сниженным уроном/лечением)." },
+      "dica": { "en": "Don't waste your ult on someone who just triggered Cheat Death: wait out the 4.5s and finish them after.", "pt": "Não gaste ult em quem acabou de ativar Cheat Death: espere os 4,5s e finalize depois.", "es": "No gastes la ulti en quien acaba de activar Burlar a la Muerte: espera los 4,5 s y remátalo después.", "ru": "Не тратьте ульту на того, у кого только что сработал Обман смерти: подождите 4,5 с и добейте." },
       "counters": []
     },
     {
       "item": "vampiric-burst", "perigo": 2,
-      "alerta": "5s de roubo de vida, cadência alta e munição infinita.",
-      "dica": "Recue ou desarme durante os 5s; trocar tiro com ele nessa hora é perder.",
+      "alerta": { "en": "5s of lifesteal, high fire rate and infinite ammo.", "pt": "5s de roubo de vida, cadência alta e munição infinita.", "es": "5 s de robo de vida, cadencia alta y munición infinita.", "ru": "5 с вампиризма, высокой скорострельности и бесконечных патронов." },
+      "dica": { "en": "Back off or disarm him during the 5s; trading shots with him then is a losing fight.", "pt": "Recue ou desarme durante os 5s; trocar tiro com ele nessa hora é perder.", "es": "Retrocede o desármalo durante los 5 s; intercambiar disparos con él en ese momento es perder.", "ru": "Отступите или обезоружьте его на эти 5 с; перестрелка с ним в этот момент проигрышна." },
       "counters": [
-        { "item": "toxic-bullets", "peso": 2, "meu_heroi_tag": "gun", "motivo": "Corta a cura do lifesteal." },
-        { "item": "healbane", "peso": 2, "meu_heroi_tag": "spirit", "motivo": "Corta a cura do lifesteal." },
-        { "item": "disarming-hex", "peso": 1, "motivo": "Desarma durante o ativo." },
-        { "item": "metal-skin", "peso": 1, "motivo": "Sem balas, sem lifesteal." }
+        { "item": "toxic-bullets", "peso": 2, "meu_heroi_tag": "gun", "motivo": { "en": "Cuts the lifesteal healing.", "pt": "Corta a cura do lifesteal.", "es": "Corta la curación del robo de vida.", "ru": "Режет лечение от вампиризма." } },
+        { "item": "healbane", "peso": 2, "meu_heroi_tag": "spirit", "motivo": { "en": "Cuts the lifesteal healing.", "pt": "Corta a cura do lifesteal.", "es": "Corta la curación del robo de vida.", "ru": "Режет лечение от вампиризма." } },
+        { "item": "disarming-hex", "peso": 1, "motivo": { "en": "Disarms him during the active.", "pt": "Desarma durante o ativo.", "es": "Lo desarma mientras dura el activo.", "ru": "Обезоруживает во время активки." } },
+        { "item": "metal-skin", "peso": 1, "motivo": { "en": "No bullets, no lifesteal.", "pt": "Sem balas, sem lifesteal.", "es": "Sin balas, no hay robo de vida.", "ru": "Нет пуль, нет вампиризма." } }
       ]
     },
     {
       "item": "leech", "perigo": 2,
-      "alerta": "28% de roubo de vida (bala + spirit).",
-      "dica": "Trocas longas favorecem ele. Burst rápido ou anti-cura.",
+      "alerta": { "en": "28% lifesteal (bullet + spirit).", "pt": "28% de roubo de vida (bala + spirit).", "es": "28% de robo de vida (balas + espiritual).", "ru": "28% вампиризма (пули + спиритический урон)." },
+      "dica": { "en": "Long trades favor him. Quick burst or anti-heal.", "pt": "Trocas longas favorecem ele. Burst rápido ou anti-cura.", "es": "Los intercambios largos le favorecen. Burst rápido o anticuración.", "ru": "Долгие размены в его пользу. Быстрый бёрст или антихил." },
       "counters": [
-        { "item": "toxic-bullets", "peso": 3, "meu_heroi_tag": "gun", "motivo": "Anti-cura." },
-        { "item": "healbane", "peso": 3, "meu_heroi_tag": "spirit", "motivo": "Anti-cura." },
-        { "item": "inhibitor", "peso": 1, "meu_heroi_tag": "gun", "motivo": "-40% cura recebida." }
+        { "item": "toxic-bullets", "peso": 3, "meu_heroi_tag": "gun", "motivo": { "en": "Anti-heal.", "pt": "Anti-cura.", "es": "Anticuración.", "ru": "Антихил." } },
+        { "item": "healbane", "peso": 3, "meu_heroi_tag": "spirit", "motivo": { "en": "Anti-heal.", "pt": "Anti-cura.", "es": "Anticuración.", "ru": "Антихил." } },
+        { "item": "inhibitor", "peso": 1, "meu_heroi_tag": "gun", "motivo": { "en": "-40% healing received.", "pt": "-40% cura recebida.", "es": "-40% de curación recibida.", "ru": "-40% получаемого лечения." } }
       ]
     },
     {
       "item": "siphon-bullets", "perigo": 1,
-      "alerta": "Rouba vida máxima com os tiros.",
-      "dica": "Evite trocas longas de tiro com ele.",
+      "alerta": { "en": "Steals max health with his shots.", "pt": "Rouba vida máxima com os tiros.", "es": "Roba vida máxima con sus disparos.", "ru": "Крадёт максимальное здоровье выстрелами." },
+      "dica": { "en": "Avoid long gunfights with him.", "pt": "Evite trocas longas de tiro com ele.", "es": "Evita los intercambios largos de disparos con él.", "ru": "Избегайте долгих перестрелок с ним." },
       "counters": [
-        { "item": "plated-armor", "peso": 1, "motivo": "Chance de anular efeitos on-hit das balas." },
-        { "item": "toxic-bullets", "peso": 1, "meu_heroi_tag": "gun", "motivo": "Reduz a cura dele." }
+        { "item": "plated-armor", "peso": 1, "motivo": { "en": "Chance to negate bullet on-hit effects.", "pt": "Chance de anular efeitos on-hit das balas.", "es": "Probabilidad de anular los efectos al impacto de las balas.", "ru": "Шанс отменить эффекты пуль при попадании." } },
+        { "item": "toxic-bullets", "peso": 1, "meu_heroi_tag": "gun", "motivo": { "en": "Reduces his healing.", "pt": "Reduz a cura dele.", "es": "Reduce su curación.", "ru": "Снижает его лечение." } }
       ]
     },
     {
       "item": "infuser", "perigo": 1,
-      "alerta": "Ativo: spirit lifesteal + spirit power por 7s.",
-      "dica": "Saia do alcance durante os 7s.",
+      "alerta": { "en": "Active: spirit lifesteal + spirit power for 7s.", "pt": "Ativo: spirit lifesteal + spirit power por 7s.", "es": "Activo: robo de vida espiritual + poder espiritual durante 7 s.", "ru": "Активка: спиритический вампиризм + спиритическая мощь на 7 с." },
+      "dica": { "en": "Stay out of range for the 7s.", "pt": "Saia do alcance durante os 7s.", "es": "Sal de su alcance durante los 7 s.", "ru": "Уходите из радиуса на эти 7 с." },
       "counters": [
-        { "item": "healbane", "peso": 2, "meu_heroi_tag": "spirit", "motivo": "Anti-cura." },
-        { "item": "toxic-bullets", "peso": 1, "meu_heroi_tag": "gun", "motivo": "Anti-cura." }
+        { "item": "healbane", "peso": 2, "meu_heroi_tag": "spirit", "motivo": { "en": "Anti-heal.", "pt": "Anti-cura.", "es": "Anticuración.", "ru": "Антихил." } },
+        { "item": "toxic-bullets", "peso": 1, "meu_heroi_tag": "gun", "motivo": { "en": "Anti-heal.", "pt": "Anti-cura.", "es": "Anticuración.", "ru": "Антихил." } }
       ]
     },
     {
       "item": "healing-nova", "perigo": 1,
-      "alerta": "Cura em área para o time inimigo.",
-      "dica": "Foque o burst depois que a Nova for usada (60s de cooldown).",
+      "alerta": { "en": "AoE heal for the enemy team.", "pt": "Cura em área para o time inimigo.", "es": "Curación en área para el equipo enemigo.", "ru": "Лечение по площади для вражеской команды." },
+      "dica": { "en": "Commit your burst after the Nova is used (60s cooldown).", "pt": "Foque o burst depois que a Nova for usada (60s de cooldown).", "es": "Concentra el burst después de que use la Nova Curativa (60 s de reutilización).", "ru": "Вкладывайте бёрст после того, как использована Вспышка исцеления (перезарядка 60 с)." },
       "counters": [
-        { "item": "healbane", "peso": 1, "meu_heroi_tag": "spirit", "motivo": "Anti-cura." },
-        { "item": "toxic-bullets", "peso": 1, "meu_heroi_tag": "gun", "motivo": "Anti-cura." }
+        { "item": "healbane", "peso": 1, "meu_heroi_tag": "spirit", "motivo": { "en": "Anti-heal.", "pt": "Anti-cura.", "es": "Anticuración.", "ru": "Антихил." } },
+        { "item": "toxic-bullets", "peso": 1, "meu_heroi_tag": "gun", "motivo": { "en": "Anti-heal.", "pt": "Anti-cura.", "es": "Anticuración.", "ru": "Антихил." } }
       ]
     },
     {
       "item": "rescue-beam", "perigo": 1,
-      "alerta": "Pode curar e PUXAR um aliado pra longe do seu combo.",
-      "dica": "Mate o alvo rápido ou corte a linha de visão do suporte.",
+      "alerta": { "en": "Can heal and PULL an ally away from your combo.", "pt": "Pode curar e PUXAR um aliado pra longe do seu combo.", "es": "Puede curar y ARRASTRAR a un aliado lejos de tu combo.", "ru": "Может вылечить и ВЫТЯНУТЬ союзника из-под вашего комбо." },
+      "dica": { "en": "Kill the target fast or break the support's line of sight.", "pt": "Mate o alvo rápido ou corte a linha de visão do suporte.", "es": "Mata al objetivo rápido o corta la línea de visión del apoyo.", "ru": "Убейте цель быстро или перекройте саппорту линию обзора." },
       "counters": [
-        { "item": "healbane", "peso": 1, "meu_heroi_tag": "spirit", "motivo": "Anti-cura." },
-        { "item": "toxic-bullets", "peso": 1, "meu_heroi_tag": "gun", "motivo": "Anti-cura." }
+        { "item": "healbane", "peso": 1, "meu_heroi_tag": "spirit", "motivo": { "en": "Anti-heal.", "pt": "Anti-cura.", "es": "Anticuración.", "ru": "Антихил." } },
+        { "item": "toxic-bullets", "peso": 1, "meu_heroi_tag": "gun", "motivo": { "en": "Anti-heal.", "pt": "Anti-cura.", "es": "Anticuración.", "ru": "Антихил." } }
       ]
     },
     {
       "item": "silencer", "perigo": 2,
-      "alerta": "As balas dele reduzem seu dano spirit em 25% e acumulam silence em você.",
-      "dica": "Se você é de spirit, não troque tiro longo com ele: entre, use combo e saia.",
+      "alerta": { "en": "His bullets reduce your spirit damage by 25% and build up silence on you.", "pt": "As balas dele reduzem seu dano spirit em 25% e acumulam silence em você.", "es": "Sus balas reducen tu daño espiritual un 25% y te acumulan silencio.", "ru": "Его пули снижают ваш спиритический урон на 25% и накапливают на вас безмолвие." },
+      "dica": { "en": "If you're a spirit hero, don't trade shots with him for long: go in, combo, get out.", "pt": "Se você é de spirit, não troque tiro longo com ele: entre, use combo e saia.", "es": "Si eres de espiritual, no te enzarces en tiroteos largos con él: entra, haz el combo y sal.", "ru": "Если вы играете от спиритизма, не перестреливайтесь с ним долго: зашли, прокомбили, вышли." },
       "counters": [
-        { "item": "plated-armor", "peso": 2, "motivo": "Chance de anular efeitos on-hit (inclui o acúmulo)." },
-        { "item": "metal-skin", "peso": 2, "motivo": "Sem bala, sem silence." },
-        { "item": "debuff-reducer", "peso": 1, "motivo": "Silence mais curto." }
+        { "item": "plated-armor", "peso": 2, "motivo": { "en": "Chance to negate on-hit effects (including the build-up).", "pt": "Chance de anular efeitos on-hit (inclui o acúmulo).", "es": "Probabilidad de anular efectos al impacto (incluida la acumulación).", "ru": "Шанс отменить эффекты при попадании (включая накопление)." } },
+        { "item": "metal-skin", "peso": 2, "motivo": { "en": "No bullets, no silence.", "pt": "Sem bala, sem silence.", "es": "Sin balas, no hay silencio.", "ru": "Нет пуль, нет безмолвия." } },
+        { "item": "debuff-reducer", "peso": 1, "motivo": { "en": "Shorter silence.", "pt": "Silence mais curto.", "es": "Silencio más corto.", "ru": "Безмолвие короче." } }
       ]
     },
     {
       "item": "inhibitor", "perigo": 1,
-      "alerta": "Os tiros dele reduzem seu dano em 30% e sua cura em 40%.",
-      "dica": "Evite ficar exposto aos tiros dele por muito tempo.",
+      "alerta": { "en": "His shots reduce your damage by 30% and your healing by 40%.", "pt": "Os tiros dele reduzem seu dano em 30% e sua cura em 40%.", "es": "Sus disparos reducen tu daño un 30% y tu curación un 40%.", "ru": "Его выстрелы снижают ваш урон на 30% и лечение на 40%." },
+      "dica": { "en": "Avoid staying exposed to his fire for long.", "pt": "Evite ficar exposto aos tiros dele por muito tempo.", "es": "Evita quedarte expuesto a sus disparos mucho tiempo.", "ru": "Не подставляйтесь под его выстрелы надолго." },
       "counters": [
-        { "item": "plated-armor", "peso": 1, "motivo": "Chance de anular efeitos on-hit." },
-        { "item": "metal-skin", "peso": 1, "motivo": "Imune às balas." }
+        { "item": "plated-armor", "peso": 1, "motivo": { "en": "Chance to negate on-hit effects.", "pt": "Chance de anular efeitos on-hit.", "es": "Probabilidad de anular efectos al impacto.", "ru": "Шанс отменить эффекты при попадании." } },
+        { "item": "metal-skin", "peso": 1, "motivo": { "en": "Immune to bullets.", "pt": "Imune às balas.", "es": "Inmune a las balas.", "ru": "Иммунитет к пулям." } }
       ]
     },
     {
       "item": "return-fire", "perigo": 1,
-      "alerta": "Por 6,5s devolve balas para quem atirar nele.",
-      "dica": "Pare de atirar e use habilidades enquanto o efeito estiver ativo.",
+      "alerta": { "en": "For 6.5s, reflects bullets back at whoever shoots him.", "pt": "Por 6,5s devolve balas para quem atirar nele.", "es": "Durante 6,5 s devuelve las balas a quien le dispare.", "ru": "6,5 с отражает пули в того, кто по нему стреляет." },
+      "dica": { "en": "Stop shooting and use abilities while it's active.", "pt": "Pare de atirar e use habilidades enquanto o efeito estiver ativo.", "es": "Deja de disparar y usa habilidades mientras el efecto esté activo.", "ru": "Прекратите стрелять и используйте способности, пока эффект активен." },
       "counters": []
     },
     {
       "item": "shadow-weave", "perigo": 1,
-      "alerta": "Fica invisível por até 13s: emboscada vindo.",
-      "dica": "Fique perto do time e preste atenção em sons. Dano revela brevemente.",
+      "alerta": { "en": "Goes invisible for up to 13s: ambush incoming.", "pt": "Fica invisível por até 13s: emboscada vindo.", "es": "Se vuelve invisible hasta 13 s: emboscada en camino.", "ru": "Становится невидимым на срок до 13 с: готовьтесь к засаде." },
+      "dica": { "en": "Stay near your team and listen for sounds. Damage briefly reveals him.", "pt": "Fique perto do time e preste atenção em sons. Dano revela brevemente.", "es": "Quédate cerca del equipo y presta atención a los sonidos. El daño lo revela brevemente.", "ru": "Держитесь рядом с командой и слушайте звуки. Урон ненадолго его раскрывает." },
       "counters": []
     },
     {
       "item": "glass-cannon", "perigo": 1,
-      "alerta": "Dano de arma muito alto, mas frágil.",
-      "dica": "Foque ele primeiro nas lutas.",
+      "alerta": { "en": "Very high gun damage, but fragile.", "pt": "Dano de arma muito alto, mas frágil.", "es": "Daño de arma muy alto, pero frágil.", "ru": "Очень высокий урон оружием, но хрупкий." },
+      "dica": { "en": "Focus him first in fights.", "pt": "Foque ele primeiro nas lutas.", "es": "Céntrate en él primero en las peleas.", "ru": "Фокусьте его первым в драках." },
       "counters": [
-        { "item": "bullet-resilience", "peso": 1, "motivo": "Resistência a bala." },
-        { "item": "metal-skin", "peso": 1, "motivo": "Imune às balas quando ele te focar." }
+        { "item": "bullet-resilience", "peso": 1, "motivo": { "en": "Bullet resist.", "pt": "Resistência a bala.", "es": "Resistencia a balas.", "ru": "Сопротивляемость пулям." } },
+        { "item": "metal-skin", "peso": 1, "motivo": { "en": "Immune to bullets when he focuses you.", "pt": "Imune às balas quando ele te focar.", "es": "Inmune a las balas cuando te focalice.", "ru": "Иммунитет к пулям, когда он вас фокусит." } }
       ]
     },
     {
       "item": "armor-piercer", "perigo": 1,
-      "alerta": "Balas com chance de ignorar sua resistência a bala.",
-      "dica": "Resistência a bala vale menos contra ele; prefira vida e Metal Skin.",
+      "alerta": { "en": "Bullets have a chance to ignore your bullet resist.", "pt": "Balas com chance de ignorar sua resistência a bala.", "es": "Balas con probabilidad de ignorar tu resistencia a balas.", "ru": "Пули с шансом игнорировать вашу сопротивляемость пулям." },
+      "dica": { "en": "Bullet resist is worth less against him; go for health and Metal Skin.", "pt": "Resistência a bala vale menos contra ele; prefira vida e Metal Skin.", "es": "La resistencia a balas vale menos contra él; prioriza vida y Piel de Metal.", "ru": "Сопротивляемость пулям против него слабее; берите здоровье и Металлическую кожу." },
       "counters": [
-        { "item": "metal-skin", "peso": 1, "motivo": "Imunidade não é afetada pela perfuração." },
-        { "item": "extra-health", "peso": 1, "motivo": "Vida bruta em vez de resistência." }
+        { "item": "metal-skin", "peso": 1, "motivo": { "en": "Immunity isn't affected by armor piercing.", "pt": "Imunidade não é afetada pela perfuração.", "es": "La inmunidad no se ve afectada por la perforación.", "ru": "Иммунитет не пробивается." } },
+        { "item": "extra-health", "peso": 1, "motivo": { "en": "Raw health instead of resist.", "pt": "Vida bruta em vez de resistência.", "es": "Vida pura en lugar de resistencia.", "ru": "Чистое здоровье вместо сопротивляемости." } }
       ]
     },
     {
       "item": "spirit-burn", "perigo": 1,
-      "alerta": "Burst de spirit dele aplica queimadura com -70% na sua cura.",
-      "dica": "Sua cura será fraca depois do combo dele.",
+      "alerta": { "en": "His spirit burst applies a burn with -70% to your healing.", "pt": "Burst de spirit dele aplica queimadura com -70% na sua cura.", "es": "Su burst espiritual aplica una quemadura con -70% a tu curación.", "ru": "Его спиритический бёрст накладывает ожог: -70% к вашему лечению." },
+      "dica": { "en": "Your healing will be weak after his combo.", "pt": "Sua cura será fraca depois do combo dele.", "es": "Tu curación será débil después de su combo.", "ru": "После его комбо ваше лечение будет слабым." },
       "counters": [
-        { "item": "spirit-resilience", "peso": 1, "motivo": "Reduz o burst que ativa o efeito." }
+        { "item": "spirit-resilience", "peso": 1, "motivo": { "en": "Reduces the burst that triggers the effect.", "pt": "Reduz o burst que ativa o efeito.", "es": "Reduce el burst que activa el efecto.", "ru": "Снижает бёрст, который запускает эффект." } }
       ]
     },
     {
       "item": "escalating-exposure", "perigo": 1,
-      "alerta": "Reduz sua resistência spirit ao longo da luta.",
-      "dica": "Lutas longas contra ele são ruins: entre e saia.",
+      "alerta": { "en": "Lowers your spirit resist over the course of the fight.", "pt": "Reduz sua resistência spirit ao longo da luta.", "es": "Reduce tu resistencia espiritual a lo largo de la pelea.", "ru": "Снижает вашу сопротивляемость спиритизму в ходе боя." },
+      "dica": { "en": "Long fights against him are bad: get in and out.", "pt": "Lutas longas contra ele são ruins: entre e saia.", "es": "Las peleas largas contra él son malas: entra y sal.", "ru": "Долгие бои против него невыгодны: заходите и выходите." },
       "counters": [
-        { "item": "spirit-resilience", "peso": 1, "motivo": "Compensa a redução de resistência." }
+        { "item": "spirit-resilience", "peso": 1, "motivo": { "en": "Offsets the resist reduction.", "pt": "Compensa a redução de resistência.", "es": "Compensa la reducción de resistencia.", "ru": "Компенсирует снижение сопротивляемости." } }
       ]
     },
     {
       "item": "scourge", "perigo": 1,
-      "alerta": "Aura de dano spirit + resistências por 10s.",
-      "dica": "Não fique colado nele enquanto o Scourge estiver ativo.",
+      "alerta": { "en": "Spirit damage aura + resists for 10s.", "pt": "Aura de dano spirit + resistências por 10s.", "es": "Aura de daño espiritual + resistencias durante 10 s.", "ru": "Аура спиритического урона + сопротивляемости на 10 с." },
+      "dica": { "en": "Don't stick to him while Scourge is active.", "pt": "Não fique colado nele enquanto o Scourge estiver ativo.", "es": "No te pegues a él mientras Azote esté activo.", "ru": "Не держитесь вплотную к нему, пока активна Кара." },
       "counters": [
-        { "item": "spirit-shielding", "peso": 1, "motivo": "Absorve o dano da aura." }
+        { "item": "spirit-shielding", "peso": 1, "motivo": { "en": "Absorbs the aura damage.", "pt": "Absorve o dano da aura.", "es": "Absorbe el daño del aura.", "ru": "Поглощает урон ауры." } }
       ]
     },
     {
       "item": "colossus", "perigo": 1,
-      "alerta": "Fica gigante por 7s: resistências, dano melee e slow em volta.",
-      "dica": "Afaste-se durante os 7s; não brigue corpo a corpo.",
+      "alerta": { "en": "Goes giant for 7s: resists, melee damage and a slow around him.", "pt": "Fica gigante por 7s: resistências, dano melee e slow em volta.", "es": "Se vuelve gigante durante 7 s: resistencias, daño cuerpo a cuerpo y ralentización a su alrededor.", "ru": "Становится гигантом на 7 с: сопротивляемости, урон в ближнем бою и замедление вокруг." },
+      "dica": { "en": "Back away during the 7s; don't fight him in melee.", "pt": "Afaste-se durante os 7s; não brigue corpo a corpo.", "es": "Aléjate durante los 7 s; no pelees cuerpo a cuerpo.", "ru": "Отойдите на эти 7 с; не деритесь в ближнем бою." },
       "counters": []
     },
     {
       "item": "magic-carpet", "perigo": 1,
-      "alerta": "Fuga voando por até 12s, imune a slows.",
-      "dica": "Use stun (não slow) para segurar quem tem Magic Carpet.",
+      "alerta": { "en": "Flying escape for up to 12s, immune to slows.", "pt": "Fuga voando por até 12s, imune a slows.", "es": "Huida volando hasta 12 s, inmune a ralentizaciones.", "ru": "Побег по воздуху на срок до 12 с, иммунитет к замедлениям." },
+      "dica": { "en": "Use stuns (not slows) to hold someone with Magic Carpet.", "pt": "Use stun (não slow) para segurar quem tem Magic Carpet.", "es": "Usa stun (no ralentización) para retener a quien tenga Alfombra Mágica.", "ru": "Используйте стан (а не замедление), чтобы удержать того, у кого Ковёр-самолёт." },
       "counters": [
-        { "item": "knockdown", "peso": 1, "motivo": "Stun mais forte em alvos no ar." }
+        { "item": "knockdown", "peso": 1, "motivo": { "en": "Stronger stun on airborne targets.", "pt": "Stun mais forte em alvos no ar.", "es": "Stun más fuerte en objetivos en el aire.", "ru": "Стан сильнее по целям в воздухе." } }
       ]
     },
     {
       "item": "warp-stone", "perigo": 1,
-      "alerta": "Teleporte curto de fuga com resistência a bala.",
-      "dica": "Silencie itens de movimento antes de tentar o abate.",
+      "alerta": { "en": "Short escape teleport with bullet resist.", "pt": "Teleporte curto de fuga com resistência a bala.", "es": "Teletransporte corto de huida con resistencia a balas.", "ru": "Короткий телепорт для побега с сопротивляемостью пулям." },
+      "dica": { "en": "Silence movement items before going for the kill.", "pt": "Silencie itens de movimento antes de tentar o abate.", "es": "Silencia los objetos de movilidad antes de ir a por la baja.", "ru": "Заблокируйте предметы передвижения, прежде чем идти на убийство." },
       "counters": [
-        { "item": "slowing-hex", "peso": 1, "motivo": "Silencia itens de movimento." }
+        { "item": "slowing-hex", "peso": 1, "motivo": { "en": "Silences movement items.", "pt": "Silencia itens de movimento.", "es": "Silencia objetos de movilidad.", "ru": "Блокирует предметы передвижения." } }
       ]
     },
     {
       "item": "majestic-leap", "perigo": 1,
-      "alerta": "Salta muito alto com barreira para fugir.",
-      "dica": "Alvo no ar = Knockdown mais forte.",
+      "alerta": { "en": "Leaps very high with a barrier to escape.", "pt": "Salta muito alto com barreira para fugir.", "es": "Salta muy alto con una barrera para huir.", "ru": "Очень высоко прыгает с барьером, чтобы сбежать." },
+      "dica": { "en": "Airborne target = stronger Knockdown.", "pt": "Alvo no ar = Knockdown mais forte.", "es": "Objetivo en el aire = Derribo más fuerte.", "ru": "Цель в воздухе = более сильный Нокдаун." },
       "counters": [
-        { "item": "slowing-hex", "peso": 1, "motivo": "Silencia itens de movimento e aumenta gravidade." }
+        { "item": "slowing-hex", "peso": 1, "motivo": { "en": "Silences movement items and increases gravity.", "pt": "Silencia itens de movimento e aumenta gravidade.", "es": "Silencia objetos de movilidad y aumenta la gravedad.", "ru": "Блокирует предметы передвижения и повышает гравитацию." } }
       ]
     }
   ]

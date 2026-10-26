@@ -3,41 +3,41 @@
   "regras": [
     {
       "id": "time-sem-interrupcao",
-      "titulo": "Seu time não tem stun e o inimigo tem ultimate canalizada",
+      "titulo": { "en": "Your team has no stun and the enemy has a channeled ultimate", "pt": "Seu time não tem stun e o inimigo tem ultimate canalizada", "es": "Tu equipo no tiene aturdimientos y el enemigo tiene una definitiva canalizada", "ru": "У вашей команды нет оглушений, а у врага есть поддерживаемая ульта" },
       "quando": { "aliados_sem_tag": "stun", "inimigos_tag": "channel-ult" },
       "recomendar": [
-        { "item": "knockdown", "peso": 2, "motivo": "Alguém precisa interromper as ultimates: seu time não tem stun." },
-        { "item": "silence-wave", "peso": 2, "motivo": "Seu time não tem como cortar canalizações." }
+        { "item": "knockdown", "peso": 2, "motivo": { "en": "Someone has to interrupt the ultimates: your team has no stun.", "pt": "Alguém precisa interromper as ultimates: seu time não tem stun.", "es": "Alguien tiene que interrumpir las definitivas: tu equipo no tiene aturdimientos.", "ru": "Кто-то должен прерывать ульты: в вашей команде нет оглушений." } },
+        { "item": "silence-wave", "peso": 2, "motivo": { "en": "Your team has no way to cut channels.", "pt": "Seu time não tem como cortar canalizações.", "es": "Tu equipo no tiene forma de cortar canalizaciones.", "ru": "Вашей команде нечем прерывать поддерживаемые способности." } }
       ]
     },
     {
       "id": "time-sem-cura",
-      "titulo": "Seu time não tem suporte que cura",
+      "titulo": { "en": "Your team has no healing support", "pt": "Seu time não tem suporte que cura", "es": "Tu equipo no tiene un apoyo que cure", "ru": "В вашей команде нет лечащей поддержки" },
       "quando": { "aliados_sem_tag": "healer" },
       "recomendar": [
-        { "item": "healing-nova", "peso": 1, "motivo": "Cura em área para o time: ninguém mais cura." },
-        { "item": "rescue-beam", "peso": 1, "motivo": "Salva um aliado (cura + puxa): seu time não tem suporte." }
+        { "item": "healing-nova", "peso": 1, "motivo": { "en": "AoE team heal: nobody else heals.", "pt": "Cura em área para o time: ninguém mais cura.", "es": "Curación en área para el equipo: nadie más cura.", "ru": "Лечение по области для команды: больше никто не лечит." } },
+        { "item": "rescue-beam", "peso": 1, "motivo": { "en": "Saves an ally (heal + pull): your team has no support.", "pt": "Salva um aliado (cura + puxa): seu time não tem suporte.", "es": "Salva a un aliado (cura + atrae): tu equipo no tiene apoyo.", "ru": "Спасает союзника (лечение + притягивание): в вашей команде нет поддержки." } }
       ]
     },
     {
       "id": "time-de-arma",
-      "titulo": "Seu time é focado em arma",
+      "titulo": { "en": "Your team is gun-focused", "pt": "Seu time é focado em arma", "es": "Tu equipo se centra en el daño de arma", "ru": "Ваша команда играет через оружие" },
       "quando": { "aliados_tag": "gun", "min": 4 },
       "recomendar": [
-        { "item": "heroic-aura", "peso": 2, "motivo": "Velocidade e cadência para todo o time de arma." },
-        { "item": "bullet-resist-shredder", "peso": 1, "meu_heroi_tag": "spirit", "motivo": "Seu dano spirit reduz a resistência a bala para os carries de arma do time." },
-        { "item": "alchemical-fire", "peso": 1, "motivo": "Reduz resistência a bala dos inimigos para o time." }
+        { "item": "heroic-aura", "peso": 2, "motivo": { "en": "Move speed and Fire Rate for the whole gun team.", "pt": "Velocidade e cadência para todo o time de arma.", "es": "Velocidad y cadencia de tiro para todo el equipo de arma.", "ru": "Скорость и скорострельность для всей команды на оружии." } },
+        { "item": "bullet-resist-shredder", "peso": 1, "meu_heroi_tag": "spirit", "motivo": { "en": "Your spirit damage lowers Bullet Resist for your team's gun carries.", "pt": "Seu dano spirit reduz a resistência a bala para os carries de arma do time.", "es": "Tu daño espiritual reduce la resistencia a balas para los carries de arma del equipo.", "ru": "Ваш урон спиритизмом снижает сопротивляемость пулям для керри на оружии в вашей команде." } },
+        { "item": "alchemical-fire", "peso": 1, "motivo": { "en": "Lowers enemy Bullet Resist for the team.", "pt": "Reduz resistência a bala dos inimigos para o time.", "es": "Reduce la resistencia a balas de los enemigos para el equipo.", "ru": "Снижает сопротивляемость пулям врагов для команды." } }
       ]
     },
     {
       "id": "time-de-spirit",
-      "titulo": "Seu time é focado em spirit",
+      "titulo": { "en": "Your team is spirit-focused", "pt": "Seu time é focado em spirit", "es": "Tu equipo se centra en el daño espiritual", "ru": "Ваша команда играет через спиритизм" },
       "quando": { "aliados_tag": "spirit", "min": 4 },
       "recomendar": [
-        { "item": "mystic-vulnerability", "peso": 2, "motivo": "Reduz resistência spirit dos inimigos para o time todo." },
-        { "item": "spirit-sap", "peso": 1, "motivo": "Reduz resistência spirit do alvo." },
-        { "item": "spirit-shredder", "peso": 1, "meu_heroi_tag": "gun", "motivo": "Seus tiros reduzem resistência spirit e dão spirit lifesteal ao time." },
-        { "item": "escalating-exposure", "peso": 1, "motivo": "Resistência spirit cai durante a luta." }
+        { "item": "mystic-vulnerability", "peso": 2, "motivo": { "en": "Lowers enemy Spirit Resist for the whole team.", "pt": "Reduz resistência spirit dos inimigos para o time todo.", "es": "Reduce la resistencia espiritual de los enemigos para todo el equipo.", "ru": "Снижает сопротивляемость спиритизму врагов для всей команды." } },
+        { "item": "spirit-sap", "peso": 1, "motivo": { "en": "Lowers the target's Spirit Resist.", "pt": "Reduz resistência spirit do alvo.", "es": "Reduce la resistencia espiritual del objetivo.", "ru": "Снижает сопротивляемость спиритизму цели." } },
+        { "item": "spirit-shredder", "peso": 1, "meu_heroi_tag": "gun", "motivo": { "en": "Your shots lower Spirit Resist and give Spirit Lifesteal to the team.", "pt": "Seus tiros reduzem resistência spirit e dão spirit lifesteal ao time.", "es": "Tus disparos reducen la resistencia espiritual y dan robo de vida espiritual al equipo.", "ru": "Ваши выстрелы снижают сопротивляемость спиритизму и дают команде кражу здоровья спиритизмом." } },
+        { "item": "escalating-exposure", "peso": 1, "motivo": { "en": "Spirit Resist drops over the course of the fight.", "pt": "Resistência spirit cai durante a luta.", "es": "La resistencia espiritual baja durante la pelea.", "ru": "Сопротивляемость спиритизму падает по ходу драки." } }
       ]
     }
   ]

@@ -2,41 +2,41 @@
   "_info": "Counters por herói inimigo: quando o herói está no time inimigo, cada item ganha 'peso' pontos. Pode ser editado dentro do jogo (aba Counters > Editar) e compartilhado por código. Itens marcados 'fonte: jogo' vêm de m_mapItemDraftCounterWeights do próprio Deadlock.",
   "herois": {
     "Seven": [
-      { "item": "knockdown", "peso": 3, "motivo": "Stun interrompe a Storm Cloud (o próprio jogo marca Nocaute como counter do Seven).", "fonte": "jogo" }
+      { "item": "knockdown", "peso": 3, "motivo": { "en": "Stun interrupts Storm Cloud (the game itself lists Knockdown as a Seven counter).", "pt": "Stun interrompe a Storm Cloud (o próprio jogo marca Nocaute como counter do Seven).", "es": "El stun interrumpe Nube de Tormenta (el propio juego marca Derribo como counter de Seven).", "ru": "Стан прерывает Грозовое облако (сама игра указывает Нокдаун как контрпредмет против Seven)." }, "fonte": "jogo" }
     ],
     "Vindicta": [
-      { "item": "knockdown", "peso": 2, "motivo": "Ela passa muito tempo voando: Nocaute é mais forte em alvos no ar (counter oficial do jogo).", "fonte": "jogo" },
-      { "item": "extra-health", "peso": 1, "motivo": "O Assassinate executa alvos com pouca vida: vida extra tira você da faixa de execução." }
+      { "item": "knockdown", "peso": 2, "motivo": { "en": "She spends a lot of time flying: Knockdown is stronger on airborne targets (official game counter).", "pt": "Ela passa muito tempo voando: Nocaute é mais forte em alvos no ar (counter oficial do jogo).", "es": "Pasa mucho tiempo volando: Derribo es más fuerte contra objetivos en el aire (counter oficial del juego).", "ru": "Она много летает: Нокдаун сильнее по целям в воздухе (официальный контрпредмет из игры)." }, "fonte": "jogo" },
+      { "item": "extra-health", "peso": 1, "motivo": { "en": "Assassinate executes low-health targets: extra health keeps you out of execute range.", "pt": "O Assassinate executa alvos com pouca vida: vida extra tira você da faixa de execução.", "es": "Asesinar ejecuta a objetivos con poca vida: la vida extra te saca del rango de ejecución.", "ru": "Контрольный выстрел добивает цели с малым здоровьем: дополнительное здоровье выводит вас из зоны добивания." } }
     ],
     "Deadman Danny": [
-      { "item": "knockdown", "peso": 2, "motivo": "Voa de jetpack: Nocaute é mais forte contra alvos no ar (counter oficial do jogo).", "fonte": "jogo" }
+      { "item": "knockdown", "peso": 2, "motivo": { "en": "Flies with a jetpack: Knockdown is stronger against airborne targets (official game counter).", "pt": "Voa de jetpack: Nocaute é mais forte contra alvos no ar (counter oficial do jogo).", "es": "Vuela con jetpack: Derribo es más fuerte contra objetivos en el aire (counter oficial del juego).", "ru": "Летает на джетпаке: Нокдаун сильнее против целей в воздухе (официальный контрпредмет из игры)." }, "fonte": "jogo" }
     ],
     "Paige": [
-      { "item": "healbane", "peso": 3, "meu_heroi_tag": "spirit", "motivo": "Paige cura e protege o time: seu dano spirit corta 35% da cura dela nos alvos." },
-      { "item": "toxic-bullets", "peso": 3, "meu_heroi_tag": "gun", "motivo": "Corta a cura que a Paige joga no alvo que você está focando." },
-      { "item": "decay", "peso": 2, "meu_heroi_tag": "spirit", "motivo": "-50% de cura recebida no alvo que a Paige está salvando." },
-      { "item": "inhibitor", "peso": 1, "meu_heroi_tag": "gun", "motivo": "-40% de cura recebida no alvo que você acerta." }
+      { "item": "healbane", "peso": 3, "meu_heroi_tag": "spirit", "motivo": { "en": "Paige heals and protects her team: your spirit damage cuts 35% of her healing on targets.", "pt": "Paige cura e protege o time: seu dano spirit corta 35% da cura dela nos alvos.", "es": "Paige cura y protege al equipo: tu daño espiritual corta un 35% de su curación en los objetivos.", "ru": "Paige лечит и защищает команду: ваш спиритический урон срезает 35% её лечения на целях." } },
+      { "item": "toxic-bullets", "peso": 3, "meu_heroi_tag": "gun", "motivo": { "en": "Cuts the healing Paige puts on the target you're focusing.", "pt": "Corta a cura que a Paige joga no alvo que você está focando.", "es": "Corta la curación que Paige lanza al objetivo que estás focalizando.", "ru": "Режет лечение, которое Paige даёт цели, которую вы фокусите." } },
+      { "item": "decay", "peso": 2, "meu_heroi_tag": "spirit", "motivo": { "en": "-50% healing received on the target Paige is saving.", "pt": "-50% de cura recebida no alvo que a Paige está salvando.", "es": "-50% de curación recibida en el objetivo que Paige está salvando.", "ru": "-50% получаемого лечения на цели, которую спасает Paige." } },
+      { "item": "inhibitor", "peso": 1, "meu_heroi_tag": "gun", "motivo": { "en": "-40% healing received on the target you hit.", "pt": "-40% de cura recebida no alvo que você acerta.", "es": "-40% de curación recibida en el objetivo al que aciertas.", "ru": "-40% получаемого лечения на цели, по которой вы попадаете." } }
     ],
     "Nurse Harrow": [
-      { "item": "healbane", "peso": 3, "meu_heroi_tag": "spirit", "motivo": "Nurse Harrow vive de cura: seu dano spirit corta 35% da cura no alvo." },
-      { "item": "toxic-bullets", "peso": 3, "meu_heroi_tag": "gun", "motivo": "Sangramento + corte de cura contra a cura da Nurse." },
-      { "item": "decay", "peso": 2, "meu_heroi_tag": "spirit", "motivo": "-50% de cura recebida: segura a cura dela e dos aliados que ela cura." },
-      { "item": "inhibitor", "peso": 1, "meu_heroi_tag": "gun", "motivo": "-40% de cura recebida no alvo que você acerta." }
+      { "item": "healbane", "peso": 3, "meu_heroi_tag": "spirit", "motivo": { "en": "Nurse Harrow lives off healing: your spirit damage cuts 35% of the healing on the target.", "pt": "Nurse Harrow vive de cura: seu dano spirit corta 35% da cura no alvo.", "es": "Nurse Harrow vive de la curación: tu daño espiritual corta un 35% de la curación en el objetivo.", "ru": "Nurse Harrow живёт за счёт лечения: ваш спиритический урон срезает 35% лечения на цели." } },
+      { "item": "toxic-bullets", "peso": 3, "meu_heroi_tag": "gun", "motivo": { "en": "Bleed + healing cut against Nurse's healing.", "pt": "Sangramento + corte de cura contra a cura da Nurse.", "es": "Sangrado + reducción de curación contra la curación de Nurse.", "ru": "Кровотечение + срез лечения против хила Nurse." } },
+      { "item": "decay", "peso": 2, "meu_heroi_tag": "spirit", "motivo": { "en": "-50% healing received: holds back healing on her and the allies she heals.", "pt": "-50% de cura recebida: segura a cura dela e dos aliados que ela cura.", "es": "-50% de curación recibida: frena su curación y la de los aliados que cura.", "ru": "-50% получаемого лечения: сдерживает лечение её и союзников, которых она лечит." } },
+      { "item": "inhibitor", "peso": 1, "meu_heroi_tag": "gun", "motivo": { "en": "-40% healing received on the target you hit.", "pt": "-40% de cura recebida no alvo que você acerta.", "es": "-40% de curación recibida en el objetivo al que aciertas.", "ru": "-40% получаемого лечения на цели, по которой вы попадаете." } }
     ],
     "Rem": [
-      { "item": "healbane", "peso": 3, "meu_heroi_tag": "spirit", "motivo": "Rem gruda em aliados para curar: corte a cura no alvo que ele está segurando." },
-      { "item": "toxic-bullets", "peso": 3, "meu_heroi_tag": "gun", "motivo": "Corta a cura do Rem no aliado que você está focando." },
-      { "item": "decay", "peso": 2, "meu_heroi_tag": "spirit", "motivo": "-50% de cura recebida no aliado que o Rem está curando." }
+      { "item": "healbane", "peso": 3, "meu_heroi_tag": "spirit", "motivo": { "en": "Rem latches onto allies to heal: cut the healing on the target he's holding.", "pt": "Rem gruda em aliados para curar: corte a cura no alvo que ele está segurando.", "es": "Rem se engancha a los aliados para curarlos: corta la curación del objetivo al que está sujetando.", "ru": "Rem цепляется к союзникам, чтобы лечить: срежьте лечение цели, которую он держит." } },
+      { "item": "toxic-bullets", "peso": 3, "meu_heroi_tag": "gun", "motivo": { "en": "Cuts Rem's healing on the ally you're focusing.", "pt": "Corta a cura do Rem no aliado que você está focando.", "es": "Corta la curación de Rem en el aliado que estás focalizando.", "ru": "Режет лечение Rem на его союзнике, которого вы фокусите." } },
+      { "item": "decay", "peso": 2, "meu_heroi_tag": "spirit", "motivo": { "en": "-50% healing received on the ally Rem is healing.", "pt": "-50% de cura recebida no aliado que o Rem está curando.", "es": "-50% de curación recibida en el aliado que Rem está curando.", "ru": "-50% получаемого лечения на союзнике, которого лечит Rem." } }
     ],    "McGinnis": [
-      { "item": "healbane", "peso": 2, "motivo": "Corta a cura das torretas/espectros de cura (counter oficial do jogo).", "fonte": "jogo" }
+      { "item": "healbane", "peso": 2, "motivo": { "en": "Cuts the healing from the healing turrets/spectres (official game counter).", "pt": "Corta a cura das torretas/espectros de cura (counter oficial do jogo).", "es": "Corta la curación de las torretas/espectros curativos (counter oficial del juego).", "ru": "Режет лечение от турелей/лечащих призраков (официальный контрпредмет из игры)." }, "fonte": "jogo" }
     ],
     "Haze": [
-      { "item": "metal-skin", "peso": 2, "motivo": "O Bullet Dance é dano de bala: Metal Skin anula a ultimate." },
-      { "item": "plated-armor", "peso": 1, "motivo": "Desvia parte das balas do Bullet Dance." }
+      { "item": "metal-skin", "peso": 2, "motivo": { "en": "Bullet Dance is bullet damage: Metal Skin negates the ult.", "pt": "O Bullet Dance é dano de bala: Metal Skin anula a ultimate.", "es": "Baile de Balas es daño de balas: Piel de Metal anula la ulti.", "ru": "Танец пуль наносит урон пулями: Металлическая кожа обнуляет ульту." } },
+      { "item": "plated-armor", "peso": 1, "motivo": { "en": "Deflects some of the Bullet Dance bullets.", "pt": "Desvia parte das balas do Bullet Dance.", "es": "Desvía parte de las balas de Baile de Balas.", "ru": "Отражает часть пуль Танца пуль." } }
     ],
     "Wraith": [
-      { "item": "metal-skin", "peso": 1, "motivo": "Anula o Full Auto (dano de arma)." },
-      { "item": "debuff-reducer", "peso": 1, "motivo": "Telekinesis segura menos tempo." }
+      { "item": "metal-skin", "peso": 1, "motivo": { "en": "Negates Full Auto (gun damage).", "pt": "Anula o Full Auto (dano de arma).", "es": "Anula Totalmente Automático (daño de arma).", "ru": "Обнуляет Сверхбыструю стрельбу (урон оружием)." } },
+      { "item": "debuff-reducer", "peso": 1, "motivo": { "en": "Telekinesis holds you for less time.", "pt": "Telekinesis segura menos tempo.", "es": "Telequinesis te retiene menos tiempo.", "ru": "Телекинез держит меньше." } }
     ]
   }
 }

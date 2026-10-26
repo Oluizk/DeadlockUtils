@@ -160,7 +160,7 @@ function mostrarDica(rec, tipo, ancora, statusExtra) {
   mostrarPainel(dicaItem.DUDicaIcone, true);
   mostrarPainel(dicaItem.DUDicaCustoLinha, true);
   mostrarPainel(dicaItem.DUDicaMotivos, true);
-  dicaItem.DUDicaRodape.text = "Clique para comprar (perto da loja)";
+  dicaItem.DUDicaRodape.text = T("dica.comprar");
   try { dicaItem.DUDicaIcone.SetImage(iconeItem(it)); } catch (e) {}
   dicaItem.DUDicaNome.text = nomeItem(it);
   var pode = podeComprar(it.id);
@@ -173,7 +173,7 @@ function mostrarDica(rec, tipo, ancora, statusExtra) {
   mostrarPainel(dicaItem.DUDicaContra, alvos.length > 0);
   if (alvos.length) {
     try { dicaItem.DUDicaHeroi.SetImage(imagemHeroi(alvos[0])); } catch (e) {}
-    dicaItem.DUDicaContraTexto.text = "Counter de <b>" + esc(alvos.join(", ")) + "</b>";
+    dicaItem.DUDicaContraTexto.text = T("dica.counterDe", "<b>" + esc(alvos.join(", ")) + "</b>");
   }
   dicaItem.DUDicaMotivos.text = rec.motivos.slice(0, 4).map(function (m) {
     return "<span class='" + (m.tipo === "build" ? "highlight_spirit" : "highlight_weapon") + "'>•</span> " + esc(m.texto);
@@ -242,7 +242,7 @@ function tickAviso() {
   var a = aviso.fila.shift();
   if (!a) { mostrarPainel(aviso.painel, false); return; }
   aviso.painel.SetHasClass("DUPerigo3", a.perigo >= 3);
-  aviso.titulo.text = esc(a.heroi) + " comprou <b>" + esc(a.nomeItem) + "</b>";
+  aviso.titulo.text = T("aviso.comprou", esc(a.heroi), "<b>" + esc(a.nomeItem) + "</b>");
   aviso.texto.text = esc(a.alerta);
   mostrarPainel(aviso.painel, true);
   aviso.ate = agoraSeg + (CONFIG.segundosAviso || 7);

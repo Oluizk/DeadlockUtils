@@ -1,7 +1,7 @@
 ﻿# Monta o pacote para publicar (GameBanana, Release do GitHub): dist\DeadlockUtils-vX.Y.Z.zip
 #   powershell -ExecutionPolicy Bypass -File tools\empacotar.ps1
 # O pacote leva o .vpk compilado SEM conta Steam (cada jogador informa a dele no jogo), o instalador
-# de um clique (tools\pacote) e o LEIA-ME em português e inglês. No fim, refaz o build normal para a
+# de um clique (tools\pacote) e o README em inglês e português. No fim, refaz o build normal para a
 # sua instalação local continuar com a sua conta.
 param([string]$Jogo)
 $ErrorActionPreference = "Stop"
@@ -22,13 +22,17 @@ $pasta = Join-Path $dist $nome
 if (Test-Path $pasta) { Remove-Item -Recurse -Force $pasta }
 New-Item -ItemType Directory -Force $pasta | Out-Null
 
+# Na raiz do pacote só o que o jogador clica (install.bat, uninstall.bat, README.txt); o resto em files\.
 $pacote = Join-Path $PSScriptRoot "pacote"
-Copy-Item (Join-Path $Raiz "build\pak42_dir.vpk") $pasta
-foreach ($f in "instalar.ps1", "achar-deadlock.ps1", "Instalar.bat", "Desinstalar.bat") { Copy-Item (Join-Path $pacote $f) $pasta }
-# LEIA-ME com a versão, em UTF-8 com BOM e CRLF (o Bloco de Notas mostra os acentos certo)
-$leia = [IO.File]::ReadAllText((Join-Path $pacote "LEIA-ME.txt"), [Text.Encoding]::UTF8).Replace("{VERSAO}", $versao)
+$arquivos = Join-Path $pasta "files"
+New-Item -ItemType Directory -Force $arquivos | Out-Null
+Copy-Item (Join-Path $Raiz "build\pak42_dir.vpk") $arquivos
+foreach ($f in "instalar.ps1", "achar-deadlock.ps1") { Copy-Item (Join-Path $pacote $f) $arquivos }
+foreach ($f in "install.bat", "uninstall.bat") { Copy-Item (Join-Path $pacote $f) $pasta }
+# README com a versão, em UTF-8 com BOM e CRLF (o Bloco de Notas mostra os acentos certo)
+$leia = [IO.File]::ReadAllText((Join-Path $pacote "README.txt"), [Text.Encoding]::UTF8).Replace("{VERSAO}", $versao)
 $leia = ($leia -replace "`r?`n", "`r`n")
-[IO.File]::WriteAllText((Join-Path $pasta "LEIA-ME.txt"), $leia, (New-Object Text.UTF8Encoding $true))
+[IO.File]::WriteAllText((Join-Path $pasta "README.txt"), $leia, (New-Object Text.UTF8Encoding $true))
 
 $zip = Join-Path $dist "$nome.zip"
 if (Test-Path $zip) { Remove-Item -Force $zip }

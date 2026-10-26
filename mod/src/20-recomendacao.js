@@ -15,7 +15,8 @@ function calcular(leitura) {
     inimigos: leitura.inimigos.map(function (j) { return { heroi: j.heroi, itens: j.itens }; }),
     meusItens: leitura.meusItens.concat(itensQueTenho()),
     tiers: [1, 2, 3, 4],
-    nomesPt: true,
+    nomeItem: nomeItem,
+    t: T,
     fase: DeadlockEngine.faseDoTempo(leitura.segundos),
     overrides: overrides,
   };
@@ -56,7 +57,7 @@ function codigoDeCounters(herois) {
 function lerCodigo(codigo) {
   var t = String(codigo || "").trim();
   var i = t.indexOf("DU1:");
-  if (i < 0) throw new Error("código precisa começar com DU1:");
+  if (i < 0) throw new Error(T("ed.erro.prefixo"));
   var obj = JSON.parse(deBase64(t.slice(i + 4).split(/\s/)[0]));
   var saida = {};
   Object.keys(obj.h || {}).forEach(function (nome) {

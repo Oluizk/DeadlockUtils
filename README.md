@@ -18,12 +18,12 @@ Mod de HUD para o **Deadlock** (Valve), feito em Panorama (a UI do próprio jogo
 **Para jogar** (não precisa compilar nada):
 
 1. Baixe o `DeadlockUtils-vX.Y.Z.zip` na página de [Releases](https://github.com/Oluizk/DeadlockUtils/releases) (ou no GameBanana) e extraia.
-2. Feche o Deadlock e dê dois cliques em **`Instalar.bat`**. Ele acha o jogo, habilita a pasta de addons no `gameinfo.gi` (com backup) e copia `pak42_dir.vpk` para `game\citadel\addons\`. No fim ele mostra o seu código de amigo da Steam, para o tracker.
+2. Feche o Deadlock e dê dois cliques em **`install.bat`**. Escolha o idioma do mod: **English** (padrão, Enter), **Português (pt-BR)**, **Español** ou **Русский**. Ele acha o jogo, habilita a pasta de addons no `gameinfo.gi` (com backup) e copia o mod para `game\citadel\addons\pak42_dir.vpk`. No fim ele mostra o seu código de amigo da Steam, para o tracker.
 3. Abra o jogo. No tracker, informe o código em loja (B) > Deadlock Utils > Configurações > Tracker.
 
-**`Desinstalar.bat`** remove o mod e volta o `gameinfo.gi` ao original (se não houver outros mods).
+Para trocar o idioma, rode o `install.bat` de novo (ele já sugere o idioma atual). **`uninstall.bat`** remove o mod e volta o `gameinfo.gi` ao original (se não houver outros mods).
 
-**A partir do código** (para quem mexe no mod): **`instalar-mod.bat`** compila e instala; **`desinstalar-mod.bat`** remove. Para gerar o pacote de publicação: `powershell -ExecutionPolicy Bypass -File tools\empacotar.ps1` (cria `dist\DeadlockUtils-vX.Y.Z.zip` sem a sua conta Steam gravada).
+**A partir do código** (para quem mexe no mod): o **`install.bat`** da raiz compila e instala (com a mesma escolha de idioma); o **`uninstall.bat`** remove. Para gerar o pacote de publicação: `powershell -ExecutionPolicy Bypass -File tools\empacotar.ps1` (cria `dist\DeadlockUtils-vX.Y.Z.zip` sem a sua conta Steam gravada).
 
 > **Depois de cada atualização do Deadlock** rode o instalador de novo (a Steam restaura o `gameinfo.gi`). Se o patch mexer no HUD, recompile com `powershell -ExecutionPolicy Bypass -File tools\build-mod.ps1 -AtualizarHud`.
 
@@ -57,14 +57,14 @@ O Panorama do Deadlock não tem armazenamento próprio, e o navegador embutido d
 2. Em **Build and deployment**, escolha **Deploy from a branch**, branch `main`, pasta `/ (root)` e salve.
 3. Depois de ~1 minuto, abra `https://oluizk.github.io/DeadlockUtils/mod/pagina/ponte.html` no navegador para conferir (página em branco com o título `DU_BOOT`).
 
-O `data/config.json` já aponta para esse endereço (`"urlPonte"`). Num fork, troque pelo endereço do seu GitHub Pages e rode `instalar-mod.bat` de novo.
+O `data/config.json` já aponta para esse endereço (`"urlPonte"`). Num fork, troque pelo endereço do seu GitHub Pages e rode o `install.bat` de novo.
 
 ### Configuração: `data/config.json`
 
 - `teclas.mapa` / `teclas.tracker`: teclas criadas pelo mod (`""` para não criar). **Alt+T não é usado** porque T é o Push-to-Talk do jogo: Alt+T abriria o microfone junto.
 - `urlPonte`: endereço **HTTPS** onde `mod/pagina/ponte.html` está publicado (ex.: GitHub Pages do repositório). O navegador embutido do jogo só abre páginas HTTPS (build de out/2026); sem isso o tracker e o salvamento dos counters editados ficam desligados (o resto funciona).
 - `accountId`: seu id Steam (SteamID3). Se ficar `null`, o build detecta pela pasta `Steam\userdata`. O tracker usa isso para achar sua partida ao vivo e o histórico com cada jogador.
-- `idioma`: `"pt"`, `"en"` ou `"es"`. Se ficar vazio, o mod usa o idioma do jogo.
+- `idioma`: idioma padrão do build local (`"en"`, `"pt"`, `"es"` ou `"ru"`; vazio = inglês). Quem instala escolhe no `install.bat`, que grava o idioma no `.vpk` instalado.
 - `itensPorSecao` (itens em cada seção do Tab), `segundosMarcaMapa` (quanto tempo a marca do mapa fica no minimapa), `buffPonteInicio`/`buffPonteIntervalo` (segundos), `segundosAviso`.
 
 ### Avisos
@@ -72,7 +72,7 @@ O `data/config.json` já aponta para esse endereço (`"urlPonte"`). Num fork, tr
 - O mod substitui o `hud.xml` do jogo: **outro mod que também substitua o `hud.xml` não funciona junto**.
 - A Valve não publicou regras sobre mods. Mods de HUD não tiveram banimentos até hoje; mas **timers e trackers são justamente o tipo de mod que a comunidade aponta como mais arriscado** (desde mar/2026 o matchmaking bloqueia mudanças de ConVars no `gameinfo.gi`; este mod mexe só nas SearchPaths). **Use por sua conta e risco.**
 - **Privacidade:** com `urlPonte` configurado, o mod abre essa página no navegador embutido do jogo (para o tracker e para salvar os counters editados), e o tracker envia ao `api.deadlock-api.com` os ids/nome Steam dos jogadores da partida.
-- Se o HUD não carregar, rode `desinstalar-mod.bat`.
+- Se o HUD não carregar, rode o `uninstall.bat`.
 
 ### Diagnóstico
 
@@ -90,7 +90,8 @@ O Panorama do Deadlock **não tem API de jogo em JavaScript**. O mod:
 ## Estrutura
 
 ```
-instalar-mod.bat / desinstalar-mod.bat
+install.bat / uninstall.bat   compila e instala / remove (a partir do código)
+tools/pacote/           instalador do pacote publicado (install.bat, uninstall.bat, files\instalar.ps1, README.txt)
 mod/src/*.js            script do HUD, em módulos (concatenados pelo build, em ordem)
   00-base  10-leitura  20-recomendacao  30-loja  35-editor  40-tab  50-mapa  60-ponte  70-tracker  90-principal
 mod/layout/*.xml        layouts próprios (aba, botão, faixa do Tab, aviso, mapa, tracker)
@@ -101,7 +102,7 @@ app/engine.js           motor de recomendação (mod e app web)
 data/                   itens, heróis, builds, regras e config: é aqui que a comunidade contribui
 tools/build-mod.ps1     compila o VPK (sem ferramentas da Valve)
 tools/atualizar-builds.ps1  regenera data/builds.json a partir do heroes.vdata do jogo
-data/textos.json        textos da interface por idioma (traduções da comunidade)
+data/textos.json        textos da interface por idioma (en, pt, es, ru); textos das regras ficam nos próprios arquivos de data/rules como { "en", "pt", "es", "ru" }
 tools/atualizar-mapa.ps1    regenera data/mapa.json (deadlock-api + túneis do Rem lidos do mapa com o Source2Viewer)
 tools/bin/s2v/          Source2Viewer CLI (não vai para o git; baixe em github.com/ValveResourceFormat/ValveResourceFormat/releases, arquivo cli-windows-x64.zip)
 test/hud-simulado.html  simula o HUD no navegador para testar o script sem abrir o jogo

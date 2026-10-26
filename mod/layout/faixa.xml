@@ -4,11 +4,11 @@
 	</styles>
 	<Panel class="DUFaixa">
 		<Panel id="DUFaixaSecaoCounters" class="DUFaixaSecao">
-			<Label class="DUFaixaTitulo" text="Counters" />
+			<Label class="DUFaixaTitulo" text="@faixa.counters" />
 			<Panel id="DUFaixaCounters" class="DUFaixaCartas" />
 		</Panel>
 		<Panel id="DUFaixaSecaoBuild" class="DUFaixaSecao">
-			<Label class="DUFaixaTitulo" text="Recomendados" />
+			<Label class="DUFaixaTitulo" text="@faixa.recomendados" />
 			<Panel id="DUFaixaBuild" class="DUFaixaCartas" />
 		</Panel>
 		<Label id="DUFaixaPorque" class="DUFaixaPorque DUEscondido" html="true" text=" " />

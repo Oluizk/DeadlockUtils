@@ -12,7 +12,37 @@
   const PESO_BUILD = 4;          // item que 100% dos jogadores compram vale 4 pontos
   const PESO_PROXIMA_FASE = 0.4; // itens da próxima fase aparecem com peso menor
   const FASES = ["inicio", "meio", "fim"];
-  const NOME_FASE = { inicio: "no início", meio: "no meio do jogo", fim: "no fim do jogo" };
+  // Textos que o motor gera. Quem chama pode passar estado.t(chave, valor1, valor2...) para traduzir;
+  // sem isso, usa estes (português, o app web).
+  const TEXTOS_MOTOR = {
+    "motor.build": "{1}% dos jogadores de {2} compram {3} ({4}% de vitória).",
+    "motor.fase.inicio": "no início", "motor.fase.meio": "no meio do jogo", "motor.fase.fim": "no fim do jogo",
+    "motor.titulo.build": "Build", "motor.titulo.proxima": "Próxima fase",
+    "motor.contra": "Contra {1}", "motor.itemDe": "{1} de {2}", "motor.inimigo": "Inimigo", "motor.decimal": ",",
+  };
+  function textoMotor(chave) {
+    let s = TEXTOS_MOTOR[chave];
+    if (s == null) return chave;
+    for (let i = 1; i < arguments.length; i++) s = s.split("{" + i + "}").join(String(arguments[i]));
+    return s;
+  }
+
+  // Textos dos dados (regras, alertas, motivos) podem vir traduzidos: { "en": "...", "pt": "...", ... }.
+  // Troca cada objeto desses pelo texto do idioma (senão inglês, senão português). Muda no lugar.
+  function ehTraducao(o) {
+    if (!o || typeof o !== "object" || Array.isArray(o) || (o.en == null && o.pt == null)) return false;
+    for (const k in o) if (typeof o[k] !== "string") return false;
+    return true;
+  }
+  function localizar(o, idioma) {
+    if (!o || typeof o !== "object") return o;
+    for (const k in o) {
+      const v = o[k];
+      if (ehTraducao(v)) o[k] = v[idioma] != null ? v[idioma] : v.en != null ? v.en : v.pt;
+      else if (v && typeof v === "object") localizar(v, idioma);
+    }
+    return o;
+  }
 
   function criarContexto(dados, estado) {
     const herois = dados.herois;
@@ -84,7 +114,8 @@
     const avisos = [];
     const pontuacao = {};
     const ordem = [];
-    const nomeDe = (item) => (estado.nomesPt && item.nome_pt) || item.nome;
+    const nomeDe = estado.nomeItem || ((item) => (estado.nomesPt && item.nome_pt) || item.nome);
+    const t = estado.t || textoMotor;
 
     function somar(tipo, rec, pontos, titulo, origem) {
       const item = itensPorId[rec.item];
@@ -120,9 +151,8 @@
           const pontos = par[1] * (PESO_BUILD * pick / 100 + Math.max(0, win - 50) / 5);
           somar("build", {
             item: linha[0],
-            motivo: fmt(pick) + "% dos jogadores de " + ctx.meuHeroi + " compram " + NOME_FASE[f] +
-              " (" + win.toFixed(1).replace(".", ",") + "% de vitória).",
-          }, pontos, f === fase ? "Build" : "Próxima fase", []);
+            motivo: t("motor.build", fmt(pick), ctx.meuHeroi, t("motor.fase." + f), win.toFixed(1).replace(".", t("motor.decimal"))),
+          }, pontos, t(f === fase ? "motor.titulo.build" : "motor.titulo.proxima"), []);
         });
       });
     }
@@ -137,7 +167,7 @@
     // 3) Counters por herói inimigo (o editor do jogo pode sobrescrever).
     const porHeroi = Object.assign({}, dados.countersHerois || {}, (estado.overrides && estado.overrides.herois) || {});
     ctx.inimigos.forEach(function (h) {
-      (porHeroi[h] || []).forEach(function (rec) { somar("counter", rec, rec.peso, "Contra " + h, [h]); });
+      (porHeroi[h] || []).forEach(function (rec) { somar("counter", rec, rec.peso, t("motor.contra", h), [h]); });
     });
 
     // 4) Itens perigosos comprados pelos inimigos.
@@ -147,11 +177,11 @@
         const ameaca = dados.ameacasPorItem[itemId];
         if (!ameaca) continue;
         const nomeItem = itensPorId[itemId] ? nomeDe(itensPorId[itemId]) : itemId;
-        const quem = inimigo.heroi || "Inimigo";
+        const quem = inimigo.heroi || t("motor.inimigo");
         alertas.push(Object.assign({}, ameaca, { itemId, nomeItem, heroi: quem }));
         for (const c of ameaca.counters) {
           // Ameaça mais perigosa pesa mais na recomendação.
-          somar("counter", c, c.peso * (0.75 + 0.25 * ameaca.perigo), nomeItem + " de " + quem, [quem]);
+          somar("counter", c, c.peso * (0.75 + 0.25 * ameaca.perigo), t("motor.itemDe", nomeItem, quem), [quem]);
         }
       }
     }
@@ -188,5 +218,5 @@
     };
   }
 
-  global.DeadlockEngine = { recomendar, prepararDados, avaliar, faseDoTempo, FASES };
+  global.DeadlockEngine = { recomendar, prepararDados, avaliar, faseDoTempo, localizar, FASES };
 })(typeof window !== "undefined" ? window : typeof globalThis !== "undefined" ? globalThis : this);

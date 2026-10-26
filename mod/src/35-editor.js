@@ -4,7 +4,7 @@
 // (navegador embutido); se não houver, as mudanças valem até fechar o jogo.
 
 var editor = { heroi: "", rascunho: null, alvo: null, detalhe: null, escolhendoItem: false };
-var CATEGORIAS = [["weapon", "Arma"], ["vitality", "Vitalidade"], ["spirit", "Spirit"]];
+var CATEGORIAS = ["weapon", "vitality", "spirit"];
 
 function abrirEditor(alvo, detalhe) {
   editor.alvo = alvo;
@@ -13,20 +13,20 @@ function abrirEditor(alvo, detalhe) {
   var corpo = criar("Panel", alvo, "", "DUEditor");
 
   var esquerda = criar("Panel", corpo, "", "DUEditorHerois");
-  rotulo(esquerda, "DUAbaSecao", "Herói inimigo");
+  rotulo(esquerda, "DUAbaSecao", T("ed.heroiInimigo"));
   var grade = criar("Panel", esquerda, "", "DUGradeHerois");
   Object.keys(dados.herois).sort().forEach(function (nome) {
     var b = criar("Panel", grade, "", "DUHeroiBotao" + (nome === editor.heroi ? " DUSelecionado" : ""));
     imagem(b, "DUHeroiFoto", imagemHeroi(nome));
     rotulo(b, "DUHeroiNome", esc(nome));
-    if (overrides.herois[nome]) rotulo(b, "DUHeroiEditado", "editado");
+    if (overrides.herois[nome]) rotulo(b, "DUHeroiEditado", T("ed.editado"));
     aoClicar(b, function () { editor.heroi = nome; editor.rascunho = null; editor.escolhendoItem = false; abrirEditor(alvo, detalhe); });
   });
 
   var direita = criar("Panel", corpo, "", "DUEditorDireita");
   editor.direita = direita;
   if (!editor.heroi) {
-    rotulo(direita, "DUAbaVazio", "Escolha um herói à esquerda para ver e editar os counters dele.");
+    rotulo(direita, "DUAbaVazio", T("ed.escolhaHeroi"));
   } else {
     desenharHeroiEditor();
   }
@@ -41,12 +41,11 @@ function desenharHeroiEditor() {
   var cab = criar("Panel", d, "", "DUEditorCab");
   imagem(cab, "DUEditorFoto", imagemHeroi(h));
   var tt = criar("Panel", cab, "", "DUEditorCabTextos");
-  rotulo(tt, "DUAbaSecao", "Counters contra " + esc(h));
-  rotulo(tt, "DUAbaVazio", (overrides.herois[h] ? "Editado por você." : "Padrão da comunidade.") +
-    " Peso: 1 situacional · 4 quase obrigatório. Clique no texto para escrever o motivo.");
+  rotulo(tt, "DUAbaSecao", esc(T("ed.countersContra", h)));
+  rotulo(tt, "DUAbaVazio", T(overrides.herois[h] ? "ed.editadoPorVoce" : "ed.padraoComunidade") + " " + T("ed.ajudaPeso"));
 
   var lista = criar("Panel", d, "", "DUEditorLista");
-  if (!editor.rascunho.length) rotulo(lista, "DUAbaVazio", "Nenhum counter ainda. Adicione itens abaixo.");
+  if (!editor.rascunho.length) rotulo(lista, "DUAbaVazio", T("ed.nenhumCounter"));
   editor.rascunho.forEach(function (c, idx) {
     var it = dados.itensPorId[c.item];
     if (!it) return;
@@ -56,7 +55,7 @@ function desenharHeroiEditor() {
     var pesos = criar("Panel", linha, "", "DUPesos");
     [1, 2, 3, 4].forEach(function (p) {
       var b = botao(pesos, "DUPeso" + (c.peso === p ? " DUSelecionado" : ""), String(p), function () { c.peso = p; redesenharEditor(); });
-      dica(b, ["", "Situacional", "Bom", "Forte", "Quase obrigatório"][p]);
+      dica(b, T("ed.peso." + p));
     });
     // Sem placeholder: no Panorama ele é desenhado por cima do texto definido via código.
     var motivo = criar("TextEntry", linha, "", "DUTexto DUMotivo", { maxchars: "200" });
@@ -68,20 +67,20 @@ function desenharHeroiEditor() {
   });
 
   var acoes = criar("Panel", d, "", "DUEditorAcoes");
-  botao(acoes, "", editor.escolhendoItem ? "Fechar lista de itens" : "+ Adicionar item", function () { editor.escolhendoItem = !editor.escolhendoItem; redesenharEditor(); });
-  botao(acoes, "DUBotaoPrimario", "Salvar", function () {
+  botao(acoes, "", T(editor.escolhendoItem ? "ed.fecharLista" : "ed.adicionarItem"), function () { editor.escolhendoItem = !editor.escolhendoItem; redesenharEditor(); });
+  botao(acoes, "DUBotaoPrimario", T("ed.salvar"), function () {
     overrides.herois[h] = editor.rascunho.filter(function (c) { return dados.itensPorId[c.item]; });
     salvarOverrides();
     atualizarRecomendacoes(ultimaLeitura || lerPartida(), true);
-    mensagemEditor("Counters de " + h + " salvos.");
+    mensagemEditor(T("ed.salvos", h));
     redesenharEditor();
   });
-  botao(acoes, "", "Restaurar padrão", function () {
+  botao(acoes, "", T("ed.restaurar"), function () {
     delete overrides.herois[h];
     editor.rascunho = null;
     salvarOverrides();
     atualizarRecomendacoes(ultimaLeitura || lerPartida(), true);
-    mensagemEditor("Counters de " + h + " voltaram ao padrão da comunidade.");
+    mensagemEditor(T("ed.restaurados", h));
     redesenharEditor();
   });
 
@@ -91,9 +90,9 @@ function desenharHeroiEditor() {
 function desenharEscolhaItem(d) {
   var caixa = criar("Panel", d, "", "DUEscolhaItem");
   CATEGORIAS.forEach(function (cat) {
-    rotulo(caixa, "DUEscolhaTitulo DUCat_" + cat[0], cat[1]);
+    rotulo(caixa, "DUEscolhaTitulo DUCat_" + cat, T("cat." + cat));
     var grade = criar("Panel", caixa, "", "DUEscolhaGrade");
-    dados.itens.filter(function (it) { return it.categoria === cat[0]; })
+    dados.itens.filter(function (it) { return it.categoria === cat; })
       .sort(function (a, b) { return a.tier - b.tier || nomeItem(a).localeCompare(nomeItem(b)); })
       .forEach(function (it) {
         var ja = editor.rascunho.some(function (c) { return c.item === it.id; });
@@ -111,31 +110,31 @@ function desenharEscolhaItem(d) {
 
 function desenharCompartilhar(d) {
   var caixa = criar("Panel", d, "", "DUCompartilhar");
-  rotulo(caixa, "DUAbaSecao", "Compartilhar / importar");
+  rotulo(caixa, "DUAbaSecao", T("ed.compartilhar"));
   var linha = criar("Panel", caixa, "", "DUEditorAcoes");
-  if (editor.heroi) botao(linha, "", "Copiar código de " + esc(editor.heroi), function () { compartilhar([editor.heroi]); });
-  botao(linha, "", "Copiar código de tudo que editei", function () {
+  if (editor.heroi) botao(linha, "", esc(T("ed.copiarDe", editor.heroi)), function () { compartilhar([editor.heroi]); });
+  botao(linha, "", T("ed.copiarTudo"), function () {
     var lista = Object.keys(overrides.herois);
-    if (!lista.length) { mensagemEditor("Você ainda não editou nenhum herói."); return; }
+    if (!lista.length) { mensagemEditor(T("ed.nadaEditado")); return; }
     compartilhar(lista);
   });
-  rotulo(caixa, "DUAbaVazio", "Recebeu um código DU1:…? Cole abaixo (Ctrl+V) e clique em Importar.");
+  rotulo(caixa, "DUAbaVazio", T("ed.recebeu"));
   editor.campoCodigo = criar("TextEntry", caixa, "", "DUTexto DUCodigo", { maxchars: "6000" });
   if (editor.campoCodigo && editor.ultimoCodigo) { try { editor.campoCodigo.text = editor.ultimoCodigo; } catch (e) {} }
   var linha2 = criar("Panel", caixa, "", "DUEditorAcoes");
-  botao(linha2, "DUBotaoPrimario", "Importar", function () {
+  botao(linha2, "DUBotaoPrimario", T("ed.importar"), function () {
     try {
       var novos = lerCodigo(textoDe(editor.campoCodigo));
       var nomes = Object.keys(novos);
-      if (!nomes.length) throw new Error("nenhum herói no código");
+      if (!nomes.length) throw new Error(T("ed.erro.vazio"));
       nomes.forEach(function (n) { overrides.herois[n] = novos[n]; });
       salvarOverrides();
       atualizarRecomendacoes(ultimaLeitura || lerPartida(), true);
       editor.rascunho = null;
-      mensagemEditor("Importado: " + nomes.join(", ") + ".");
+      mensagemEditor(T("ed.importado", nomes.join(", ")));
       redesenharEditor();
     } catch (e) {
-      mensagemEditor("Código inválido: " + e.message);
+      mensagemEditor(T("ed.invalido", e.message));
     }
   });
   editor.msg = rotulo(caixa, "DUEditorMsg", esc(editor.ultimaMsg || ""));
@@ -146,8 +145,7 @@ function compartilhar(herois) {
   var copiou = copiarTexto(codigo);
   editor.ultimoCodigo = codigo;
   if (valido(editor.campoCodigo)) { try { editor.campoCodigo.text = codigo; } catch (e) {} }
-  mensagemEditor((copiou ? "Código copiado! Cole no grupo (Ctrl+V). " : "Copie o código do campo acima. ") +
-    "Quem receber clica em Importar.");
+  mensagemEditor(T(copiou ? "ed.copiado" : "ed.copieCampo") + " " + T("ed.quemRecebe"));
   log("código compartilhado (" + herois.join(",") + "): " + codigo);
 }
 

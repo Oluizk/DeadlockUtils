@@ -25,7 +25,7 @@
 					<Label id="DUDicaContraTexto" class="DUDicaContraTexto" html="true" text=" " />
 				</Panel>
 				<Label id="DUDicaMotivos" class="DUDicaMotivos" html="true" text=" " />
-				<Label id="DUDicaRodape" class="DUDicaRodape" text="Clique para comprar (perto da loja)" />
+				<Label id="DUDicaRodape" class="DUDicaRodape" text="@dica.comprar" />
 			</Panel>
 		</Panel>
 	</Panel>

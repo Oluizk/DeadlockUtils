@@ -112,9 +112,14 @@ Vale quando o herói está no time inimigo. Também dá para editar **dentro do 
 
 Gerado por `tools\atualizar-builds.ps1` a partir dos dados de popularidade que o próprio jogo traz (`m_PopularItems` em `scripts/heroes.vdata`): para cada herói e fase (`inicio`/`meio`/`fim`), `[item, % de escolha, % de vitória]`. Não edite à mão: rode o script depois de um patch.
 
-## 7. Traduções: `data/textos.json`
+## 7. Traduções
 
-Cada idioma é um bloco (`"pt"`, `"en"`, `"es"`...) com as mesmas chaves. Para traduzir, copie o bloco `"pt"`, troque o nome pelo código do idioma e traduza os valores. `{1}` e `{2}` são trocados pelo herói, a fase etc. Chave que faltar usa o texto em português. Os títulos dos cartazes da aba (`cartaz.*`) ficam melhores curtos: são escritos em letras grandes.
+O mod tem inglês (padrão), português (pt-BR), espanhol e russo; quem instala escolhe no `install.bat`.
+
+- **Interface: `data/textos.json`.** Um bloco por idioma (`"en"`, `"pt"`, `"es"`, `"ru"`) com as mesmas chaves. `{1}` e `{2}` são trocados pelo herói, a fase etc. Chave que faltar num idioma usa o texto em inglês. Nos layouts (`mod/layout/*.xml`), um Label com `text="@chave"` usa a chave daqui. Os títulos dos cartazes da aba (`cartaz.*`) ficam melhores curtos: são escritos em letras grandes. Nomes das camadas do mapa: `camada.<id>` e `camada.<id>.desc`.
+- **Regras: `data/rules/*.json`.** `titulo`, `motivo`, `alerta` e `dica` são objetos `{ "en": "...", "pt": "...", "es": "...", "ru": "..." }`. Um texto simples (`"motivo": "..."`) também funciona: aparece igual em todos os idiomas. Ao traduzir, use os nomes oficiais dos itens no idioma (estão em `game\citadel\resource\localization\citadel_gc_mod_names\`).
+- **Nomes de itens** vêm da localização do próprio jogo no build; não precisa traduzir.
+- Novo idioma: acrescente o bloco em `textos.json`, a chave nos objetos das regras, o código em `IDIOMAS` (`mod/src/05-textos.js` e `tools/pacote/instalar.ps1`, com os textos do instalador) e o arquivo de nomes de itens em `tools/build-mod.ps1` (`$arqIdioma`).
 
 ## Boas práticas
 
