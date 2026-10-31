@@ -9,6 +9,29 @@
 var desconhecidos = {};
 var cacheLeitura = { jogadores: [] }; // [{ painel, heroi, como, texto, nome, mods }]
 
+// Painéis do jogo usados o tempo todo, guardados enquanto valem. FindChildTraverse a partir da raiz percorre
+// o HUD inteiro (milhares de painéis), e inteiro mesmo quando o painel não existe: quem não existe agora só é
+// procurado de novo depois de 2 s (no loop rápido seriam 40 varreduras por segundo).
+var paineisJogo = {};
+function painelDoJogo(id) {
+  var c = paineisJogo[id];
+  if (c && valido(c.p)) return c.p;
+  var agora = Date.now();
+  if (c && agora - c.em < 2000) return null;
+  var p = achar(hud, id);
+  paineisJogo[id] = { p: valido(p) ? p : null, em: agora };
+  return valido(p) ? p : null;
+}
+function lojaDoJogo() { return painelDoJogo("CitadelHudHeroShop"); }
+function minimapa() { return painelDoJogo("hud_minimap"); }
+function menuEsc() { return painelDoJogo("EscapeMenu"); }
+// Dentro do placar do topo: guardado também (relógio, timer do Rejuvenator).
+function noTopo(id) {
+  var p = cacheLeitura["tb_" + id];
+  if (!valido(p)) { p = achar(topBar(), id); cacheLeitura["tb_" + id] = p; }
+  return p;
+}
+
 function coletarPorId(p, id, prof, saida) {
   if (!valido(p) || prof > 10) return;
   var lista = filhos(p);
@@ -59,15 +82,11 @@ function partidaAtiva(emPartida, e) { return !!emPartida && !e.hideout && !e.pre
 // em si mesmo), então olha os ancestrais dele; e o #hud_minimap, que tem o próprio listener.
 function placarAberto() {
   if (temClasse(topBar(), "gScoreboardOpen")) return true;
-  if (!valido(cacheLeitura.persp)) cacheLeitura.persp = achar(hud, "minimap_persp");
-  try { if (valido(cacheLeitura.persp) && cacheLeitura.persp.BAscendantHasClass("gScoreboardOpen")) return true; } catch (e) {}
-  if (!valido(cacheLeitura.mm)) cacheLeitura.mm = achar(hud, "hud_minimap");
-  return temClasse(cacheLeitura.mm, "gScoreboardOpen");
+  var persp = painelDoJogo("minimap_persp");
+  try { if (persp && persp.BAscendantHasClass("gScoreboardOpen")) return true; } catch (e) {}
+  return temClasse(minimapa(), "gScoreboardOpen");
 }
-function topBar() {
-  if (!valido(cacheLeitura.topBar)) cacheLeitura.topBar = achar(hud, "TopBar");
-  return cacheLeitura.topBar;
-}
+function topBar() { return painelDoJogo("TopBar"); }
 function containerDoTime(id) {
   var c = cacheLeitura["cont_" + id];
   if (!valido(c)) { c = achar(achar(topBar(), id), "PlayersContainer"); cacheLeitura["cont_" + id] = c; }
@@ -116,6 +135,13 @@ function infoJogador(p) {
   return novo;
 }
 
+// Label das almas do cartão de um jogador (guardado junto com o resto do cartão).
+function almasDoCartao(p) {
+  var c = infoJogador(p);
+  if (!valido(c.almas)) c.almas = achar(p, "SoulsValue");
+  return c.almas;
+}
+
 function lerJogador(p) {
   var c = infoJogador(p);
   if (!valido(c.mods)) c.mods = achar(p, "PlayerModsContainer");
@@ -142,17 +168,17 @@ function lerTime(id) {
 
 // Seu herói sem depender do placar: classe na mira, barra de habilidades, retrato da loja.
 function meuHeroiPeloHud() {
-  if (!valido(cacheLeitura.vivo)) cacheLeitura.vivo = achar(hud, "gameplay_hud_alive");
-  var prog = achar(achar(cacheLeitura.vivo, "crosshair"), "progress");
+  if (!valido(cacheLeitura.prog)) cacheLeitura.prog = achar(achar(painelDoJogo("gameplay_hud_alive"), "crosshair"), "progress");
+  var prog = cacheLeitura.prog;
   var achados = [];
-  for (var c in classeParaHeroi) {
+  if (prog) for (var c in classeParaHeroi) {
     if (temClasse(prog, c) || temClasse(prog, c.replace(/^hero_/, ""))) achados.push(classeParaHeroi[c]);
   }
   if (achados.length === 1) return achados[0];
-  if (!valido(cacheLeitura.assinatura)) cacheLeitura.assinatura = achar(hud, "hud_signature");
-  var h = heroiPelasHabilidades(cacheLeitura.assinatura);
+  var h = heroiPelasHabilidades(painelDoJogo("hud_signature"));
   if (h) return h;
-  h = heroiDaImagem(srcImagem(achar(achar(achar(hud, "CitadelHudHeroShop"), "HeroPanel"), "HeroImage")));
+  if (!valido(cacheLeitura.retratoLoja)) cacheLeitura.retratoLoja = achar(achar(lojaDoJogo(), "HeroPanel"), "HeroImage");
+  h = heroiDaImagem(srcImagem(cacheLeitura.retratoLoja));
   return h || achados[0] || "";
 }
 
@@ -197,9 +223,9 @@ function lerPartida() {
     aliados: aliados,
     inimigos: inimigos,
     meusItens: meusItens,
-    almas: meuCartao ? lerAlmas(textoDe(achar(meuCartao.painel, "SoulsValue"))) : null,
-    segundos: segundosDoRelogio(textoDe(achar(tb, "GameTime"))),
-    textoMidboss: textoDe(achar(tb, "MidbossTimerLabel")),
+    almas: meuCartao ? lerAlmas(textoDe(almasDoCartao(meuCartao.painel))) : null,
+    segundos: segundosDoRelogio(textoDe(noTopo("GameTime"))),
+    textoMidboss: textoDe(noTopo("MidbossTimerLabel")),
     emPartida: emPartida,
     estado: estado,
     ativa: partidaAtiva(emPartida, estado),

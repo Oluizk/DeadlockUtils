@@ -26,12 +26,13 @@
 		</Panel>
 		<Panel id="DUVistaRecs" class="DUAbaCorpo">
 			<Label id="DUStatusLoja" class="DUAbaStatus" html="true" text=" " />
-			<Panel id="DUCabPerigo" class="DUSecaoCab" />
-			<Panel id="DUAmeacas" class="DUAmeacas" />
-			<Panel id="DUCabBuild" class="DUSecaoCab" />
-			<Panel id="DUBuild" class="DUTiers" />
+			<!-- Counters primeiro (o foco da aba); a Build Recomendada só aparece se for ligada nas configurações. -->
 			<Panel id="DUCabCounters" class="DUSecaoCab" />
 			<Panel id="DUCounters" class="DUTiers" />
+			<Panel id="DUSecaoBuild" class="DUSecaoBuild DUEscondido">
+				<Panel id="DUCabBuild" class="DUSecaoCab" />
+				<Panel id="DUBuild" class="DUTiers" />
+			</Panel>
 		</Panel>
 		<Panel id="DUVistaEditor" class="DUAbaCorpo DUEscondido" />
 		<Label id="DUDetalhe" class="DUDetalhe" html="true" text=" " />

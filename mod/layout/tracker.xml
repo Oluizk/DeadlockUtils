@@ -2,29 +2,34 @@
 	<styles>
 		<include src="s2r://panorama/styles/deadlock_utils.vcss_c" />
 	</styles>
+	<!-- Tracker (70-tracker.js). Dois temas pela classe na raiz: o do jogo (versão normal) e DUTemaQol
+	     (addon do QOL Lock, com as cores da janela do QOL). -->
 	<Panel class="DUTracker">
 		<Panel class="DUTrackerJanela">
-			<Panel class="DUAbaCab">
+			<Panel class="DUTrackerCab">
 				<Panel class="DUTrackerCabIcone" />
-				<Panel class="DUAbaCabTextos">
-					<Label class="DUAbaTitulo" text="Tracker" />
-					<Label id="DUTrackerStatus" class="DUAbaSub" html="true" text=" " />
+				<Panel class="DUTrackerCabTextos">
+					<Label class="DUTrackerTitulo" text="Tracker" />
+					<Label id="DUTrackerStatus" class="DUTrackerStatus" html="true" text=" " />
 				</Panel>
-				<Panel class="DUAbaCabAcoes">
-					<Button id="DUTrackerAtualizar" class="DUAbaModo">
+				<Panel class="DUTrackerCabAcoes">
+					<Button id="DUTrackerAtualizar" class="DUTrackerBotao">
 						<Label text="@tr.atualizar" />
 					</Button>
-					<Button id="DUTrackerFechar" class="DUAbaModo">
+					<Button id="DUTrackerFechar" class="DUTrackerBotao">
 						<Label text="@tr.fechar" />
 					</Button>
 				</Panel>
 			</Panel>
-			<Panel class="DUAbaLinha" />
 			<Panel class="DUTrackerCorpo">
 				<Panel class="DUTrackerTimes">
-					<Label class="DUAbaSecao" text="@tr.seuTime" />
+					<Panel class="DUTrackerTimeCab DUTrackerTimeAmigo">
+						<Label text="@tr.seuTime" />
+					</Panel>
 					<Panel id="DUTrackerAmigos" class="DUTrackerLista" />
-					<Label class="DUAbaSecao" text="@tr.inimigos" />
+					<Panel class="DUTrackerTimeCab DUTrackerTimeInimigo">
+						<Label text="@tr.inimigos" />
+					</Panel>
 					<Panel id="DUTrackerInimigos" class="DUTrackerLista" />
 				</Panel>
 				<Panel id="DUTrackerDetalhe" class="DUTrackerDetalhe" />

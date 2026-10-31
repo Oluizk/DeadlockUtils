@@ -3,10 +3,12 @@
 // classes canAffordMod / owned atualizadas pelo C++). Não dá para criar um desses pelo JS e dizer
 // qual item ele mostra, mas dá para:
 //   1) achar o painel nativo de cada item e LER se dá para comprar / se você já tem;
-//   2) pedir a compra a ele (várias formas; a que funcionar fica guardada);
-//   3) EMPRESTAR o painel para a nossa aba (SetParent) e devolver quando ela fecha.
+//   2) pedir a compra por ele (várias formas; a que funcionar fica guardada).
+// Os painéis do jogo NUNCA saem do lugar. O C++ da loja procura cada item dentro da entrada do guia de build
+// (BuildModEntry, primeiro filho) e da lista dele sem conferir se achou: um item levado para a nossa aba
+// fechava o jogo na próxima vez que a loja atualizava o guia (abrir a loja, comprar, trocar de herói).
 
-var nativos = { porItem: {}, contagem: 0, mapeados: 0, varridoEm: -99, emprestados: [], metodoCompra: -1, amostra: "", tipos: "" };
+var nativos = { porItem: {}, contagem: 0, mapeados: 0, varridoEm: -99, metodoCompra: "", amostra: "", tipos: "", logados: {} };
 var nomeLocalParaItem = DU_DATA.nomesItens || {}; // nome do item em qualquer idioma (minúsculo) -> id
 
 function tipoDe(p) { try { return p.paneltype || ""; } catch (e) { return ""; } }
@@ -39,13 +41,13 @@ function varrerNativos(forcar) {
     if (!forcar && recente) return;
   }
   nativos.varridoEm = agoraSeg;
-  var shop = achar(hud, "CitadelHudHeroShop");
-  if (!valido(shop)) return;
+  var shop = lojaDoJogo();
+  if (!shop) return;
   var mapa = {}, n = 0, mapeados = 0, primeiro = null, tipos = {};
   (function rec(p, prof) {
     if (prof > 18) return;
     filhos(p).forEach(function (f) {
-      if (f.id === "DUAbaLoja") return; // os que estão emprestados já estão no mapa
+      if (f.id === "DUAbaLoja") return; // a nossa aba não tem itens do jogo
       var tipo = tipoDe(f);
       if (/Mod|Item|Shop/.test(tipo)) tipos[tipo] = (tipos[tipo] || 0) + 1;
       if (tipo === "CitadelShopMod") {
@@ -62,8 +64,6 @@ function varrerNativos(forcar) {
       rec(f, prof + 1);
     });
   })(shop, 0);
-  // mantém os emprestados (eles saíram da árvore da loja)
-  nativos.emprestados.forEach(function (e) { if (valido(e.painel)) mapa[e.item] = e.painel; });
   nativos.porItem = mapa;
   nativos.contagem = n;
   nativos.mapeados = Object.keys(mapa).length;
@@ -105,19 +105,30 @@ function jaTem(itemId) {
 }
 
 // ---------- compra ----------
-// O jogo compra pelo painel do próprio item (CitadelShopMod). Há dois jeitos de pedir; o que funcionar
-// fica guardado (também nas configurações salvas: a descoberta acontece uma vez só).
+// O jogo compra pelo evento CitadelPurchaseModItem, a partir do painel do próprio item (CitadelShopMod).
+// Desde o patch de 30/10/2026 o evento leva o item (nome da classe, que o jogo vira token), dois sinais e a
+// origem da compra (client.dll: CUIEvent<CUtlStringToken, bool, bool, EItemPurchaseSource>); antes levava
+// só o painel. Como o formato pode mudar de novo, há várias formas de pedir: a que funcionar fica guardada
+// (também nas configurações salvas) e é descoberta de novo quando para de funcionar.
 // Com o método conhecido, a compra não espera o jogo: o item sai da fileira do Tab na hora, como na loja,
 // e a confirmação roda por trás. Se em 2 s nada indicar a compra, ele volta.
 var METODOS_COMPRA = [
-  function (p) { $.DispatchEvent("CitadelPurchaseModItem", p); },
-  function (p) { $.DispatchEvent("Activated", p, "mouse"); },
+  { id: "item", fn: function (p, cl) { $.DispatchEvent("CitadelPurchaseModItem", p, cl, false, false, 0); } },
+  { id: "itemOrigem1", fn: function (p, cl) { $.DispatchEvent("CitadelPurchaseModItem", p, cl, false, false, 1); } },
+  { id: "itemSemPainel", fn: function (p, cl) { $.DispatchEvent("CitadelPurchaseModItem", cl, false, false, 0); } },
+  { id: "painel", fn: function (p) { $.DispatchEvent("CitadelPurchaseModItem", p); } },
+  { id: "clique", fn: function (p) { $.DispatchEvent("Activated", p, "mouse"); } },
 ];
+function metodoCompraPorId(id) { return METODOS_COMPRA.filter(function (m) { return m.id === id; })[0] || null; }
+function classeDoItem(itemId) { var it = dados.itensPorId[itemId]; return it && it.classes ? it.classes[0] || "" : ""; }
+// O mesmo erro a cada clique só enche o console: cada mensagem sai uma vez.
+function logUmaVez(msg) { if (nativos.logados[msg]) return; nativos.logados[msg] = true; log(msg); }
+function esquecerMetodoCompra() { nativos.metodoCompra = ""; ajustes.metodoCompra = ""; nativos.falhasSeguidas = 0; salvarAjustes(); }
 var comprasPendentes = {}; // id do item -> quando foi pedido
 function compraPendente(id) { return !!comprasPendentes[id] && Date.now() - comprasPendentes[id] < 2500; }
 function almasAgora() {
   var l = ultimaLeitura;
-  return l && l.meuCartao ? lerAlmas(textoDe(achar(l.meuCartao.painel, "SoulsValue"))) : null;
+  return l && l.meuCartao ? lerAlmas(textoDe(almasDoCartao(l.meuCartao.painel))) : null;
 }
 // Com a loja fechada o jogo pode demorar a marcar o painel como "owned": vale também o item aparecer no
 // seu cartão do placar ou as almas caírem pelo preço do item.
@@ -140,9 +151,13 @@ function comprarItem(itemId, aoTerminar, aoConfirmar) {
   if (!p) { log("compra: item " + itemId + " sem painel nativo na loja"); fim(false, T("compra.abraLoja")); confirmou(false, T("compra.abraLoja")); return; }
   if (temClasse(p, "owned")) { fim(true, T("compra.jaTem")); confirmou(true, T("compra.jaTem")); return; }
   var almasAntes = almasAgora();
-  var metodo = nativos.metodoCompra >= 0 ? nativos.metodoCompra : ajustes.metodoCompra;
-  if (metodo >= 0 && METODOS_COMPRA[metodo]) {
-    try { METODOS_COMPRA[metodo](p); } catch (e) { log("compra: método " + metodo + " erro: " + e); }
+  var classe = classeDoItem(itemId);
+  var metodo = metodoCompraPorId(nativos.metodoCompra || ajustes.metodoCompra);
+  if (metodo) {
+    // o jogo recusou o formato na hora (patch): descobre de novo já nesta compra
+    try { metodo.fn(p, classe); } catch (e) { logUmaVez("compra: " + metodo.id + " parou de funcionar: " + e); esquecerMetodoCompra(); metodo = null; }
+  }
+  if (metodo) {
     comprasPendentes[itemId] = Date.now();
     fim(true, T("compra.ok"));
     $.Schedule(2.0, function () {
@@ -152,28 +167,27 @@ function comprarItem(itemId, aoTerminar, aoConfirmar) {
       nativos.falhasSeguidas = (nativos.falhasSeguidas || 0) + 1;
       log("compra de " + itemId + " não confirmada (" + nativos.falhasSeguidas + " seguida)");
       if (nativos.falhasSeguidas >= 2) {
-        log("compra: método " + metodo + " parou de funcionar, vai descobrir de novo");
-        nativos.metodoCompra = -1;
-        ajustes.metodoCompra = -1;
-        nativos.falhasSeguidas = 0;
-        salvarAjustes();
+        log("compra: " + metodo.id + " parou de funcionar, vai descobrir de novo");
+        esquecerMetodoCompra();
       }
       confirmou(false, T("compra.recusou"));
       if (faixa.visivel) atualizarFaixa(true);
     });
     return;
   }
-  // Primeira compra: descobre o método (um de cada vez, conferindo por 1 s).
+  // Primeira compra: descobre o método (um de cada vez, conferindo por 1 s). Um formato que o jogo
+  // recusa na hora (erro ao montar o evento) passa direto para o próximo.
   (function tentar(k) {
-    if (k >= METODOS_COMPRA.length) { log("compra: nenhum método funcionou para " + itemId); fim(false, T("compra.recusou")); confirmou(false, T("compra.recusou")); return; }
-    try { METODOS_COMPRA[k](p); } catch (e) { log("compra: método " + k + " erro: " + e); }
+    if (k >= METODOS_COMPRA.length) { logUmaVez("compra: nenhum método funcionou (" + itemId + ")"); fim(false, T("compra.recusou")); confirmou(false, T("compra.recusou")); return; }
+    var m = METODOS_COMPRA[k];
+    try { m.fn(p, classe); } catch (e) { logUmaVez("compra: " + m.id + " recusado: " + e); tentar(k + 1); return; }
     var checagens = 0;
     (function conferir() {
       if (compraConfirmada(itemId, almasAntes)) {
-        log("compra: método " + k + " funciona");
-        nativos.metodoCompra = k;
+        log("compra: " + m.id + " funciona");
+        nativos.metodoCompra = m.id;
         nativos.falhasSeguidas = 0;
-        ajustes.metodoCompra = k;
+        ajustes.metodoCompra = m.id;
         salvarAjustes();
         fim(true, T("compra.ok"));
         confirmou(true, T("compra.ok"));
@@ -184,42 +198,41 @@ function comprarItem(itemId, aoTerminar, aoConfirmar) {
   })(0);
 }
 
-// ---------- empréstimo para a nossa aba ----------
-function emprestarNativo(itemId, novoPai) {
-  var p = nativoDe(itemId);
-  if (!p) return null;
-  var ja = nativos.emprestados.filter(function (e) { return e.painel === p; })[0];
-  if (!ja) {
-    var pai = null;
-    try { pai = p.GetParent(); } catch (e) {}
-    if (!valido(pai)) return null;
-    // Índice ORIGINAL: o atual + quantos já emprestados do mesmo pai estavam antes dele.
-    var idx = filhos(pai).indexOf(p);
-    nativos.emprestados.filter(function (e) { return e.pai === pai; })
-      .sort(function (a, b) { return a.indice - b.indice; })
-      .forEach(function (e) { if (e.indice <= idx) idx++; });
-    nativos.emprestados.push({ item: itemId, painel: p, pai: pai, indice: idx });
-  }
-  try { p.SetParent(novoPai); } catch (e) { log("SetParent falhou: " + e); return null; }
-  return p;
-}
-
-// Devolve todos os painéis emprestados para o lugar original na loja.
-// Em ordem crescente do índice original: cada um volta exatamente para a posição de antes.
-function devolverNativos() {
-  nativos.emprestados.slice().sort(function (a, b) { return a.indice - b.indice; }).forEach(function (e) {
-    if (!valido(e.painel) || !valido(e.pai)) return;
-    try {
-      e.painel.SetParent(e.pai);
-      var irmaos = filhos(e.pai);
-      if (e.indice >= 0 && e.indice < irmaos.length - 1) e.pai.MoveChildBefore(e.painel, irmaos[e.indice]);
-    } catch (err) { log("devolver nativo falhou: " + err); }
+// ---------- guia: a build que o jogador escolheu na aba Builds da loja ----------
+// A loja monta a build escolhida em #ShopModsSelectedBuild > #CategoryContainer > uma categoria por etapa
+// (CitadelShopModsBuildCategory, nome em #BuildCategoryName) > #ModsContainer > uma BuildModEntry por item
+// com o CitadelShopMod dentro, na ordem do guia. Só leitura: nada ali pode sair do lugar (ver o topo).
+var guia = { itens: [], lidoEm: -99 };
+function lerGuia() {
+  if (agoraSeg - guia.lidoEm < 3) return guia.itens;
+  guia.lidoEm = agoraSeg;
+  var cats = achar(achar(lojaDoJogo(), "ShopModsSelectedBuild"), "CategoryContainer");
+  var lista = [], vistos = {};
+  filhos(cats).forEach(function (cat) {
+    var etapa = textoDe(achar(cat, "BuildCategoryName"));
+    (function rec(p, prof) {
+      if (prof > 6) return;
+      filhos(p).forEach(function (f) {
+        if (tipoDe(f) !== "CitadelShopMod") { rec(f, prof + 1); return; }
+        var id = itemDoNativo(f);
+        if (!id || vistos[id]) return;
+        vistos[id] = true;
+        lista.push({ id: id, etapa: etapa });
+        if (temClasse(f, "owned")) possuidos[id] = true;
+      });
+    })(achar(cat, "ModsContainer"), 0);
   });
-  nativos.emprestados = [];
+  guia.itens = lista;
+  return lista;
 }
 
-// Itens que o jogo marca como seus (classe owned no painel nativo).
+// Itens que o jogo marca como seus (classe owned no painel nativo). A conferência de todos os painéis roda a
+// cada 5 s (com a loja aberta, atualizarNativos já confere a cada 2 s); os itens do seu cartão no placar
+// chegam pela leitura de cada segundo.
 function itensQueTenho() {
-  Object.keys(nativos.porItem).forEach(function (id) { jaTem(id); }); // atualiza a memória
+  if (agoraSeg - (nativos.possuidosEm || -99) >= 5) {
+    nativos.possuidosEm = agoraSeg;
+    Object.keys(nativos.porItem).forEach(function (id) { jaTem(id); });
+  }
   return Object.keys(possuidos);
 }

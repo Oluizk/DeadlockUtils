@@ -111,13 +111,15 @@
   .DU_miniOpac85 #HudMinimapContainer { opacity: .85; } .DU_miniOpac70 #HudMinimapContainer { opacity: .7; } .DU_miniOpac55 #HudMinimapContainer { opacity: .55; } .DU_miniOpac40 #HudMinimapContainer { opacity: .4; }
   .DUMapaAberto #HudMinimapContainer { opacity: 1; } .DUMapaAberto.DU_mapaOpac85 #HudMinimapContainer { opacity: .85; } .DUMapaAberto.DU_mapaOpac70 #HudMinimapContainer { opacity: .7; } .DUMapaAberto.DU_mapaOpac55 #HudMinimapContainer { opacity: .55; } .DUMapaAberto.DU_mapaOpac40 #HudMinimapContainer { opacity: .4; }
   /* camada dos heróis (iconesmapa.xml): o jogo a centraliza no pai; aqui o JS a posiciona por correção */
-  .DUIconesMapa { position: absolute; left: 0; top: 0; } .DUIconesMapa.invert_map { transform: scaleX(-1) scaleY(-1); }
   .DUMapaAberto #minimap_persp.sim { right: auto; bottom: auto; left: 10px; top: 10px; width: 820px; height: 820px; }
   .DUMapaAberto #hud_minimap.sim { width: 820px; height: 820px; }
   .p-Panel, .p-Image, .p-Label { pointer-events: auto; }
   .semFilhos * { pointer-events: none !important; }
   .map_button.localplayer { position: absolute; left: 55%; top: 60%; width: 15%; height: 15%; background: url(icones/player_marker_self_psd.png) center / 100% 100%; transform: translate(-50%, -50%) scale(1.3); }
-  .DUIcone.DUIndisponivel { opacity: .45; filter: saturate(.3); }
+  .DUCartaTab { position: relative; width: 64px; height: 96px; margin-right: 6px; background-size: 100% 100% !important; color: #2a241d; font-size: 10px; text-align: center; border-radius: 3px; } .DUCartaTabIcone { width: 52px; height: 52px; margin: 4px auto 0; }
+  .DUCartaTab.DUSemAlmas { opacity: .6; filter: saturate(.15); } .DUCartaTab.DULonge { opacity: .7; filter: saturate(.4); } .DUCartaTab.DUComprando { opacity: .4; }
+  .DUCartaTabHeroi { position: absolute; right: -5px; top: -5px; width: 22px; height: 22px; border-radius: 11px; border: 2px solid #e04848; } .DUCartaTabPreco { position: absolute; bottom: 0; left: 0; right: 0; background: #0f0d0bcc; color: #7fe0a0; } .DUSemAlmas .DUCartaTabPreco { color: #ff6b6b; }
+  .DUFaixaSecao { border-left: 3px solid #EC9719; padding: 4px 6px; margin-bottom: 6px; } .DUFaixaSecaoGuia { border-left-color: #5FE6A2; } .DUFaixaCab { display: flex; gap: 6px; font-weight: bold; text-transform: uppercase; }
   .DUMiniPontos1 .DUPonto { scale: 1.3; } .DUMiniPontos2 .DUPonto { scale: 1.7; } .DUMiniPontos3 .DUPonto { scale: 2.1; }
   .DUPontoAtivo:hover { transform: scale(1.35); filter: brightness(1.8); z-index: 10; }
   .DUInvertido .DUPontoAtivo:hover { transform: scale(-1.35, -1.35); }
@@ -144,6 +146,33 @@
   #EscapeMenu.sim { display: none; position: absolute; left: 0; top: 0; bottom: 0; width: 220px; background: #000c; padding: 20px; }
   #EscapeMenu.sim.aberto { display: block; }
   .nav_menu_item { display: block; color: #fff; padding: 6px; margin: 4px 0; background: #333; cursor: pointer; }
+  /* ---- ?qol=1: janela de configurações do QOL Lock (aproximação de ql_settings.css) ---- */
+  #SettingsWindow { display: none; position: absolute; left: 240px; top: 20px; width: 720px; height: 720px; background: #0c1014; border: 1px solid #2a2f33; color: #cde5db; font: 13px sans-serif; flex-direction: column; z-index: 60; }
+  #SettingsWindow.Visible { display: flex; }
+  #SettingsHeader { height: 50px; flex: none; display: flex; align-items: center; padding-left: 16px; font-weight: bold; color: #66cc99; border-bottom: 1px solid #1d2226; }
+  #SettingsBody { display: flex; flex: 1; min-height: 0; }
+  #SettingsTabBar { width: 190px; flex: none; display: flex; flex-direction: column; border-right: 1px solid #1d2226; padding-top: 8px; }
+  #SettingsTabRailSpacerMain { flex: 1; }
+  #SettingsContentHost { flex: 1; overflow: auto; }
+  #SettingsWindow .SettingsTabRailGroupLabel { font-size: 10px; color: #66706c; text-transform: uppercase; padding-left: 12px; letter-spacing: 1.5px; }
+  #SettingsWindow .SettingsTabRailGroupRule { height: 1px; background: #1e3a2c; margin: 3px 0 5px; }
+  #SettingsWindow .TabItem { display: flex; align-items: center; gap: 8px; height: 34px; padding: 0 12px; cursor: pointer; color: #a6a196; text-transform: uppercase; font-weight: bold; border-left: 2px solid transparent; }
+  #SettingsWindow .TabItem.Active { border-left-color: #5FE6A2; background: #12241a; color: #d8efde; }
+  #SettingsWindow .TabIcon { width: 13px; height: 13px; background-color: #9fa8a3; }
+  #SettingsWindow .Hidden { display: none !important; }
+  #SettingsWindow .TabFading { opacity: .4; }
+  #SettingsWindow .SectionTitleRow { margin: 10px 0 4px; } #SettingsWindow .SectionTitle { font-weight: bold; text-transform: uppercase; color: #fff; padding-left: 16px; }
+  #SettingsWindow .SettingRow { display: flex; align-items: center; min-height: 30px; }
+  #SettingsWindow .LabelContainer { width: 220px; flex: none; padding-left: 30px; color: #a6b1b4; }
+  #SettingsWindow .SettingToggleBtn { width: 34px; height: 16px; background: #333; border-radius: 8px; } #SettingsWindow .SettingToggleBtn.ToggleOn { background: #66cc99; }
+  #SettingsWindow .SwitchButton { width: 100%; height: 100%; cursor: pointer; }
+  #SettingsWindow .SettingButtonGroup, #SettingsWindow .SettingActionGroup { display: flex; gap: 3px; align-items: center; }
+  #SettingsWindow .SegmentBtn { padding: 3px 8px; background: #171717; cursor: pointer; color: #a39c8e; }
+  #SettingsWindow .SegmentBtn.Active { background: #2f6b4c; color: #fff; } #SettingsWindow .SegmentBtn.DUQolUsada { opacity: .35; }
+  #SettingsWindow .SettingActionBtn { padding: 3px 10px; background: #1b2a22; cursor: pointer; color: #cde5db; }
+  #SettingsWindow .DUQolCampo { width: 150px; }
+  #SettingsWindow .DUQolInfo { padding-left: 30px; color: #7f8b8e; } #SettingsWindow .DUQolMsg { color: #66cc99; }
+  #SettingsWindow .simQolTexto { padding: 16px; color: #8b9698; }
   /* ---- 2.0: mira, vida, central, painel de objetivos (aproximação do CSS Panorama) ---- */
   .simMiraCont { position: absolute; inset: 0; pointer-events: none; z-index: 40; }
   .simArma { position: absolute; left: 50%; top: 50%; width: 500px; height: 500px; margin: -250px 0 0 -250px; }
@@ -240,13 +269,14 @@
 <body>
 <div id="controles">
   <button id="b-loja">Loja (B)</button>
+  <button id="b-filtro">Filtro de cura (loja)</button>
   <button id="b-tab">Placar (Tab)</button>
   <button id="b-m">Tecla M</button>
   <button id="b-f6">Tecla F6</button>
   <button id="b-esc">Menu ESC</button>
   <button id="b-curse">Dynamo compra Cursed Relic</button>
   <button id="b-tempo">+5 min</button>
-  <button id="b-f9">Tecla F9 (configurações)</button>
+  <button id="b-f9">Shift direito (configurações)</button>
   <button id="b-dano">Tomar dano</button>
   <button id="b-cura">Curar</button>
   <button id="b-ponte">Buffs na ponte</button>
@@ -304,7 +334,7 @@ class FakePanel {
   FindChildTraverse(id) { for (const k of this._kids) { if (k.id === id) return k; const r = k.FindChildTraverse(id); if (r) return r; } return null; }
   FindChildrenWithClassTraverse(c) { const out = []; const rec = (p) => p._kids.forEach((k) => { if (k._classes.has(c)) out.push(k); rec(k); }); rec(this); return out; }
   GetAttributeString(n, d) { return this[n] || d; }
-  MoveChildAfter(a, b) { b.el.after(a.el); }
+  MoveChildAfter(a, b) { this._kids = this._kids.filter((k) => k !== a); this._kids.splice(this._kids.indexOf(b) + 1, 0, a); b.el.after(a.el); }
   MoveChildBefore(a, b) { this._kids = this._kids.filter((k) => k !== a); this._kids.splice(this._kids.indexOf(b), 0, a); b.el.before(a.el); }
   SetParent(novo) {
     if (this.parent) this.parent._kids = this.parent._kids.filter((k) => k !== this);
@@ -353,6 +383,7 @@ class FakePanel {
   // CitadelHTMLPanel falso: carrega a página real (mod/pagina/ponte.html) num iframe; pedidos pelo
   // fragmento da URL, respostas pelo título (fetch real ao deadlock-api).
   SetURL(url) {
+    if (SIM_PONTE_FALSA) { this._ponteFalsa(url); return; }
     const [base, hash] = url.split("#");
     if (!this._iframe) {
       this._iframe = document.createElement("iframe");
@@ -368,11 +399,41 @@ class FakePanel {
 }
 const raiz = new FakePanel("Panel", null, "Hud");
 document.getElementById("tela").appendChild(raiz.el);
+// ?addon=1: o "Deadlock Utils - QOL Addon" (build\qol), que no jogo roda no hud_playerintents.xml (um filho do HUD).
+// ?qol=1: simula o QOL Lock instalado (botão e configuração dele no menu ESC / raiz).
+const SIM_ADDON = /[?&]addon=1/.test(location.search);
+// ?ponteFalsa=1: a ponte responde aqui mesmo (salvar/ler em memória e um tracker com dados de exemplo), para
+// testar o desenho sem a página publicada.
+const SIM_PONTE_FALSA = /[?&]ponteFalsa=1/.test(location.search);
+FakePanel.prototype._ponteFalsa = function (url) {
+  const msg = JSON.parse(decodeURIComponent(url.split("#")[1] || "{}"));
+  const guardado = window._simGuardado = window._simGuardado || {};
+  const RANKS = ["Obscurus", "Initiate", "Seeker", "Acolyte", "Sentinel", "Mystic", "Ritualist", "Emissary", "Oracle", "Phantom", "Ascendant", "Eternus"];
+  let r = "";
+  if (msg.fn === "info") r = JSON.stringify({ fetch: "function", localStorage: "ok", visitas: 1 });
+  else if (msg.fn === "salvar") { guardado[msg.args[0]] = msg.args[1]; r = "ok"; }
+  else if (msg.fn === "ler") r = guardado[msg.args[0]] || "";
+  else if (msg.fn === "tracker") {
+    const nomes = msg.args[1] || [];
+    r = JSON.stringify({ origem: "partida ao vivo", jogadores: nomes.map((j, i) => i === 3 ? { nome: j.nome, classe: j.classe, time: j.time } : {
+      nome: j.nome, classe: j.classe, time: j.time, id: 100 + i, porNome: i === 5,
+      rank: i === 7 ? "Sem rank" : RANKS[(i * 5) % 12] + " " + ((i % 6) + 1),
+      partidas: 120 + i * 37, vitorias: 50 + i * 21,
+      top: [[j.classe, 40 + i, 22 + i], ["hero_inferno", 30, 12], ["hero_haze", 18, 11]],
+      atual: i % 4 === 0 ? null : [40 + i, 22 + i, 6.4, 4.1],
+      contra: i % 3 === 0 ? [5, 3] : null, com: i % 4 === 1 ? [7, 4] : null,
+    }) });
+  }
+  const seq = (this._seq = (this._seq || 0) + 1);
+  const titulo = "DU|r|" + msg.id + "|1|0|1|" + r + "|#" + seq;
+  setTimeout(() => { this._fire("HTMLTitle", titulo); this._fire("HTMLTitle", titulo); }, 120);
+};
+const SIM_QOL = /[?&]qol=1/.test(location.search);
 if (location.search.indexOf("ponte=1") >= 0) window.DU_URL_PONTE_TESTE = location.origin + "/mod/pagina/ponte.html";
 const keyBinds = {};
 
 window.$ = {
-  GetContextPanel: () => raiz,
+  GetContextPanel: () => (SIM_ADDON ? intents : raiz),
   CreatePanel: (t, p, id) => new FakePanel(t, p, id),
   RegisterKeyBind: (p, key, fn) => { (keyBinds[key] = keyBinds[key] || []).push(fn); },
   CreatePanelWithProperties: (t, p, id, props) => { const x = new FakePanel(t, p, id); if (props && props.placeholder && t === "TextEntry") x.el.placeholder = props.placeholder; return x; },
@@ -392,9 +453,14 @@ window.$ = {
       if (cmd === "-show_scoreboard") { topBar.RemoveClass("gScoreboardOpen"); hudMinimap.RemoveClass("gScoreboardOpen"); }
     }
     if (n === "CopyStringToClipboard") clipboard = a[0];
-    // Compra simulada: só "Activated" funciona (para testar a escolha de método) e só se puder pagar.
-    if (n === "Activated" && a[0] && a[0].paneltype === "CitadelShopMod" && a[0].BHasClass("canAffordMod")) a[0].AddClass("owned");
-    if (n === "CitadelResumePlaying") { esc.RemoveClass("aberto"); raiz.RemoveClass("ShowEscapeMenu"); }
+    // Compra simulada como no jogo de 31/10/2026: CitadelPurchaseModItem(painel, classe do item, bool, bool,
+    // origem). O formato antigo (só o painel) dá o mesmo erro do jogo; "Activated" não compra.
+    if (n === "CitadelPurchaseModItem") {
+      if (a.length < 5 || typeof a[1] !== "string" || !a[0] || !a[0].paneltype) throw new Error("Event arguments could not be parsed for DispatchEvent of CitadelPurchaseModItem");
+      porTipo(shop, "CitadelShopMod").filter((m) => m.classeItem === a[1] && m.BHasClass("canAffordMod")).forEach((m) => m.AddClass("owned"));
+      setTimeout(() => cppAtualizaGuia("compra"), 100);
+    }
+    if (n === "CitadelResumePlaying") { esc.RemoveClass("aberto"); raiz.RemoveClass("ShowEscapeMenu"); if (qolSim) qolSim.janela.RemoveClass("Visible"); }
   },
 };
 window.PlayUISoundEvent = () => {};
@@ -521,7 +587,67 @@ el("Panel", hudMinimap, "", "map_button mid_boss");
 // menu ESC
 const esc = real(el("Panel", raiz, "EscapeMenu"), "sim");
 const menuEsc = real(el("Panel", esc, "Menu"));
-real(el("Panel", real(el("Panel", esc, "SubOptions")), "", "FeedbackRow"));
+const subOpcoes = real(el("Panel", esc, "SubOptions"));
+real(el("Panel", subOpcoes, "", "FeedbackRow"));
+let qolSim = null;
+if (SIM_QOL) {
+  // QOL Lock: botão "QOL LOCK" no menu ESC e a configuração dele na raiz (ql_settings.js), LANGUAGE 9 = pt-br
+  const btQol = real(el("Button", subOpcoes, "ModSettingsBtn", "nav_menu_item minor"));
+  btQol.el.textContent = "QOL LOCK";
+  raiz.SetAttributeString("Deadlock_Mod_Settings_v1", JSON.stringify({ schema: "4.0.5", data: { LANGUAGE: 9 } }));
+  raiz.SetAttributeString("QOL_USER_EDIT_REV", "1");
+  // A janela dele (window.js): barra de abas refeita pelo buildUI, conteúdo em painéis "SettingsListSig_*"
+  // escondidos com Hidden; trocar de aba põe TabFading na lista e 0,2 s depois troca; clicar na aba atual não faz nada.
+  const janela = el("Panel", esc, "SettingsWindow");
+  el("Panel", janela, "SettingsHeader").el.textContent = "QOL LOCK (simulado)";
+  const corpo = el("Panel", janela, "SettingsBody");
+  const barra = el("Panel", corpo, "SettingsTabBar");
+  const trilho = el("Panel", barra, "SettingsTabRailTabs");
+  el("Panel", barra, "SettingsTabRailSpacerMain");
+  const rodape = el("Panel", barra, "SettingsTabRailFooter");
+  const versao = el("Button", rodape, "FooterVersionLabel", "TabItem"); versao.el.textContent = "v4.0.5";
+  const host = el("Panel", corpo, "SettingsContentHost");
+  const lista = el("Panel", host, "SettingsList");
+  const cache = el("Panel", lista, "SettingsListCacheHost", "SettingsListContentHost");
+  el("Panel", lista, "SettingsListSearchHost", "SettingsListContentHost Hidden");
+  const GRUPOS = [["General", ["Support", "Config"]], ["Gameplay", ["Crosshair", "Healthbar", "Shop"]]];
+  qolSim = { janela, barra, trilho, lista, cache, atual: "Config" };
+  const conteudo = {};
+  GRUPOS.forEach(([, abas]) => abas.forEach((a) => {
+    const c = el("Panel", cache, "SettingsListSig_" + a + "_ptbr_default", "SettingsListCachedTabContent");
+    el("Panel", c, "", "simQolTexto").el.textContent = "Conteúdo do QOL: aba " + a;
+    conteudo[a] = c;
+  }));
+  qolSim.mostrar = () => {
+    Object.keys(conteudo).forEach((a) => conteudo[a].SetHasClass("Hidden", a !== qolSim.atual));
+    trilho.FindChildrenWithClassTraverse("TabItem").forEach((b) => b.SetHasClass("Active", b.id === "TabButton_" + qolSim.atual));
+  };
+  qolSim.trocar = (a) => {
+    if (a === qolSim.atual) return; // window.js:937
+    lista.AddClass("TabFading");
+    setTimeout(() => { qolSim.atual = a; qolSim.mostrar(); lista.RemoveClass("TabFading"); }, 200);
+  };
+  // buildUI: apaga e refaz os grupos de abas (no jogo: ao carregar o menu, ao trocar o idioma por preset)
+  qolSim.refazer = () => {
+    trilho.RemoveAndDeleteChildren();
+    GRUPOS.forEach(([g, abas]) => {
+      const grupo = el("Panel", trilho, "SettingsTabRailGroup_" + g, "SettingsTabRailGroup");
+      el("Label", grupo, "", "SettingsTabRailGroupLabel", { text: g });
+      el("Panel", grupo, "", "SettingsTabRailGroupRule");
+      const tabs = el("Panel", grupo, "", "SettingsTabRailGroupTabs");
+      abas.forEach((a) => {
+        const b = el("Button", tabs, "TabButton_" + a, "TabItem TabItem_" + a);
+        el("Label", b, "TabLabel", "", { text: a });
+        b.el.addEventListener("click", () => { qolSim.trocar(a); b._fire("Activated"); });
+      });
+    });
+    qolSim.mostrar();
+  };
+  qolSim.refazer();
+  btQol.el.addEventListener("click", () => { janela.SetHasClass("Visible", !janela.BHasClass("Visible")); qolSim.mostrar(); });
+}
+// ?addon=1&comNormal=1: a versão normal também instalada (ela se anuncia na raiz antes do addon ligar).
+if (/[?&]comNormal=1/.test(location.search)) raiz.SetAttributeString("DeadlockUtils_Instancia", "normal");
 const changehero = real(el("Button", menuEsc, "changehero", "nav_menu_item"));
 changehero.el.textContent = "Trocar herói";
 // loja
@@ -539,19 +665,51 @@ Object.entries(abasJogo).forEach(([id, cls]) => {
   b.el.addEventListener("click", () => { if (shop.BHasClass(cls)) return; Object.values(abasJogo).forEach((c) => shop.RemoveClass(c)); shop.AddClass(cls); });
 });
 shop.AddClass("showingArmor");
+const NATIVOS = (() => { const x = new XMLHttpRequest(); x.open("GET", "../data/items.json", false); x.send(); return JSON.parse(x.responseText).itens; })();
+// Build escolhida na aba Builds (citadel_shop_mods_build.xml): uma categoria por etapa e, no #ModsContainer,
+// uma BuildModEntry por item com o CitadelShopMod dentro, na ordem do guia. Vem ANTES das outras listas, como
+// no citadel_hud_hero_shop.xml do jogo (por isso a varredura do mod acha primeiro os itens do guia).
+const guiaSim = el("Panel", el("Panel", listasSim, "ShopModsSelectedBuild"), "CategoryContainer");
+guiaSim.parent.el.style.display = "none";
+[["Início", [1, 4, 7]], ["Meio do jogo", [10, 13, 16, 19]]].forEach(([nome, idx]) => {
+  const cat = el("CitadelShopModsBuildCategory", guiaSim, "");
+  el("Label", el("Panel", cat, "BuildCategoryHeader"), "BuildCategoryName", "", { text: nome });
+  const mods = el("Panel", cat, "ModsContainer");
+  idx.forEach((i) => {
+    const it = NATIVOS[i];
+    const m = el("CitadelShopMod", el("Panel", mods, "BuildModEntry"), "", i % 2 ? "canAffordMod" : "");
+    m.classeItem = it.classes[0];
+    el("Image", m, "ModIconImage", "", { src: "s2r://panorama/images/" + it.icones.filter((k) => k.startsWith("items/"))[0] + "_psd.vtex" });
+    el("Label", m, "", "modName", { text: it.nome_pt });
+  });
+});
+// Como o C++ da loja (client.dll, função com "BuildModEntry"): pega o 1º filho de cada entrada do guia e usa
+// como CitadelShopMod sem conferir. Se um item saiu do lugar, o jogo fecha: aqui aparece CRASH SIMULADO.
+let crashSim = false;
+function cppAtualizaGuia(motivo) {
+  porTipo(guiaSim, "Panel").filter((p) => p.id === "BuildModEntry").forEach((e) => {
+    const f = e.Children()[0];
+    if (f && f.paneltype === "CitadelShopMod") return;
+    if (!crashSim) { crashSim = true; msgs.push("CRASH SIMULADO (" + motivo + "): BuildModEntry sem o item da loja"); logEl.textContent = msgs.slice(-80).join("\n"); document.body.style.outline = "8px solid red"; }
+  });
+}
+function porTipo(p, tipo) { const out = []; (function rec(x) { x.Children().forEach((k) => { if (k.paneltype === tipo) out.push(k); rec(k); }); })(p); return out; }
+setInterval(() => cppAtualizaGuia("atualização da loja"), 500);
 // Lista "todos os itens" da loja com um CitadelShopMod nativo por item (como o jogo cria).
 const listaNativa = el("Panel", el("Panel", listasSim, "ShopModsFiltered"), "ModTiers");
-const NATIVOS = (() => { const x = new XMLHttpRequest(); x.open("GET", "../data/items.json", false); x.send(); return JSON.parse(x.responseText).itens; })();
 NATIVOS.forEach((it, i) => {
   const m = el("CitadelShopMod", listaNativa, "", i % 3 === 0 ? "canAffordMod" : "");
+  m.classeItem = it.classes[0];
   const SEMSRC = location.search.indexOf("semsrc=1") >= 0; // como no jogo: src vazio, só o nome no cartão
   el("Image", el("Panel", m, "ModCard"), "ModIconImage", "", { src: SEMSRC ? "" : "s2r://panorama/images/" + it.icones.filter((k) => k.startsWith("items/"))[0] + "_psd.vtex" });
   el("Label", el("Panel", m, "", "mod_name_area"), "", "modName", { text: it.nome_pt });
   m.el.classList.remove("fake"); m.el.classList.add("nativoSim"); m.el.textContent = "N:" + it.nome;
 });
 shop.el.style.display = "none";
+// Vista de filtros da loja (ex.: filtrar por cura): classe showingFilters, sem botão na barra lateral.
+document.getElementById("b-filtro").onclick = () => { Object.values(abasJogo).forEach((c) => shop.RemoveClass(c)); shop.AddClass("showingFilters"); };
 
-document.getElementById("b-loja").onclick = () => { const a = !topBar.BHasClass("gShopOpen"); topBar.SetHasClass("gShopOpen", a); shop.SetHasClass("gShopOpen", a); shop.el.style.display = a ? "block" : "none"; };
+document.getElementById("b-loja").onclick = () => { const a = !topBar.BHasClass("gShopOpen"); topBar.SetHasClass("gShopOpen", a); shop.SetHasClass("gShopOpen", a); shop.el.style.display = a ? "block" : "none"; if (a) setTimeout(() => cppAtualizaGuia("abrir a loja"), 300); };
 document.getElementById("b-tab").onclick = () => topBar.SetHasClass("gScoreboardOpen", !topBar.BHasClass("gScoreboardOpen"));
 document.getElementById("b-m").onclick = () => tecla("m");
 document.getElementById("b-f6").onclick = () => tecla("f6");
@@ -559,7 +717,7 @@ document.getElementById("b-f6").onclick = () => tecla("f6");
 document.getElementById("b-esc").onclick = () => { const a = !esc.BHasClass("aberto"); esc.SetHasClass("aberto", a); raiz.SetHasClass("ShowEscapeMenu", a); };
 document.getElementById("b-curse").onclick = () => comprar(ini[4], "items/spirit/curse");
 document.getElementById("b-tempo").onclick = () => { const s = segundos() + 300; relogioLbl.text = Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); };
-document.getElementById("b-f9").onclick = () => tecla("f9");
+document.getElementById("b-f9").onclick = () => tecla("rshift");
 document.getElementById("b-dano").onclick = () => definirVida(vidaAtual - 350);
 document.getElementById("b-cura").onclick = () => definirVida(vidaAtual + 350);
 document.getElementById("b-ponte").onclick = () => { const on = !buffsPonte[0].BHasClass("powerup_gun"); buffsPonte[0].SetHasClass("powerup_gun", on); buffsPonte[1].SetHasClass("powerup_casting", on); };
@@ -579,7 +737,7 @@ function segundos() { const [m, s] = relogioLbl.text.split(":").map(Number); ret
 (function () {
   const idioma = new URLSearchParams(location.search).get("idioma");
   const xhr = new XMLHttpRequest();
-  xhr.open("GET", "../build/deadlock_utils.js?" + Date.now(), false); xhr.send(); // sem cache: sempre o build novo
+  xhr.open("GET", (SIM_ADDON ? "../build/qol/" : "../build/") + "deadlock_utils.js?" + Date.now(), false); xhr.send(); // sem cache: sempre o build novo
   let js = xhr.responseText;
   if (idioma) js = js.replace(/\/\*DU_IDIOMA\*\/"[a-z]{2}"/, '/*DU_IDIOMA*/"' + idioma + '"');
   const s = document.createElement("script");

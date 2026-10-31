@@ -1,0 +1,19 @@
+<root>
+	<!-- Botão "Deadlock Utils" na barra lateral da janela do QOL Lock (78-qolaba.js). Usa as classes do
+	     QOL (ql_settings.vcss_c, do próprio QOL): só painéis deste layout pegam esse CSS. -->
+	<styles>
+		<include src="s2r://panorama/styles/citadel_base_styles.vcss" />
+		<include src="s2r://panorama/styles/ql_settings.vcss_c" />
+		<include src="s2r://panorama/styles/deadlock_utils.vcss_c" />
+	</styles>
+	<Panel class="SettingsTabRailGroup DUQolGrupo">
+		<Label class="SettingsTabRailGroupLabel" text="Addons" />
+		<Panel class="SettingsTabRailGroupRule" />
+		<Panel class="SettingsTabRailGroupTabs">
+			<Button id="DUQolBotao" class="TabItem TabItem_DeadlockUtils">
+				<Image class="TabIcon" src="s2r://panorama/images/icons/icon_graph.vsvg" scaling="stretch-to-fit-preserve-aspect" />
+				<Label text="Deadlock Utils" />
+			</Button>
+		</Panel>
+	</Panel>
+</root>

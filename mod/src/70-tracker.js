@@ -10,6 +10,7 @@ function montarTracker() {
   if (tracker.falhou || valido(tracker.painel)) return !tracker.falhou;
   tracker.painel = painelComLayout(hud, "DU_Tracker", "tracker");
   if (!tracker.painel) { tracker.falhou = true; log("tracker: layout não carregou"); return false; }
+  tracker.painel.SetHasClass("DUTemaQol", ADDON_QOL); // no addon, as cores da janela do QOL Lock
   tracker.status = achar(tracker.painel, "DUTrackerStatus");
   tracker.amigos = achar(tracker.painel, "DUTrackerAmigos");
   tracker.inimigos = achar(tracker.painel, "DUTrackerInimigos");
@@ -24,7 +25,7 @@ function montarTracker() {
 function abrirTracker() {
   if (!modLigado || estadoHud().hideout) return;
   if (!montarTracker()) return;
-  if (mapa.aberto) fecharMapa();
+  cadaModulo("fechar"); // mapa
   try { $.DispatchEvent("CitadelResumePlaying"); } catch (e) {} // fecha o menu ESC, se aberto
   tracker.aberto = true;
   mostrarPainel(tracker.painel, true);
@@ -78,6 +79,36 @@ function infoDoJogador(j) {
 function pct(v, t) { return t ? Math.round(100 * v / t) + "%" : "-"; }
 function heroiDaClasse(c) { return classeParaHeroi[c] || c || "?"; }
 
+// ---------- peças do desenho ----------
+// Insígnia do rank, do próprio jogo: panorama/images/ranked/badges/rank<tier>/badge_<lg|sm>_subrank<1..6>.
+// A ponte manda o nome em inglês ("Ritualist 3", nomes de /v1/assets/ranks); tier/sub numéricos, se vierem, valem mais.
+var NOMES_RANK = ["Obscurus", "Initiate", "Seeker", "Acolyte", "Sentinel", "Mystic", "Ritualist", "Emissary", "Oracle", "Phantom", "Ascendant", "Eternus"];
+function rankDe(info) {
+  var tier = info && info.tier, sub = info && info.sub;
+  if (tier == null) {
+    var m = /^([A-Za-z]+)\s+(\d)$/.exec(String(info && info.rank || ""));
+    if (m) { tier = NOMES_RANK.indexOf(m[1]); sub = Number(m[2]); }
+  }
+  return tier >= 0 ? { tier: tier, sub: sub || 0, nome: NOMES_RANK[tier] + (tier > 0 && sub ? " " + sub : "") } : null;
+}
+function insigniaRank(r, tamanho) {
+  if (!r) return "";
+  return "s2r://panorama/images/ranked/badges/rank" + r.tier + "/badge_" + tamanho + (r.tier > 0 && r.sub ? "_subrank" + r.sub : "") + "_psd.vtex";
+}
+// Barra de vitórias: verde acima de 55%, vermelha abaixo de 45%.
+function barraVitorias(pai, v, t) {
+  var b = criar("Panel", pai, "", "DUTrBarra");
+  var f = t ? v / t : 0;
+  var cheia = criar("Panel", b, "", "DUTrBarraCheia" + (!t ? "" : f >= 0.55 ? " DUTrBom" : f <= 0.45 ? " DUTrRuim" : " DUTrMedio"));
+  try { cheia.style.width = Math.round(100 * f) + "%"; } catch (e) {}
+  return b;
+}
+function cartaoTracker(pai, titulo, classes) {
+  var c = criar("Panel", pai, "", "DUTrCartao " + (classes || ""));
+  if (titulo) rotulo(c, "DUTrCartaoTitulo", esc(titulo));
+  return c;
+}
+
 function desenharTracker() {
   if (!tracker.aberto || !valido(tracker.painel)) return;
   var jogadores = jogadoresDaPartida();
@@ -99,9 +130,16 @@ function desenharTracker() {
       imagem(b, "DUTrackerFoto", imagemHeroi(j.heroi));
       var tx = criar("Panel", b, "", "DUTrackerTextos");
       rotulo(tx, "DUTrackerNome", esc(j.nome || j.heroi || "?"));
-      rotulo(tx, "DUTrackerResumo", info && info.id ? esc(info.rank) + "  ·  " + T("tr.vitorias", pct(info.vitorias, info.partidas)) :
-        tracker.carregando ? "…" : T("tr.semDados"));
-      if (info && (info.contra || info.com)) rotulo(b, "DUTrackerHistorico", T(info.contra ? "tr.jaEnfrentou" : "tr.jaJogouJunto"));
+      var linha = criar("Panel", tx, "", "DUTrackerRankLinha");
+      var r = info && info.id ? rankDe(info) : null;
+      if (r) imagem(linha, "DUTrackerRankMini", insigniaRank(r, "sm"));
+      rotulo(linha, "DUTrackerResumo", info && info.id ? esc(r ? r.nome : T("tr.semRank")) : tracker.carregando ? "…" : T("tr.semDados"));
+      if (info && (info.contra || info.com)) rotulo(b, "DUTrackerHistorico" + (info.contra ? " DUTrContra" : " DUTrJunto"), T(info.contra ? "tr.jaEnfrentou" : "tr.jaJogouJunto"));
+      if (info && info.id && info.partidas) {
+        var vit = criar("Panel", b, "", "DUTrackerVitorias");
+        rotulo(vit, "DUTrackerPct", pct(info.vitorias, info.partidas));
+        barraVitorias(vit, info.vitorias, info.partidas);
+      }
       aoClicar(b, function () { tracker.selecionado = chave; desenharTracker(); });
     });
   });
@@ -114,36 +152,65 @@ function desenharDetalheTracker(jogadores) {
   var j = jogadores.filter(function (x) { return x.time + "|" + x.heroi === tracker.selecionado; })[0];
   if (!j) { rotulo(d, "DUAbaVazio", T("tr.cliqueJogador")); return; }
   var info = infoDoJogador(j);
-  var cab = criar("Panel", d, "", "DUTrackerDetCab");
+  var r = info && info.id ? rankDe(info) : null;
+  // cabeçalho: retrato com a cor do time, nome, herói e a insígnia grande do rank
+  var cab = criar("Panel", d, "", "DUTrackerDetCab" + (j.time === "inimigo" ? " DUInimigo" : ""));
   imagem(cab, "DUTrackerDetFoto", imagemHeroi(j.heroi));
-  var tt = criar("Panel", cab, "", "DUAbaCabTextos");
-  rotulo(tt, "DUAbaTitulo", esc(j.nome || "?"));
-  rotulo(tt, "DUAbaSub", esc(j.heroi) + (info && info.porNome ? "  ·  " + T("tr.porNome") : ""));
-  if (!info || !info.id) { rotulo(d, "DUAbaVazio", tracker.carregando ? T("tr.carregando") : T("tr.naoEncontrado")); return; }
-
-  function bloco(titulo, linhas) {
-    rotulo(d, "DUAbaSecao", titulo);
-    var caixa = criar("Panel", d, "", "DUTrackerBloco");
-    linhas.forEach(function (l) { rotulo(caixa, "DUTrackerLinha", l); });
+  var tt = criar("Panel", cab, "", "DUTrackerDetTextos");
+  rotulo(tt, "DUTrackerDetNome", esc(j.nome || "?"));
+  rotulo(tt, "DUTrackerDetSub", esc(j.heroi) + (info && info.porNome ? "  ·  " + T("tr.porNome") : ""));
+  if (r) {
+    var rk = criar("Panel", cab, "", "DUTrackerDetRank");
+    imagem(rk, "DUTrackerRankGrande", insigniaRank(r, "lg"));
+    rotulo(rk, "DUTrackerRankNome", esc(r.nome));
   }
-  bloco(T("tr.rank"), ["<b>" + esc(info.rank) + "</b>", T("tr.partidasRegistradas", info.partidas, pct(info.vitorias, info.partidas))]);
-  if (info.atual) bloco(esc(T("tr.com", j.heroi)), [T("tr.partidasVitorias", info.atual[0], pct(info.atual[1], info.atual[0])),
-    T("tr.media", info.atual[2], info.atual[3])]);
-  else bloco(esc(T("tr.com", j.heroi)), [T("tr.primeiraVez")]);
-  rotulo(d, "DUAbaSecao", T("tr.maisJogados"));
-  var tops = criar("Panel", d, "", "DUTrackerTops");
-  (info.top || []).forEach(function (t) {
-    var h = heroiDaClasse(t[0]);
-    var c = criar("Panel", tops, "", "DUTrackerTop");
-    imagem(c, "DUTrackerTopFoto", imagemHeroi(h));
-    rotulo(c, "DUTrackerLinha", "<b>" + esc(h) + "</b><br>" + T("tr.partidasPct", t[1], pct(t[2], t[1])));
+  if (!info || !info.id) { rotulo(d, "DUAbaVazio DUTrVazio", tracker.carregando ? T("tr.carregando") : T("tr.naoEncontrado")); return; }
+
+  // números: partidas e vitórias no geral, e com o herói desta partida
+  var nums = criar("Panel", d, "", "DUTrLinhaCartoes");
+  var c1 = cartaoTracker(nums, T("tr.partidas"));
+  rotulo(c1, "DUTrNumero", String(info.partidas || 0));
+  rotulo(c1, "DUTrLegenda", esc(r ? r.nome : T("tr.semRank")));
+  var c2 = cartaoTracker(nums, T("tr.vitoriasRotulo"));
+  rotulo(c2, "DUTrNumero", pct(info.vitorias, info.partidas));
+  barraVitorias(c2, info.vitorias, info.partidas);
+  var c3 = cartaoTracker(nums, T("tr.com", j.heroi), "DUTrCartaoLargo");
+  if (info.atual) {
+    rotulo(c3, "DUTrNumero", pct(info.atual[1], info.atual[0]));
+    barraVitorias(c3, info.atual[1], info.atual[0]);
+    rotulo(c3, "DUTrLegenda", esc(T("tr.partidasN", info.atual[0])) + "  ·  " + esc(T("tr.media", info.atual[2], info.atual[3])));
+  } else rotulo(c3, "DUTrLegenda", esc(T("tr.primeiraVez")));
+
+  // heróis mais jogados
+  if ((info.top || []).length) {
+    rotulo(d, "DUTrSecao", esc(T("tr.maisJogados")));
+    var tops = criar("Panel", d, "", "DUTrLinhaCartoes");
+    info.top.forEach(function (t) {
+      var h = heroiDaClasse(t[0]);
+      var c = cartaoTracker(tops, "", "DUTrCartaoHeroi");
+      imagem(c, "DUTrackerTopFoto", imagemHeroi(h));
+      var tx = criar("Panel", c, "", "DUTrackerTopTextos");
+      rotulo(tx, "DUTrackerTopNome", esc(h));
+      rotulo(tx, "DUTrLegenda", esc(T("tr.partidasN", t[1])) + "  ·  " + pct(t[2], t[1]));
+      barraVitorias(tx, t[2], t[1]);
+    });
+  }
+
+  // histórico com você: contra e junto, com o placar de cada um
+  rotulo(d, "DUTrSecao", esc(T("tr.historico")));
+  var hist = criar("Panel", d, "", "DUTrLinhaCartoes");
+  var euMesmo = CONFIG.accountId && info.id === CONFIG.accountId;
+  if (euMesmo || !CONFIG.accountId || (!info.contra && !info.com)) {
+    rotulo(cartaoTracker(hist, "", "DUTrCartaoLargo"), "DUTrLegenda", esc(euMesmo ? T("tr.ehVoce") : CONFIG.accountId ? T("tr.nunca") : T("tracker.semConta")));
+    return;
+  }
+  [["contra", info.contra, "tr.contraVoceTit", "tr.contraVoce"], ["com", info.com, "tr.juntoTit", "tr.junto"]].forEach(function (x) {
+    if (!x[1]) return;
+    var c = cartaoTracker(hist, T(x[2]), "DUTrCartaoLargo DUTrHist_" + x[0]);
+    rotulo(c, "DUTrNumero", esc(T("tr.placar", x[1][1], x[1][0] - x[1][1])));
+    barraVitorias(c, x[1][1], x[1][0]);
+    rotulo(c, "DUTrLegenda", esc(T(x[3], x[1][0], x[1][1], x[1][0] - x[1][1])));
   });
-  var hist = [];
-  if (CONFIG.accountId && info.id === CONFIG.accountId) hist.push(T("tr.ehVoce"));
-  else if (info.contra) hist.push(T("tr.contraVoce", info.contra[0], info.contra[1], info.contra[0] - info.contra[1]));
-  if (info.com && !(CONFIG.accountId && info.id === CONFIG.accountId)) hist.push(T("tr.junto", info.com[0], info.com[1], info.com[0] - info.com[1]));
-  if (!hist.length) hist.push(CONFIG.accountId ? T("tr.nunca") : T("tracker.semConta"));
-  bloco(T("tr.historico"), hist);
 }
 
 // Botões "Deadlock Utils" (central de configurações) e "Tracker" no menu ESC da partida, numa linha própria
@@ -153,9 +220,9 @@ function desenharDetalheTracker(jogadores) {
 // cores, hover e sons vêm do jogo).
 var botaoEscPronto = false;
 function montarBotaoEsc() {
-  if (botaoEscPronto) return;
-  var menu = achar(hud, "EscapeMenu");
-  if (!valido(menu)) return;
+  if (botaoEscPronto || !querBotaoEsc()) return; // com o QOL Lock, o addon fica numa aba da janela dele (02-compat.js)
+  var menu = menuEsc();
+  if (!menu) return;
   var sub = achar(menu, "SubOptions");
   if (!valido(sub)) return;
   var linha = painelComLayout(sub, "DULinhaMenuEsc", "menuesc");

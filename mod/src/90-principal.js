@@ -20,12 +20,17 @@ function teclaUnica(nome, fn) {
 // As teclas podem mudar na tela de configurações. O jogo não deixa desregistrar uma tecla, então cada
 // tecla registrada pergunta, na hora, qual ação está com ela agora (ajustes.teclas).
 // Com a central aberta, as teclas de mapa e tracker não fazem nada (podem ser letras digitadas na pesquisa).
+// As teclas dos módulos opcionais (o mapa, M) vêm do registro deles (00-base.js).
 var ACOES_TECLA = {
-  mapa: function () { if (modLigado && !central.aberto) alternarMapa(); },
   tracker: function () { if (modLigado && !central.aberto) alternarTracker(); },
   central: function () { if (modLigado) alternarCentral(); },
   desligar: function () { alternarMod(); },
 };
+function acaoDaTecla(a) {
+  if (ACOES_TECLA[a]) return ACOES_TECLA[a];
+  var f = doModulo("teclas", a);
+  return f ? function () { if (modLigado && !central.aberto) f(); } : null;
+}
 var teclasRegistradas = {};
 function registrarTecla(t) {
   if (!t || typeof $.RegisterKeyBind !== "function") return;
@@ -33,11 +38,13 @@ function registrarTecla(t) {
   if (teclasRegistradas[chave]) return;
   teclasRegistradas[chave] = true;
   var fn = function () {
-    Object.keys(ACOES_TECLA).forEach(function (a) {
-      if (String(ajustes.teclas[a] || "").toLowerCase() === tecla) teclaUnica(a, ACOES_TECLA[a])();
+    Object.keys(ajustes.teclas).forEach(function (a) {
+      if (String(ajustes.teclas[a] || "").toLowerCase() !== tecla) return;
+      var acao = acaoDaTecla(a);
+      if (acao) teclaUnica(a, acao)();
     });
   };
-  try { $.RegisterKeyBind(hud, chave, fn); } catch (e) { log("RegisterKeyBind(hud, " + chave + "): " + e); }
+  try { $.RegisterKeyBind(contexto, chave, fn); } catch (e) { log("RegisterKeyBind(contexto, " + chave + "): " + e); }
   try { $.RegisterKeyBind("", chave, fn); } catch (e) { log("RegisterKeyBind('', " + chave + "): " + e); }
 }
 function registrarTeclas() {
@@ -49,27 +56,13 @@ function registrarTeclas() {
 // Desligado = o HUD do jogo exatamente como sem o mod (fora os arquivos substituídos, que sem as classes
 // DU_* na raiz se comportam como o original).
 function esconderTudo() {
-  fecharMapa();
+  cadaModulo("esconder"); // mapa (e as classes dele na raiz), mira, vida, timers, placar do topo
   fecharTracker();
   fecharCentral();
-  desmontarMira();
-  restaurarVida();
-  restaurarTopo();
-  esconderTimers();
   if (loja.ativa) ativarAba(false);
-  devolverNativos();
   esconderDica();
-  limparMarcas();
   [faixa.painel, aviso.painel, loja.botao, achar(hud, "DUBotaoCentral"), achar(hud, "DUBotaoTracker")].forEach(function (p) { mostrarPainel(p, false); });
   faixa.visivel = false;
-  // tamanhos do minimapa e do mapa grande, recorte do placar, ícone do jogador, transparência
-  TAMANHOS_MAPA.forEach(function (t) { hud.RemoveClass("DUMapaT" + t); });
-  [115, 130, 150].forEach(function (e) { hud.RemoveClass("DUMini" + e); });
-  hud.RemoveClass("DUCortaTopo");
-  OPACIDADES_MAPA.forEach(function (o) { hud.RemoveClass("DU_miniOpac" + o[0]); hud.RemoveClass("DU_mapaOpac" + o[0]); });
-  devolverIconesMapa();
-  atualizarCamadaPontos();
-  ajustarJogador(true);
 }
 function alternarMod() {
   modLigado = !modLigado;
@@ -91,9 +84,9 @@ function alternarMod() {
 var rapido = { esc: false, chaveEstado: "" };
 function estadoRapido() {
   var tb = topBar();
-  if (!valido(rapido.escMenu)) rapido.escMenu = achar(hud, "EscapeMenu");
+  var menu = menuEsc();
   var esc = temClasse(hud, "ShowEscapeMenu");
-  if (!esc && valido(rapido.escMenu)) { try { esc = rapido.escMenu.BAscendantHasClass("ShowEscapeMenu"); } catch (e) {} }
+  if (!esc && menu) { try { esc = menu.BAscendantHasClass("ShowEscapeMenu"); } catch (e) {} }
   var estado = estadoHud();
   var e = { lojaAberta: temClasse(tb, "gShopOpen"), placarAberto: placarAberto(), escAberto: esc, escAbriu: esc && !rapido.esc,
     estado: estado, ativa: partidaAtiva(ultimaLeitura && ultimaLeitura.emPartida, estado) };
@@ -108,18 +101,14 @@ function verificarRapido() {
   if (!modLigado) return;
   try {
     var e = estadoRapido();
-    if (e.escAbriu || e.mudouEstado) { fecharMapa(); fecharTracker(); fecharCentral(); esconderDica(); }
+    if (e.escAbriu || e.mudouEstado) { cadaModulo("fechar"); fecharTracker(); fecharCentral(); esconderDica(); }
     if (e.mudouEstado) log("estado do jogo: hideout=" + e.estado.hideout + " preJogo=" + e.estado.preJogo + " fim=" + e.estado.fimDeJogo + " ativa=" + e.ativa);
-    vigiarMapa(e);
+    cadaModulo("rapido", e); // timers, mapa, mira, vida, placar do topo
     atualizarVisibilidadeFaixa(e);
     vigiarAbaLoja(e);
     vigiarCentral(e);
-    vigiarMira(e);
-    atualizarVida(e);
-    vigiarTopo(e);
-    vigiarTimers(e);
     // Nada nosso por cima de mapa/tracker/central/menu ESC.
-    if ((e.escAberto || mapa.aberto || tracker.aberto || central.aberto) && valido(aviso.painel)) mostrarPainel(aviso.painel, false);
+    if ((e.escAberto || algumModuloAberto() || tracker.aberto || central.aberto) && valido(aviso.painel)) mostrarPainel(aviso.painel, false);
     // Loja aberta: as abas trocam os painéis nativos; varre a cada 2s para saber o que dá para comprar/já tem.
     if (e.lojaAberta && Date.now() - ultimaVarreduraLoja > 2000) {
       ultimaVarreduraLoja = Date.now();
@@ -135,51 +124,79 @@ function loopRapido() {
 aoEvento("CitadelScoreboardToggle", function () { $.Schedule(0, verificarRapido); });
 
 // ---------- loop lento ----------
+// O trabalho de cada segundo é dividido em três etapas, cada uma num frame (a ~20 ms uma da outra): tudo num
+// frame só dava um tranco de vários ms a cada segundo. Cada etapa mede o próprio tempo; se alguma passar de
+// 4 ms, o console mostra o pior tempo de cada uma (no máximo uma linha por minuto), para achar o que pesa.
 var ultimoErro = "";
 var ultimosSegundos = null;
 var diagnosticoFeito = false;
 var ultimoLogDesconhecidos = "";
+var tempos = { max: {}, logEm: 0 };
+function etapa(nome, fn) {
+  var t0 = Date.now();
+  try { fn(); } catch (e) {
+    ultimoErro = String(e);
+    log("erro (" + nome + "): " + e + (e && e.stack ? "\n" + e.stack : ""));
+  }
+  var ms = Date.now() - t0;
+  if (!(tempos.max[nome] >= ms)) tempos.max[nome] = ms;
+}
+function logTempos() {
+  if (agoraSeg - tempos.logEm < 60) return;
+  var nomes = Object.keys(tempos.max);
+  if (!nomes.some(function (n) { return tempos.max[n] > 4; })) return;
+  tempos.logEm = agoraSeg;
+  log("desempenho (pior em 60 s): " + nomes.map(function (n) { return n + " " + tempos.max[n] + " ms"; }).join(", "));
+  tempos.max = {};
+}
 function tick() {
-  try {
-    agoraSeg += 1;
-    if (modLigado) {
-      var l = lerPartida();
-      // Partida nova (relógio voltou): esquece itens e heróis da partida anterior.
-      if (l.segundos != null && ultimosSegundos != null && l.segundos + 60 < ultimosSegundos) {
-        esquecerPossuidos();
-        limparMarcas();
-        cacheLeitura.jogadores = [];
-        aviso.vistos = {};
-        aviso.fila = [];
-        timers.urnaFimEm = null;
-        timers.urnaEmJogo = false;
-        topo.confirmado = false;
-        log("partida nova detectada");
-      }
-      if (l.segundos != null) ultimosSegundos = l.segundos;
-      l.meusItens.forEach(marcarPossuido);
-      atualizarRecomendacoes(l, false);
-      garantirPontosMinimapa(l);
+  $.Schedule(1.0, tick);
+  agoraSeg += 1;
+  if (!modLigado) {
+    if (valido(aviso.painel) && agoraSeg >= aviso.ate) mostrarPainel(aviso.painel, false); // o aviso de "mod desligado" some sozinho
+    return;
+  }
+  var l = null;
+  etapa("leitura", function () {
+    l = lerPartida();
+    // Partida nova (relógio voltou): esquece itens e heróis da partida anterior.
+    if (l.segundos != null && ultimosSegundos != null && l.segundos + 60 < ultimosSegundos) {
+      esquecerPossuidos();
+      cacheLeitura.jogadores = [];
+      aviso.vistos = {};
+      aviso.fila = [];
+      cadaModulo("novaPartida"); // marcas do mapa, urna, placar do topo
+      log("partida nova detectada");
+    }
+    if (l.segundos != null) ultimosSegundos = l.segundos;
+    l.meusItens.forEach(marcarPossuido);
+    atualizarRecomendacoes(l, false);
+  });
+  if (!l) return;
+  $.Schedule(0.02, function () {
+    if (!modLigado) return;
+    etapa("hud", function () {
+      cadaModulo("lento", l); // pontos no minimapa
       if (faixa.visivel) atualizarFaixa(false); // almas e distância da loja mudam sem a recomendação mudar
       if (!valido(loja.botao)) montarAbaLoja();
       montarFaixa();
-      atualizarTimers(l);
-      atualizarPainelMapa(l);
       tickAviso(l);
-      montarBotaoEsc();
-      if (tracker.aberto && agoraSeg % 5 === 0) desenharTracker();
-      if (l.emPartida && !diagnosticoFeito) { diagnosticoFeito = true; diagnosticoLeitura(); }
-      var desc = Object.keys(desconhecidos).sort().join(", ");
-      if (desc && desc !== ultimoLogDesconhecidos) { ultimoLogDesconhecidos = desc; log("ícones sem item mapeado: " + desc); }
-      mostrarDiagnosticoNaTela(l);
-    } else if (valido(aviso.painel) && agoraSeg >= aviso.ate) {
-      mostrarPainel(aviso.painel, false); // o aviso de "mod desligado" some sozinho
-    }
-  } catch (e) {
-    ultimoErro = String(e);
-    log("erro: " + e + (e && e.stack ? "\n" + e.stack : ""));
-  }
-  $.Schedule(1.0, tick);
+    });
+    $.Schedule(0.02, function () {
+      if (!modLigado) return;
+      etapa("resto", function () {
+        cadaModulo("lentoFim", l); // timers dos objetivos e painel do mapa M
+        vigiarCompat(l); // QOL Lock (02-compat.js)
+        montarBotaoEsc();
+        if (tracker.aberto && agoraSeg % 5 === 0) desenharTracker();
+        if (l.emPartida && !diagnosticoFeito) { diagnosticoFeito = true; diagnosticoLeitura(); }
+        var desc = Object.keys(desconhecidos).sort().join(", ");
+        if (desc && desc !== ultimoLogDesconhecidos) { ultimoLogDesconhecidos = desc; log("ícones sem item mapeado: " + desc); }
+        mostrarDiagnosticoNaTela(l);
+      });
+      logTempos();
+    });
+  });
 }
 
 // Se a partida está rolando há um tempo e a leitura falhou, a fileira do Tab mostra o motivo (para depurar
@@ -198,14 +215,19 @@ function mostrarDiagnosticoNaTela(l) {
 }
 
 function diagnosticoInicial() {
-  log("carregado v" + DU_DATA.versao + " (jogo " + DU_DATA.versaoJogo + "): " + dados.itens.length + " itens, " +
+  log("carregado v" + DU_DATA.versao + (ADDON_QOL ? " (addon do QOL Lock)" : "") + " (jogo " + DU_DATA.versaoJogo + "): " + dados.itens.length + " itens, " +
     dados.regras.length + " regras, builds de " + Object.keys(dados.builds).length + " heróis, conta=" + (CONFIG.accountId || "não configurada") +
-    ", ponte=" + (CONFIG.urlPonte || "não configurada"));
+    ", ponte=" + (CONFIG.urlPonte || "não configurada") + ", módulos=" + MODULOS.map(function (m) { return m.id; }).join(","));
 }
 
-diagnosticoInicial();
-carregarAjustes(); // tamanhos do mapa, teclas etc. (75-ajustes.js)
-registrarTeclas();
-if (CONFIG.urlPonte) { iniciarPonte(); aoPontePronta(carregarOverrides); }
-$.Schedule(1.0, tick);
-$.Schedule(1.0, loopRapido);
+function iniciar() {
+  if (!instanciaUnica()) return; // as duas versões instaladas: só uma roda (02-compat.js)
+  diagnosticoInicial();
+  carregarAjustes(); // tamanhos do mapa, teclas etc. (75-ajustes.js)
+  registrarTeclas();
+  if (CONFIG.urlPonte) { iniciarPonte(); aoPontePronta(carregarOverrides); }
+  $.Schedule(1.0, tick);
+  $.Schedule(1.0, loopRapido);
+}
+// O addon espera 1 s: dá tempo de a versão normal (no hud.xml), se também estiver instalada, se anunciar.
+if (ADDON_QOL) $.Schedule(1.0, iniciar); else iniciar();

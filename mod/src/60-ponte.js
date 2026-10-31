@@ -55,6 +55,7 @@ function enviarPedido(pedido) {
   $.Schedule(30, function () {
     if (ponte.ocupado === id && ponte.cbs[id]) {
       var cb = ponte.cbs[id]; delete ponte.cbs[id];
+      delete ponte.partes[id]; // pedaços de uma resposta que não chegou inteira
       ponte.ocupado = null;
       cb(false, T("ponte.tempo"));
       proximoPedido();

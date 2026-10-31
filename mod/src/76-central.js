@@ -32,8 +32,10 @@ function montarCentral() {
 }
 
 function abrirCentral(secao) {
+  // Addon com o QOL Lock: as configurações ficam na janela do QOL; a tecla e o botão só dizem onde.
+  if (!centralDisponivel()) { mostrarAvisoTexto(T("qol.ondeConfig.titulo"), T("qol.ondeConfig"), true, 6); return; }
   if (!modLigado || !montarCentral()) return;
-  if (mapa.aberto) fecharMapa();
+  cadaModulo("fechar"); // mapa
   if (tracker.aberto) fecharTracker();
   esconderDica();
   if (secao) central.secao = secao;
@@ -66,7 +68,7 @@ function desenharCentral() {
   if (!valido(central.painel)) return;
   central.secoes.RemoveAndDeleteChildren();
   central.botoes = {};
-  SECOES_CFG.forEach(function (s) {
+  secoesCfg().forEach(function (s) {
     var b = criar("Button", central.secoes, "", "DUCentralSecao");
     // ícone pelo CSS (.DUSecIcone_<seção>): imagem posta pelo JS só carregava depois de um clique
     criar("Panel", b, "", "DUCentralSecaoIcone DUSecIcone_" + s.id);
@@ -113,10 +115,11 @@ function desenharListaCentral() {
   }
 
   var achou = 0;
-  (busca ? SECOES_CFG : [sec]).forEach(function (s) {
+  (busca ? secoesCfg() : [sec]).forEach(function (s) {
     var grupo = null, painelGrupo = null, secFeita = false;
     s.itens.forEach(function (def) {
       if (def.grupo) { grupo = def.grupo; painelGrupo = null; return; }
+      if (!cfgExiste(def)) return;
       if (busca && !linhaCombina(def, s, grupo, busca)) return;
       if (busca && !secFeita) { secFeita = true; rotulo(lista, "DUCfgSecaoBusca", esc(T("cfg.sec." + s.id))); }
       if (grupo && !painelGrupo) {
@@ -150,7 +153,7 @@ function criarLinhaCfg(pai, def) {
   var d = descLinha(def);
   if (d) rotulo(tx, "DUCfgDesc", esc(d));
   var ctl = criar("Panel", p, "", "DUCfgControle");
-  var fn = CONTROLES_CFG[def.tipo];
+  var fn = CONTROLES_CFG[def.tipo] || doModulo("controles", def.tipo); // "pontos" vem de 48-pontos.js
   l.atualizar = (fn && fn(ctl, def, l)) || function () {};
   return l;
 }
@@ -313,35 +316,7 @@ var CONTROLES_CFG = {
     };
   },
 
-  // Camadas do mapa: liga cada uma no mapa grande ("Mapa") e no minimapa ("Mini").
-  pontos: function (ctl) {
-    if (!pontos.filtros) carregarFiltros();
-    var chips = [];
-    DADOS_MAPA.camadas.forEach(function (c) {
-      var b = criar("Panel", ctl, "", "DUFiltro DUCfgCamada");
-      var amostra = criar("Panel", b, "", "DUFiltroIcone " + (c.estilo === "icone" ? "DUBadge" : "DUBolinha"));
-      if (amostra) {
-        try { if (c.estilo === "icone") amostra.style.border = "2px solid " + c.cor; else amostra.style.backgroundColor = c.cor; } catch (e) {}
-        if (c.estilo === "icone" && c.icone) { var im = imagem(amostra, "DUBadgeIcone", iconePonto(c)); if (im && !c.semCor) { try { im.style.washColor = c.cor; } catch (e) {} } }
-      }
-      rotulo(b, "DUFiltroNome", esc(c.nome));
-      var chipG = criar("Button", b, "", "DUAbaModo DUCfgChipMini");
-      rotulo(chipG, "", esc(T("aj.chipGrande")));
-      aoClicar(chipG, function () { alternarFiltro(c.id); atualizarCentral(); });
-      var chipM = criar("Button", b, "", "DUAbaModo DUCfgChipMini");
-      rotulo(chipM, "", esc(T("aj.chipMini")));
-      aoClicar(chipM, function () { alternarFiltroMini(c.id); atualizarCentral(); });
-      chips.push({ c: c, b: b, g: chipG, m: chipM });
-    });
-    return function () {
-      chips.forEach(function (x) {
-        var on = !!pontos.filtros[x.c.id], onMini = !!(pontos.filtrosMini || {})[x.c.id];
-        x.b.SetHasClass("DUFiltroOn", on || onMini);
-        x.g.SetHasClass("DUAbaModoAtivo", on);
-        x.m.SetHasClass("DUAbaModoAtivo", onMini);
-      });
-    };
-  },
+  // (o tipo "pontos", camadas do mapa, vem do módulo dos pontos: 48-pontos.js)
 
   // Backup: copiar código / colar e importar.
   codigo: function (ctl) {
@@ -375,7 +350,7 @@ function lerPadrao(id) {
   return i < 0 ? AJUSTES_PADRAO[id] : (AJUSTES_PADRAO[id.slice(0, i)] || {})[id.slice(i + 1)];
 }
 
-// ---------- prévia (coluna da direita) ----------
+// ---------- prévia (coluna da direita): o módulo da seção desenha (mira: 80-mira.js, vida: 82-vida.js) ----------
 function montarPrevia(tipo) {
   var p = central.previa;
   p.RemoveAndDeleteChildren();
@@ -383,36 +358,10 @@ function montarPrevia(tipo) {
   central.previaDesenho = null;
   central.previaBarras = null;
   rotulo(p, "DUCfgPreviaTitulo", esc(T("cfg.previa")));
-  if (tipo === "mira") {
-    var caixa = criar("Panel", p, "", "DUCfgPreviaMira");
-    criar("Panel", caixa, "", "DUCfgPreviaEscuro");
-    criar("Panel", caixa, "", "DUCfgPreviaClaro");
-    central.previaDesenho = criar("Panel", caixa, "", "DUCfgPreviaDesenho");
-    rotulo(p, "DUCfgPreviaDica", esc(T("cfg.previa.mira")));
-  } else if (tipo === "vida") {
-    central.previaBarras = [95, 70, 45, 15].map(function (pct) {
-      var linha = criar("Panel", p, "", "DUCfgPreviaVida");
-      rotulo(linha, "DUCfgPreviaPct", pct + "%");
-      var barra = criar("Panel", linha, "", "DUCfgPreviaBarra");
-      return { pct: pct, cheia: criar("Panel", barra, "", "DUCfgPreviaCheia") };
-    });
-    rotulo(p, "DUCfgPreviaDica", esc(T("cfg.previa.vida")));
-  }
+  var previa = doModulo("previas", tipo);
+  if (previa) previa.montar(p);
 }
 function desenharPrevia(tipo) {
-  if (tipo === "mira" && valido(central.previaDesenho)) {
-    var c = cfgMira();
-    var chave = JSON.stringify(c);
-    if (chave === central.chavePrevia) return;
-    central.chavePrevia = chave;
-    desenharMira(central.previaDesenho, c, 260);
-  } else if (tipo === "vida" && central.previaBarras) {
-    // mesma textura da barra do jogo tingida com wash-color, como no HUD (cor de fundo ficaria por baixo dela)
-    central.previaBarras.forEach(function (x) {
-      try {
-        x.cheia.style.width = x.pct + "%";
-        x.cheia.style.washColor = corVida(x.pct) || null;
-      } catch (e) {}
-    });
-  }
+  var previa = doModulo("previas", tipo);
+  if (previa) previa.desenhar();
 }

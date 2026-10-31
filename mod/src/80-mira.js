@@ -143,12 +143,12 @@ function vigiarMira(estado) {
       mira.vida = achar(mira.painel, "DUVidaMira");
       mira.vidaCheia = achar(mira.painel, "DUVidaMiraCheia");
       mira.vidaTexto = achar(mira.painel, "DUVidaMiraTexto");
-      vida.chaveMira = "";
+      if (temModulo("vida")) vida.chaveMira = ""; // a barrinha de vida perto da mira é da vida (82-vida.js)
     }
     esconderMiraJogo(arma, querMira && ajustes.miraEsconderJogo);
   }
   if (!valido(mira.painel)) return;
-  var chave = querMira ? JSON.stringify(cfgMira()) : "-";
+  var chave = querMira ? "mira" : "-"; // aplicar() (configurações mudaram) e um painel novo zeram a chave
   if (chave !== mira.chave) {
     mira.chave = chave;
     if (querMira) desenharMira(mira.desenho, cfgMira(), LADO_MIRA);
@@ -157,6 +157,32 @@ function vigiarMira(estado) {
   // Dentro do elemento do jogo ela some junto com a mira do jogo. Sem ele (fallback no HUD), o mod esconde
   // fora da partida e com loja, menus, mapa e telas do mod abertos.
   if (mira.pai === hud && estado) {
-    mostrarPainel(mira.painel, estado.ativa && !(estado.lojaAberta || estado.escAberto || mapa.aberto || central.aberto || tracker.aberto));
+    mostrarPainel(mira.painel, estado.ativa && !(estado.lojaAberta || estado.escAberto || algumModuloAberto() || central.aberto || tracker.aberto));
   }
 }
+
+// Ganchos (00-base.js). A prévia é a da central de configurações (76-central.js).
+registrarModulo("mira", {
+  rapido: vigiarMira,
+  esconder: desmontarMira,
+  aplicar: function () { mira.chave = ""; },
+  previas: {
+    mira: {
+      montar: function (p) {
+        var caixa = criar("Panel", p, "", "DUCfgPreviaMira");
+        criar("Panel", caixa, "", "DUCfgPreviaEscuro");
+        criar("Panel", caixa, "", "DUCfgPreviaClaro");
+        central.previaDesenho = criar("Panel", caixa, "", "DUCfgPreviaDesenho");
+        rotulo(p, "DUCfgPreviaDica", esc(T("cfg.previa.mira")));
+      },
+      desenhar: function () {
+        if (!valido(central.previaDesenho)) return;
+        var c = cfgMira();
+        var chave = JSON.stringify(c);
+        if (chave === central.chavePrevia) return;
+        central.chavePrevia = chave;
+        desenharMira(central.previaDesenho, c, 260);
+      },
+    },
+  },
+});

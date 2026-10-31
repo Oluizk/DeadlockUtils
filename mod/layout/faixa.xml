@@ -2,13 +2,22 @@
 	<styles>
 		<include src="s2r://panorama/styles/deadlock_utils.vcss_c" />
 	</styles>
+	<!-- Fileiras do Tab (40-tab.js): counters e próximos itens do guia (ou da Build Recomendada), em
+	     cartas no formato da loja. -->
 	<Panel class="DUFaixa">
-		<Panel id="DUFaixaSecaoCounters" class="DUFaixaSecao">
-			<Label class="DUFaixaTitulo" text="@faixa.counters" />
+		<Panel id="DUFaixaSecaoCounters" class="DUFaixaSecao DUFaixaSecaoCounters">
+			<Panel class="DUFaixaCab">
+				<Panel class="DUFaixaCabIcone DUFaixaCabIconeCounters" />
+				<Label class="DUFaixaTitulo" text="@faixa.counters" />
+			</Panel>
 			<Panel id="DUFaixaCounters" class="DUFaixaCartas" />
 		</Panel>
-		<Panel id="DUFaixaSecaoBuild" class="DUFaixaSecao">
-			<Label class="DUFaixaTitulo" text="@faixa.recomendados" />
+		<Panel id="DUFaixaSecaoBuild" class="DUFaixaSecao DUFaixaSecaoGuia">
+			<Panel class="DUFaixaCab">
+				<Panel class="DUFaixaCabIcone DUFaixaCabIconeGuia" />
+				<Label id="DUFaixaTituloBuild" class="DUFaixaTitulo" text="@faixa.guia" />
+				<Label id="DUFaixaSubBuild" class="DUFaixaSub" text=" " />
+			</Panel>
 			<Panel id="DUFaixaBuild" class="DUFaixaCartas" />
 		</Panel>
 		<Label id="DUFaixaPorque" class="DUFaixaPorque DUEscondido" html="true" text=" " />

@@ -480,7 +480,7 @@
     flow-children: down;
     border-radius: 2px;
     box-shadow: 2px 2px 12px #0007;
-    transition-property: pre-transform-scale2d, brightness;
+    transition-property: pre-transform-scale2d, brightness, saturation, opacity;
     transition-duration: 0.05s;
 }
 .DUCartao:hover
@@ -524,8 +524,60 @@
     letter-spacing: 1px;
     horizontal-align: center;
 }
+/* preço no rodapé, como no cartão da loja (fora do fluxo para ficar sempre embaixo) */
+.DUCartaoPreco
+{
+    ignore-parent-flow: true;
+    width: 100%;
+    height: 16px;
+    vertical-align: bottom;
+    background-color: #0f0d0bcc;
+    border-radius: 0px 0px 2px 2px;
+}
+.DUCartaoCusto
+{
+    horizontal-align: center;
+    vertical-align: center;
+    font-size: 12px;
+    font-weight: bold;
+    color: #7fe0a0;
+}
+/* estados na aba da loja (relidos do item da loja): já tem, sem almas, longe da loja, comprando */
+.DUCartao.DUComprado
+{
+    saturation: 0;
+    opacity: 0.45;
+}
+.DUCartao.DUSemAlmas
+{
+    saturation: 0.15;
+    opacity: 0.6;
+}
+.DUCartao.DUSemAlmas .DUCartaoCusto
+{
+    color: #ff6b6b;
+}
+.DUCartao.DULonge
+{
+    saturation: 0.4;
+    opacity: 0.7;
+}
+.DUCartao.DUComprado:hover, .DUCartao.DUSemAlmas:hover, .DUCartao.DULonge:hover
+{
+    opacity: 0.95;
+}
+.DUCartao.DUComprando
+{
+    opacity: 0.4;
+    pre-transform-scale2d: 0.92;
+}
 
 /* slot da aba: item (nativo da loja ou nosso cartão) + legenda de contra quem / build */
+.DUSecaoBuild
+{
+    width: 100%;
+    flow-children: down;
+}
 .DUSlot
 {
     width: 82px;
@@ -1095,6 +1147,7 @@
 
 /* ---------------- faixa do Tab (acima dos investimentos) ---------------- */
 /* Só os ícones, no estilo dos slots de item do jogo (canto inferior esquerdo). */
+/* ---- fileiras do Tab (40-tab.js, faixa.xml): cartas no formato da loja ---- */
 .DUFaixa
 {
     horizontal-align: left;
@@ -1106,91 +1159,166 @@
 .DUFaixaSecao
 {
     flow-children: down;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
+    padding: 6px 8px 8px 8px;
+    border-radius: 4px;
+    background-color: gradient( linear, 0% 0%, 100% 0%, from( #0d0c0bdd ), to( #0d0c0b00 ) );
+    border-left: 3px solid #EC9719;
+}
+.DUFaixaSecaoGuia
+{
+    border-left: 3px solid #5FE6A2;
+}
+.DUFaixaCab
+{
+    flow-children: right;
+    margin-bottom: 5px;
+}
+.DUFaixaCabIcone
+{
+    width: 14px;
+    height: 14px;
+    vertical-align: center;
+    margin-right: 6px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.DUFaixaCabIconeCounters
+{
+    background-image: url("s2r://panorama/images/shop/catalog/catalog_shop_tab_icon_weapon_psd.vtex");
+}
+.DUFaixaCabIconeGuia
+{
+    background-image: url("s2r://panorama/images/shop/catalog/catalog_shop_tab_icon_builds_psd.vtex");
 }
 .DUFaixaTitulo
 {
-    font-size: 12px;
+    font-size: 13px;
     font-weight: bold;
-    letter-spacing: 1px;
+    letter-spacing: 1.5px;
     text-transform: uppercase;
-    color: #d9b26a;
+    color: #f2e4c4;
     text-shadow: 1px 1px 2px #000000;
-    margin-bottom: 3px;
+    vertical-align: center;
+}
+.DUFaixaSub
+{
+    font-size: 12px;
+    color: #a89f8e;
+    margin-left: 8px;
+    vertical-align: center;
 }
 .DUFaixaCartas
 {
     flow-children: right;
-}
-.DUComprando
-{
-    opacity: 0.4;
-    pre-transform-scale2d: 0.92;
 }
 .DUFaixaVazio
 {
     font-size: 13px;
     color: #a89f8e;
 }
-.DUIcone
+/* carta: mesmo fundo de papel por categoria/tier da loja (card_backer), menor que a da loja (76x114) */
+.DUCartaTab
 {
-    width: 58px;
-    height: 58px;
+    width: 64px;
+    height: 96px;
     margin-right: 6px;
-    border-radius: 4px;
-    background-color: #1a1714e6;
-    border: 2px solid #d9b26a99;
-    box-shadow: 0px 2px 6px #000000aa;
-    transition-property: pre-transform-scale2d, opacity, brightness;
+    flow-children: down;
+    border-radius: 3px;
+    box-shadow: 1px 2px 8px #000000bb;
+    transition-property: pre-transform-scale2d, brightness, saturation, opacity;
     transition-duration: 0.08s;
 }
-.DUIcone_weapon
+.DUCartaTab:hover
 {
-    background-color: #5a3a17e6;
+    pre-transform-scale2d: 1.07;
+    brightness: 1.18;
 }
-.DUIcone_vitality
+.DUCartaTabIcone
 {
-    background-color: #2f4a1de6;
+    width: 52px;
+    height: 52px;
+    horizontal-align: center;
+    margin-top: 4px;
 }
-.DUIcone_spirit
+.DUCartaTabNome
 {
-    background-color: #3d2457e6;
+    width: 100%;
+    height: 22px;
+    font-family: VALVEOracle, Reaver, sans-serif;
+    font-size: 10px;
+    font-weight: bold;
+    line-height: 92%;
+    text-align: center;
+    text-overflow: shrink;
+    color: #2a241d;
+    horizontal-align: center;
 }
-.DUIcone:hover
+.DUCartaTabAtivo
 {
-    pre-transform-scale2d: 1.08;
-    brightness: 1.2;
-    border: 2px solid #ffe2a0;
+    font-size: 8px;
+    letter-spacing: 1px;
+    color: #f2e4c4;
+    background-color: #000000aa;
+    padding: 0px 3px;
+    horizontal-align: center;
+    margin-top: -1px;
 }
-.DUIconeImagem
+.DUCartaTabPreco
 {
-    width: 54px;
-    height: 54px;
+    width: 100%;
+    height: 14px;
+    vertical-align: bottom;
+    background-color: #0f0d0bcc;
+    border-radius: 0px 0px 3px 3px;
+}
+.DUCartaTabCusto
+{
     horizontal-align: center;
     vertical-align: center;
+    font-size: 11px;
+    font-weight: bold;
+    color: #7fe0a0;
 }
-/* Tab: não dá para comprar agora (sem almas ou longe da loja), igual à loja do jogo com item caro */
-.DUIcone.DUIndisponivel
+/* fora do fluxo da carta (flow-children: down): sem isso ele ia para baixo do preço, espremido */
+.DUCartaTabHeroi
 {
-    opacity: 0.45;
-    saturation: 0.3;
-}
-.DUIcone.DUIndisponivel:hover
-{
-    opacity: 0.8;
-}
-.DUIconeHeroi
-{
-    width: 24px;
-    height: 24px;
+    ignore-parent-flow: true;
+    z-index: 2;
+    width: 22px;
+    height: 22px;
     horizontal-align: right;
     vertical-align: top;
-    margin: -6px -6px 0px 0px;
-    border-radius: 12px;
+    margin: 3px 3px 0px 0px;
+    border-radius: 11px;
     border: 2px solid #e04848;
     background-color: #1a1714;
 }
-.DUFaixaPorque
+/* estados, como a loja: sem almas e longe da loja ficam apagados; comprando encolhe */
+.DUCartaTab.DUSemAlmas
+{
+    saturation: 0.15;
+    opacity: 0.6;
+}
+.DUCartaTab.DUSemAlmas .DUCartaTabCusto
+{
+    color: #ff6b6b;
+}
+.DUCartaTab.DULonge
+{
+    saturation: 0.4;
+    opacity: 0.7;
+}
+.DUCartaTab.DUSemAlmas:hover, .DUCartaTab.DULonge:hover
+{
+    opacity: 0.95;
+}
+.DUCartaTab.DUComprando
+{
+    opacity: 0.4;
+    pre-transform-scale2d: 0.92;
+}.DUFaixaPorque
 {
     max-width: 760px;
     margin-top: 6px;
@@ -1543,8 +1671,8 @@
 .DUMapaAberto #minimap_persp { ui-scale: 100%; }
 /* transparência (configurações > Mapa). Opacidade no próprio #hud_minimap não pega no jogo (o painel C++
    cuida da dele); nos painéis comuns do #minimap_container pega. Vai na moldura, no desfoque e na caixa
-   do mapa, ou seja, em tudo do container menos a camada .DUIconesMapa, onde os heróis ficam nítidos
-   (50-mapa.js). Minimapa normal: DU_miniOpac<n>; mapa grande: DU_mapaOpac<n> (OPACIDADES_MAPA). */
+   do mapa (os heróis, que são filhos do minimapa, ficam transparentes junto). Minimapa normal:
+   DU_miniOpac<n>; mapa grande: DU_mapaOpac<n> (OPACIDADES_MAPA). */
 .DU_miniOpac85 #minimap_container #minimap_frame, .DU_miniOpac85 #minimap_container #minimap_blur, .DU_miniOpac85 #minimap_container #HudMinimapContainer { opacity: 0.85; }
 .DU_miniOpac70 #minimap_container #minimap_frame, .DU_miniOpac70 #minimap_container #minimap_blur, .DU_miniOpac70 #minimap_container #HudMinimapContainer { opacity: 0.7; }
 .DU_miniOpac55 #minimap_container #minimap_frame, .DU_miniOpac55 #minimap_container #minimap_blur, .DU_miniOpac55 #minimap_container #HudMinimapContainer { opacity: 0.55; }
@@ -1554,18 +1682,6 @@
 .DUMapaAberto.DU_mapaOpac70 #minimap_container #minimap_frame, .DUMapaAberto.DU_mapaOpac70 #minimap_container #minimap_blur, .DUMapaAberto.DU_mapaOpac70 #minimap_container #HudMinimapContainer { opacity: 0.7; }
 .DUMapaAberto.DU_mapaOpac55 #minimap_container #minimap_frame, .DUMapaAberto.DU_mapaOpac55 #minimap_container #minimap_blur, .DUMapaAberto.DU_mapaOpac55 #minimap_container #HudMinimapContainer { opacity: 0.55; }
 .DUMapaAberto.DU_mapaOpac40 #minimap_container #minimap_frame, .DUMapaAberto.DU_mapaOpac40 #minimap_container #minimap_blur, .DUMapaAberto.DU_mapaOpac40 #minimap_container #HudMinimapContainer { opacity: 0.4; }
-/* camada dos heróis: no #minimap_container, centralizada como o #HudMinimapContainer (tamanho e ajuste
-   fino de posição vêm do JS) e virada como o minimapa (.invert_map.HudMinimap no hud_minimap.css) */
-.DUIconesMapa
-{
-    horizontal-align: center;
-    vertical-align: center;
-    overflow: noclip;
-}
-.DUIconesMapa.invert_map
-{
-    transform: scaleY(-1) scaleX(-1);
-}
 .DUMapaAberto #minimap_persp #minimap_hints
 {
     visibility: collapse;
@@ -2602,7 +2718,9 @@
     font-style: italic;
 }
 
-/* ---------------- tracker ---------------- */
+/* ---------------- tracker (70-tracker.js, tracker.xml) ----------------
+   Tema do jogo (versão normal): papel da loja com cartões escuros. .DUTemaQol (addon do QOL Lock): as cores
+   da janela do QOL (ql_settings.css: fundo #11161a > #090c0f, verde #66cc99, texto #cde5db). */
 .DUTracker
 {
     width: 100%;
@@ -2612,21 +2730,30 @@
 }
 .DUTrackerJanela
 {
-    width: 1500px;
-    height: 900px;
+    width: 1440px;
+    height: 880px;
     horizontal-align: center;
     vertical-align: center;
     flow-children: down;
     background-color: #b9a684;
     background-image: url("s2r://panorama/images/shop/catalog/catalog_shop_generic_bg2_psd.vtex");
     background-size: 100% 100%;
-    border-radius: 4px;
-    box-shadow: #000000cc 0px 6px 30px 0px;
+    border-radius: 6px;
+    box-shadow: #000000cc 0px 8px 34px 0px;
+}
+.DUTrackerCab
+{
+    width: 100%;
+    height: 78px;
+    flow-children: right;
+    padding: 0px 24px;
+    background-color: #FFEFD795;
+    border-radius: 6px 6px 0px 0px;
 }
 .DUTrackerCabIcone
 {
-    width: 46px;
-    height: 46px;
+    width: 40px;
+    height: 40px;
     vertical-align: center;
     margin-right: 14px;
     background-image: url("s2r://panorama/images/icons/icon_graph.vsvg");
@@ -2634,36 +2761,104 @@
     background-repeat: no-repeat;
     wash-color: #3a2c1c;
 }
+.DUTrackerCabTextos
+{
+    width: fill-parent-flow(1.0);
+    flow-children: down;
+    vertical-align: center;
+}
+.DUTrackerTitulo
+{
+    font-family: VALVEOracle, Reaver, sans-serif;
+    font-size: 30px;
+    font-style: italic;
+    font-weight: bold;
+    color: #10130D;
+}
+.DUTrackerStatus
+{
+    font-size: 14px;
+    color: #10130Dcc;
+}
+.DUTrackerCabAcoes
+{
+    flow-children: right;
+    vertical-align: center;
+}
+.DUTrackerBotao
+{
+    height: 34px;
+    padding: 0px 16px;
+    margin-left: 8px;
+    background-color: #241e18e6;
+    border-radius: 4px;
+}
+.DUTrackerBotao Label
+{
+    vertical-align: center;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #f2e4c4;
+}
+.DUTrackerBotao:hover
+{
+    brightness: 1.3;
+}
 .DUTrackerCorpo
 {
     width: 100%;
     height: fill-parent-flow(1.0);
     flow-children: right;
-    padding: 6px 26px;
+    padding: 14px 24px 6px 24px;
 }
 .DUTrackerTimes
 {
-    width: 520px;
+    width: 500px;
     height: 100%;
     flow-children: down;
     overflow: squish scroll;
-    margin-right: 20px;
+    margin-right: 22px;
+}
+.DUTrackerTimeCab
+{
+    width: 100%;
+    margin: 4px 0px 6px 0px;
+    padding-left: 10px;
+    border-left: 4px solid #7cc35a;
+}
+.DUTrackerTimeInimigo
+{
+    margin-top: 14px;
+    border-left: 4px solid #e04848;
+}
+.DUTrackerTimeCab Label
+{
+    font-size: 15px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #2b2219;
 }
 .DUTrackerLista
 {
     width: 100%;
     flow-children: down;
 }
+/* jogador: retrato, nome, rank (insígnia pequena) e, à direita, vitórias com barra */
 .DUTrackerJogador
 {
     width: 100%;
-    height: 62px;
+    height: 58px;
     flow-children: right;
     margin-bottom: 4px;
-    padding: 5px 8px;
+    padding: 5px 10px 5px 6px;
     background-color: #241e18e6;
     border-left: 4px solid #7cc35a;
-    border-radius: 3px;
+    border-radius: 4px;
+    transition-property: brightness, background-color;
+    transition-duration: 0.1s;
 }
 .DUTrackerJogador.DUInimigo
 {
@@ -2679,9 +2874,10 @@
 }
 .DUTrackerFoto
 {
-    width: 52px;
-    height: 52px;
+    width: 48px;
+    height: 48px;
     margin-right: 10px;
+    border-radius: 4px;
 }
 .DUTrackerTextos
 {
@@ -2691,25 +2887,90 @@
 }
 .DUTrackerNome
 {
-    font-size: 17px;
+    font-size: 16px;
     font-weight: bold;
     color: #f2e4c4;
+    text-overflow: ellipsis;
+}
+.DUTrackerRankLinha
+{
+    flow-children: right;
+    margin-top: 2px;
+}
+.DUTrackerRankMini
+{
+    width: 22px;
+    height: 22px;
+    margin-right: 5px;
+    vertical-align: center;
 }
 .DUTrackerResumo
 {
-    font-size: 14px;
+    font-size: 13px;
     color: #c9bba1;
+    vertical-align: center;
 }
 .DUTrackerHistorico
 {
     vertical-align: center;
-    font-size: 11px;
+    margin-right: 10px;
+    font-size: 10px;
     font-weight: bold;
+    letter-spacing: 0.5px;
     padding: 2px 6px;
     color: #2b2219;
     background-color: #d9b26a;
     border-radius: 3px;
 }
+.DUTrackerHistorico.DUTrContra
+{
+    background-color: #e8846b;
+}
+.DUTrackerHistorico.DUTrJunto
+{
+    background-color: #9fd480;
+}
+.DUTrackerVitorias
+{
+    width: 74px;
+    flow-children: down;
+    vertical-align: center;
+}
+.DUTrackerPct
+{
+    horizontal-align: right;
+    font-size: 15px;
+    font-weight: bold;
+    color: #f2e4c4;
+}
+/* barra de vitórias */
+.DUTrBarra
+{
+    width: 100%;
+    height: 5px;
+    margin-top: 3px;
+    background-color: #00000066;
+    border-radius: 3px;
+}
+.DUTrBarraCheia
+{
+    height: 100%;
+    border-radius: 3px;
+    background-color: #c9bba1;
+}
+.DUTrBom
+{
+    background-color: #7fd36a;
+}
+.DUTrMedio
+{
+    background-color: #e3c25c;
+}
+.DUTrRuim
+{
+    background-color: #e3624f;
+}
+/* detalhe do jogador */
 .DUTrackerDetalhe
 {
     width: fill-parent-flow(1.0);
@@ -2719,53 +2980,234 @@
 }
 .DUTrackerDetCab
 {
+    width: 100%;
     flow-children: right;
-    margin-top: 10px;
+    padding: 12px 16px;
+    background-color: #241e18e6;
+    border-left: 4px solid #7cc35a;
+    border-radius: 4px;
+}
+.DUTrackerDetCab.DUInimigo
+{
+    border-left: 4px solid #e04848;
 }
 .DUTrackerDetFoto
 {
-    width: 84px;
-    height: 84px;
-    margin-right: 14px;
+    width: 92px;
+    height: 92px;
+    margin-right: 16px;
+    border-radius: 6px;
 }
-.DUTrackerBloco
+.DUTrackerDetTextos
 {
-    width: 100%;
+    width: fill-parent-flow(1.0);
     flow-children: down;
-    padding: 8px 12px;
-    background-color: #241e18e6;
-    border-radius: 3px;
+    vertical-align: center;
 }
-.DUTrackerLinha
+.DUTrackerDetNome
 {
-    font-size: 16px;
+    font-family: VALVEOracle, Reaver, sans-serif;
+    font-size: 30px;
+    font-weight: bold;
     color: #f2e4c4;
 }
-.DUTrackerTops
+.DUTrackerDetSub
 {
-    flow-children: right;
+    font-size: 15px;
+    color: #c9bba1;
 }
-.DUTrackerTop
+.DUTrackerDetRank
 {
-    width: 260px;
+    flow-children: down;
+    vertical-align: center;
+}
+.DUTrackerRankGrande
+{
+    width: 96px;
+    height: 96px;
+    horizontal-align: center;
+}
+.DUTrackerRankNome
+{
+    horizontal-align: center;
+    font-size: 14px;
+    font-weight: bold;
+    color: #f2e4c4;
+}
+.DUTrSecao
+{
+    margin: 16px 0px 6px 2px;
+    font-size: 15px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #2b2219;
+}
+.DUTrLinhaCartoes
+{
+    width: 100%;
     flow-children: right;
-    margin-right: 8px;
-    padding: 6px;
+    margin-top: 10px;
+}
+.DUTrCartao
+{
+    width: 190px;
+    flow-children: down;
+    margin-right: 10px;
+    padding: 10px 14px 12px 14px;
     background-color: #241e18e6;
-    border-radius: 3px;
+    border-radius: 4px;
+}
+.DUTrCartaoLargo
+{
+    width: fill-parent-flow(1.0);
+}
+.DUTrCartaoTitulo
+{
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #c9bba1;
+}
+.DUTrNumero
+{
+    font-size: 28px;
+    font-weight: bold;
+    color: #f2e4c4;
+}
+.DUTrLegenda
+{
+    margin-top: 4px;
+    font-size: 13px;
+    color: #c9bba1;
+}
+.DUTrCartaoHeroi
+{
+    width: fill-parent-flow(1.0);
+    flow-children: right;
 }
 .DUTrackerTopFoto
 {
-    width: 48px;
-    height: 48px;
-    margin-right: 8px;
+    width: 56px;
+    height: 56px;
+    margin-right: 10px;
+    border-radius: 4px;
+}
+.DUTrackerTopTextos
+{
+    width: fill-parent-flow(1.0);
+    flow-children: down;
+    vertical-align: center;
+}
+.DUTrackerTopNome
+{
+    font-size: 16px;
+    font-weight: bold;
+    color: #f2e4c4;
+}
+.DUTrHist_contra
+{
+    border-left: 4px solid #e8846b;
+}
+.DUTrHist_com
+{
+    border-left: 4px solid #9fd480;
+}
+.DUTrVazio
+{
+    margin-top: 14px;
 }
 .DUTrackerRodape
 {
     horizontal-align: right;
-    margin: 4px 26px 10px 0px;
+    margin: 4px 24px 10px 0px;
     font-size: 12px;
     color: #4f402d;
+}
+
+/* ---- tema do QOL Lock (addon) ---- */
+.DUTemaQol .DUTrackerJanela
+{
+    background-image: none;
+    background-color: gradient( linear, 0% 0%, 0% 100%, from( #11161a ), color-stop( 0.48, #0c1014 ), to( #090c0f ) );
+    border: 1px solid #fffcf412;
+}
+.DUTemaQol .DUTrackerCab
+{
+    background-color: #0b0f12;
+    border-bottom: 1px solid #66cc9926;
+}
+.DUTemaQol .DUTrackerCabIcone
+{
+    wash-color: #66cc99;
+}
+.DUTemaQol .DUTrackerTitulo
+{
+    font-style: normal;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 24px;
+    color: #ffffff;
+}
+.DUTemaQol .DUTrackerStatus, .DUTemaQol .DUTrackerResumo, .DUTemaQol .DUTrLegenda, .DUTemaQol .DUTrackerDetSub
+{
+    color: #8b9698;
+}
+.DUTemaQol .DUTrackerBotao, .DUTemaQol .DUTrackerJogador, .DUTemaQol .DUTrackerDetCab, .DUTemaQol .DUTrCartao
+{
+    background-color: gradient( linear, 0% 0%, 0% 100%, from( #171717 ), to( #111111 ) );
+}
+.DUTemaQol .DUTrackerJogador.DUSelecionado
+{
+    background-color: gradient( linear, 0% 0%, 100% 0%, from( #12241ac7 ), to( #0a100c52 ) );
+}
+.DUTemaQol .DUTrackerBotao Label, .DUTemaQol .DUTrackerNome, .DUTemaQol .DUTrackerPct, .DUTemaQol .DUTrackerDetNome, .DUTemaQol .DUTrackerRankNome, .DUTemaQol .DUTrNumero, .DUTemaQol .DUTrackerTopNome
+{
+    color: #cde5db;
+}
+.DUTemaQol .DUTrackerDetNome
+{
+    font-family: Radiance, sans-serif;
+    text-transform: uppercase;
+    font-size: 26px;
+}
+.DUTemaQol .DUTrackerTimeCab Label, .DUTemaQol .DUTrSecao, .DUTemaQol .DUTrCartaoTitulo
+{
+    color: #66706c;
+}
+.DUTemaQol .DUTrackerJogador, .DUTemaQol .DUTrackerDetCab, .DUTemaQol .DUTrackerTimeCab
+{
+    border-left: 3px solid #5FE6A2;
+}
+.DUTemaQol .DUTrackerJogador.DUInimigo, .DUTemaQol .DUTrackerDetCab.DUInimigo, .DUTemaQol .DUTrackerTimeInimigo
+{
+    border-left: 3px solid #ff3045;
+}
+.DUTemaQol .DUTrBom
+{
+    background-color: #66cc99;
+}
+.DUTemaQol .DUTrRuim
+{
+    background-color: #ff3045;
+}
+.DUTemaQol .DUTrackerHistorico
+{
+    color: #0c1014;
+    background-color: #a6b1b4;
+}
+.DUTemaQol .DUTrackerHistorico.DUTrContra
+{
+    background-color: #ff8a73;
+}
+.DUTemaQol .DUTrackerHistorico.DUTrJunto
+{
+    background-color: #66cc99;
+}
+.DUTemaQol .DUTrackerRodape
+{
+    color: #66706c;
 }
 
 /* Linha do mod no menu ESC (layout menuesc.xml, que inclui o hud_escape_menu.css do jogo: o visual dos
@@ -2784,6 +3226,159 @@
 .DULinhaMenuEsc #DUBotaoTracker
 {
     margin-left: 24px;
+}
+
+/* ===== Aba "Deadlock Utils" na janela do QOL Lock (addon; qolbotao.xml, qolaba.xml, 78-qolaba.js) =====
+   O visual vem do CSS do próprio QOL (ql_settings.vcss_c, incluído nos dois layouts); aqui só o que é
+   nosso. As regras do QOL têm #SettingsWindow na frente: as nossas também, para valerem depois delas. */
+.DUQolGrupo
+{
+    margin-top: 10px;
+}
+.DUQolConteudo.Hidden
+{
+    visibility: collapse;
+}
+#SettingsWindow .SettingRow.DUQolInfo
+{
+    height: fit-children;
+    padding: 0px 16px 4px 30px;
+}
+#SettingsWindow .SettingRow.DUQolInfo:hover
+{
+    background-color: none;
+}
+.DUQolTexto
+{
+    width: 100%;
+    color: #7f8b8e;
+    font-size: 13px;
+}
+.DUQolMsg
+{
+    color: #66cc99;
+}
+#SettingsWindow .DUQolAcoes
+{
+    flow-children: right;
+}
+#SettingsWindow .DUQolCampo
+{
+    width: 150px;
+    margin-left: 8px;
+    margin-right: 8px;
+}
+#SettingsWindow .SegmentBtn.DUQolUsada
+{
+    opacity: 0.35;
+}
+/* linhas com botões montados pelo script (mira, pontos): crescem com as quebras */
+#SettingsWindow .SettingRow.DUQolAlta
+{
+    height: fit-children;
+    min-height: 30px;
+    padding: 3px 0px;
+}
+#SettingsWindow .SettingRow.DUQolAlta .LabelContainer
+{
+    vertical-align: top;
+    margin-top: 4px;
+}
+.DUQolChips
+{
+    width: fill-parent-flow(1.0);
+    flow-children: right-wrap;
+    margin-right: 12px;
+}
+/* .DUQolChip / .DUQolCor: cópia do .SegmentBtn do QOL (ql_settings.css), mais compactos */
+.DUQolChip
+{
+    height: 24px;
+    padding: 0px 9px;
+    margin: 0px 3px 3px 0px;
+    background-color: #1f1d1b;
+    border-radius: 4px;
+    transition-property: background-color, brightness;
+    transition-duration: 0.15s;
+}
+.DUQolChip Label
+{
+    color: #a39c8e;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    vertical-align: center;
+}
+.DUQolChip:hover
+{
+    background-color: #262320;
+    brightness: 1.05;
+}
+.DUQolChip.DUQolAtivo
+{
+    background-color: gradient( radial, 50% 50%, 0% 0%, 80% 80%, from( #66cc99 ), to( #337755 ) );
+    brightness: 1.15;
+}
+.DUQolChip.DUQolAtivo Label
+{
+    color: #ffffff;
+}
+.DUQolCor
+{
+    width: 22px;
+    height: 22px;
+    margin: 1px 5px 4px 0px;
+    border-radius: 11px;
+    border: 2px solid #00000099;
+}
+.DUQolCor:hover
+{
+    brightness: 1.2;
+}
+.DUQolCor.DUQolAtivo
+{
+    border: 2px solid #ffffff;
+}
+/* prévia da mira na aba do QOL: o quadro meio escuro, meio claro da central (.DUCfgPreviaMira), menor */
+.DUQolPrevia
+{
+    width: 156px;
+    height: 156px;
+    margin: 2px 0px 6px 0px;
+    border: 1px solid #fffcf41f;
+    border-radius: 6px;
+}
+.DUQolPreviaEscuro
+{
+    width: 50%;
+    height: 100%;
+    background-color: gradient( linear, 0% 0%, 0% 100%, from( #2b3b45 ), to( #11171b ) );
+}
+.DUQolPreviaClaro
+{
+    width: 50%;
+    height: 100%;
+    horizontal-align: right;
+    background-color: gradient( linear, 0% 0%, 0% 100%, from( #ddd3bb ), to( #9c937c ) );
+}
+.DUQolPreviaDesenho
+{
+    width: 150px;
+    height: 150px;
+    horizontal-align: center;
+    vertical-align: center;
+}
+.DUQolValor
+{
+    width: 64px;
+    height: 24px;
+    text-align: center;
+    vertical-align: top;
+    padding-top: 3px;
+    color: #cde5db;
+    font-size: 13px;
+    font-weight: bold;
 }
 
 /* Por último para vencer as regras acima */

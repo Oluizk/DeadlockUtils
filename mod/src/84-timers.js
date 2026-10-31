@@ -48,14 +48,14 @@ function timeDoPainel(p) {
 // team1/team2 no contêiner do time (CitadelHudTopBarTeam) e nas caixas de almas: compara os dois. Sem
 // essas marcas, a caixa da esquerda é a do contêiner #TeamFriendly (10-leitura.js descobre em qual você está).
 function meuLadoEsquerdo(l) {
-  var tb = topBar();
-  var meu = timeDoPainel(achar(tb, l.meuTime)) || (l.meuCartao ? timeDoPainel(l.meuCartao.painel) : 0);
-  var caixa = timeDoPainel(achar(tb, "TeamScoreFriendly"));
+  var meu = timeDoPainel(noTopo(l.meuTime)) || (l.meuCartao ? timeDoPainel(l.meuCartao.painel) : 0);
+  var caixa = timeDoPainel(noTopo("TeamScoreFriendly"));
   if (meu && caixa) return meu === caixa;
   return l.meuTime !== "TeamEnemy";
 }
+// Os painéis do placar do topo vêm do cache (noTopo, 10-leitura.js): o #TopBar tem os 12 cartões de jogador.
 function lerObjetivos(l) {
-  var tb = topBar(), mm = minimapa(), s = l.segundos, o = { seg: s };
+  var mm = minimapa(), s = l.segundos, o = { seg: s };
   var esquerda = meuLadoEsquerdo(l);
   // buffs da ponte
   var buffs = [];
@@ -64,24 +64,24 @@ function lerObjetivos(l) {
   });
   o.ponte = { buffs: buffs };
   // rejuvenator
-  var rt = achar(tb, "RejuvenatorTimer"), mb = porClasse(mm, "mid_boss")[0];
-  var nos = contagemRejuv(achar(tb, "RejuvenatorFriendly")), eles = contagemRejuv(achar(tb, "RejuvenatorEnemy"));
+  var rt = noTopo("RejuvenatorTimer"), mb = porClasse(mm, "mid_boss")[0];
+  var nos = contagemRejuv(noTopo("RejuvenatorFriendly")), eles = contagemRejuv(noTopo("RejuvenatorEnemy"));
   if (!esquerda) { var t = nos; nos = eles; eles = t; }
   o.rejuv = {
     vivo: temClasse(rt, "midboss_available") || temClasse(mb, "midboss_spawned"),
     recarga: temClasse(rt, "midboss_cooldown"),
     buff: temClasse(rt, "has_rejuv"),
-    texto: normalizar(textoDe(achar(tb, "MidbossTimerLabel"))) || normalizar(textoDe(porClasse(mb, "midboss_timer")[0])),
+    texto: normalizar(textoDe(noTopo("MidbossTimerLabel"))) || normalizar(textoDe(porClasse(mb, "midboss_timer")[0])),
     nos: nos, eles: eles,
   };
   // urna
-  var portador = botoesMapa("PlayerIsHoldingIdol")[0]; // os heróis podem estar na camada do mod (50-mapa.js)
+  var portador = botoesMapa("PlayerIsHoldingIdol")[0];
   o.urna = { disponivel: porClasse(mm, "idol_spawn").length > 0, com: portador ? (temClasse(portador, "enemy") ? "eles" : "nos") : "" };
   var emJogo = o.urna.disponivel || !!portador;
   if (timers.urnaEmJogo && !emJogo && s != null) timers.urnaFimEm = s; // entregue (ou sumiu): conta o intervalo
   timers.urnaEmJogo = emJogo;
   // fenda
-  var cp = porClasse(mm, "capture_point")[0], koth = achar(tb, "KothCashInMeter");
+  var cp = porClasse(mm, "capture_point")[0], koth = noTopo("KothCashInMeter");
   var aviso = temClasse(cp, "koth_warning");
   if (aviso && timers.fendaAvisoDesde == null) timers.fendaAvisoDesde = s;
   if (!aviso) timers.fendaAvisoDesde = null;
@@ -92,8 +92,8 @@ function lerObjetivos(l) {
   var disputa = ["capturing", "contested", "captured"].some(function (c) { return temClasse(koth, c); });
   o.fenda = { aviso: aviso, ativa: !aviso && disputa, progresso: progresso.length ? Math.max.apply(null, progresso) : null };
   // almas dos times
-  var a = lerAlmas(textoDe(porClasse(achar(tb, "TeamScoreFriendly"), "ScoreLabel")[0]));
-  var b = lerAlmas(textoDe(porClasse(achar(tb, "TeamScoreEnemy"), "ScoreLabel")[0]));
+  var a = lerAlmas(textoDe(porClasse(noTopo("TeamScoreFriendly"), "ScoreLabel")[0]));
+  var b = lerAlmas(textoDe(porClasse(noTopo("TeamScoreEnemy"), "ScoreLabel")[0]));
   o.almas = esquerda ? { nos: a, eles: b, esquerda: true } : { nos: b, eles: a, esquerda: false };
   return o;
 }
@@ -292,6 +292,20 @@ function esconderTimers() {
   desenharTopo(null, false);
   if (valido(timers.mini.painel)) mostrarPainel(timers.mini.painel, false);
 }
+
+// Ganchos (00-base.js). Antes do mapa: o painel do mapa M mostra os timers calculados nesta mesma volta.
+registrarModulo("timers", {
+  ordem: 45,
+  rapido: vigiarTimers,
+  esconder: esconderTimers,
+  lentoFim: atualizarTimers,
+  novaPartida: function () { timers.urnaFimEm = null; timers.urnaEmJogo = false; },
+  aplicar: function () {
+    CONFIG.buffPonteInicio = ajustes.ponteInicio;
+    CONFIG.buffPonteIntervalo = ajustes.ponteIntervalo;
+    if (modLigado && ultimaLeitura) desenharTopo(timers.estados, !!ultimaLeitura.ativa && !!timers.estados);
+  },
+});
 
 // Uma linha por minuto no console (F7) com o que foi lido, para conferir no jogo.
 function logObjetivos(o) {

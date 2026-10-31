@@ -15,7 +15,7 @@ var AJUSTES_PADRAO = {
   idioma: "",            // en, pt, es, ru; "" = o gravado no .vpk (inglês, ou o que o install.bat escolheu)
   abaLoja: true,         // aba "Deadlock Utils" na loja
   faixaTab: true,        // itens recomendados ao segurar Tab
-  itensTab: CONFIG.itensPorSecao || 4,
+  buildRecomendada: false, // seção "Build Recomendada" (loja e Tab); desligada: o Tab mostra o guia escolhido no jogo
   avisoPerigo: true,     // aviso quando um inimigo compra item perigoso
   avisoSeg: CONFIG.segundosAviso || 7,
   avisoSom: true,
@@ -80,7 +80,7 @@ var AJUSTES_PADRAO = {
   topoVisao: true,
   // ---- tracker e outros
   contaSteam: 0,         // código de amigo da Steam (SteamID3) para o tracker; 0 = o do build (data/config.json)
-  metodoCompra: -1,      // jeito de pedir compra que o jogo aceitou (25-nativos.js), descoberto na 1ª compra
+  metodoCompra: "",      // jeito de pedir compra que o jogo aceitou (id em 25-nativos.js), descoberto na 1ª compra
   teclas: {
     mapa: (CONFIG.teclas || {}).mapa || "",
     tracker: (CONFIG.teclas || {}).tracker || "",
@@ -150,43 +150,16 @@ function salvarAjustes() {
   });
 }
 
-// Aplica no HUD: classes na raiz (tamanhos, recorte do topo), variáveis dos módulos e teclas novas.
+// Aplica no HUD: variáveis, aba da loja e Tab, os módulos opcionais (classes na raiz, redesenho) e teclas novas.
 function aplicarAjustes() {
-  TAMANHOS_MAPA.forEach(function (t) { hud.SetHasClass("DUMapaT" + t, ajustes.mapaTam === t); });
-  [115, 130, 150].forEach(function (e) { hud.SetHasClass("DUMini" + e, ajustes.miniEscala === e); });
-  OPACIDADES_MAPA.forEach(function (o) {
-    if (o[0] >= 100) return;
-    hud.SetHasClass("DU_miniOpac" + o[0], ajustes.miniOpac === o[0]);
-    hud.SetHasClass("DU_mapaOpac" + o[0], ajustes.mapaOpac === o[0]);
-  });
-  hud.SetHasClass("DUCortaTopo", !!ajustes.mapaCortaTopo);
   CONFIG.accountId = Number(ajustes.contaSteam) || (DU_DATA.config || {}).accountId || null;
-  CONFIG.itensPorSecao = ajustes.itensTab;
   CONFIG.segundosAviso = ajustes.avisoSeg;
-  CONFIG.buffPonteInicio = ajustes.ponteInicio;
-  CONFIG.buffPonteIntervalo = ajustes.ponteIntervalo;
-  ESCALA_HEROIS_MAPA = ajustes.mapaHerois;
-  TAM_JOGADOR_MAPA = ajustes.mapaEu;
-  if (TAM_MAPA !== ajustes.mapaTam) {
-    // os pontos são posicionados em px do tamanho do mapa: recria as camadas no tamanho novo
-    TAM_MAPA = ajustes.mapaTam;
-    if (valido(pontos.painel)) { pontos.painel.RemoveAndDeleteChildren(); pontos.criadas = {}; }
-    marcas.tam = 0;
-    pontos.chaveEscala = "";
-    if (mapa.aberto) { aplicarFiltros(); desenharMarcas(true); }
-  }
-  atualizarCamadaPontos();
-  ajustarJogador(true);
-  if (mapa.aberto) mostrarPainel(mapa.painel, ajustes.mapaPainel);
   // aba da loja e Tab
   if (valido(loja.botao)) mostrarPainel(loja.botao, modLigado && ajustes.abaLoja);
-  if (!ajustes.abaLoja) { loja.reabrir = false; if (loja.ativa) ativarAba(false); }
+  if (!ajustes.abaLoja && loja.ativa) ativarAba(false);
   faixa.assinatura = "";
-  // módulos novos: forçam redesenho na próxima volta do loop
-  mira.chave = "";
-  vida.cor = null; vida.corNumero = null; vida.chaveMira = ""; vida.chavePropria = "";
-  if (modLigado && ultimaLeitura) desenharTopo(timers.estados, !!ultimaLeitura.ativa && !!timers.estados);
-  topo.em = 0;
+  if (loja.ativa && loja.vista === "recs" && ultimoResultado) desenharAba(ultimoResultado, ultimaLeitura); // Build Recomendada ligada/desligada
+  cadaModulo("aplicar"); // mapa, mira, vida, timers, topo (00-base.js)
   Object.keys(ajustes.teclas).forEach(function (a) { registrarTecla(ajustes.teclas[a]); });
   trocarIdioma(ajustes.idioma);
 }
@@ -198,17 +171,15 @@ function trocarIdioma(novo) {
   if (novo === IDIOMA) return;
   IDIOMA = novo;
   dados = dadosNoIdioma(IDIOMA);
-  traduzirCamadasMapa();
-  fecharMapa();
+  cadaModulo("idioma"); // o mapa traduz as camadas e apaga o painel dele
   fecharTracker();
   esconderDica();
   var centralAberta = central.aberto;
   if (centralAberta) fecharCentral();
-  [faixa, aviso, dicaItem, mapa, tracker, central].forEach(function (o) {
+  [faixa, aviso, dicaItem, tracker, central].forEach(function (o) {
     if (valido(o.painel)) o.painel.DeleteAsync(0);
     o.painel = null;
   });
-  mapa.linhasTimer = null;
   faixa.visivel = false;
   editor.rascunho = null;
   assinaturaAnterior = "";
@@ -253,7 +224,7 @@ function lerContaSteam(txt) {
   return /^\d{1,10}$/.test(s) ? Number(s) : 0;
 }
 
-// ---------- backup: código "DUC1:<base64>" com tudo que é diferente do padrão (e os filtros do mapa) ----------
+// ---------- backup: código "DUC1:<base64>" com tudo que é diferente do padrão (e o que os módulos juntam) ----------
 // Pessoais: não vão no código e não mudam ao importar nem ao restaurar.
 var AJUSTES_PESSOAIS = { contaSteam: 1, metodoCompra: 1, miniPontosAntes: 1, idioma: 1 };
 function manterPessoais(fn) {
@@ -268,8 +239,9 @@ function codigoDeAjustes() {
     if (AJUSTES_PESSOAIS[k]) return;
     if (JSON.stringify(ajustes[k]) !== JSON.stringify(AJUSTES_PADRAO[k])) dif[k] = ajustes[k];
   });
-  if (!pontos.filtros) carregarFiltros();
-  return "DUC1:" + paraBase64(JSON.stringify({ v: 1, a: dif, f: pontos.filtros, m: pontos.filtrosMini }));
+  var obj = { v: 1, a: dif };
+  cadaModulo("exportar", obj); // filtros do mapa
+  return "DUC1:" + paraBase64(JSON.stringify(obj));
 }
 function importarAjustes(codigo) {
   var t = String(codigo || "").trim();
@@ -281,14 +253,7 @@ function importarAjustes(codigo) {
     ajustes = copiaAjustes(AJUSTES_PADRAO);
     misturarAjustes(obj.a);
   });
-  if (!pontos.filtros) carregarFiltros();
-  [["f", "filtros", "du_mapa_filtros"], ["m", "filtrosMini", "du_mini_filtros"]].forEach(function (x) {
-    var origem = obj[x[0]];
-    if (!origem || typeof origem !== "object") return;
-    Object.keys(origem).forEach(function (k) { if (k in pontos[x[1]]) { pontos[x[1]][k] = !!origem[k]; if (x[0] === "f") pontos.manual[k] = true; } });
-    if (CONFIG.urlPonte) ponteSalvar(x[2], JSON.stringify(pontos[x[1]]));
-  });
-  aplicarFiltros();
+  cadaModulo("importar", obj); // filtros do mapa
   salvarAjustes();
 }
 function restaurarTudo() {
@@ -308,6 +273,7 @@ function restaurarTudo() {
 //   acoes                botões; acoes: [[chaveDoTexto, função], ...]
 //   conta, pontos, codigo, sobre: linhas especiais da própria central
 // Nome e descrição: "cfg.<id>" e "cfg.<id>.desc", ou as chaves em nome/desc. mostrarSe: function () -> bool.
+// modulo: "<id>" (na seção ou na linha) = só aparece se o módulo existe nesta versão (00-base.js, registrarModulo).
 var CORES_PALETA = ["#FFFFFF", "#FFEFD7", "#00FF7F", "#5FE69E", "#00E5FF", "#3D9BFF", "#B388FF", "#FF4FD8", "#FF3B30", "#FF9500", "#F5D33D", "#000000"];
 // Transparência do mapa: abaixo de 40% os ícones somem em fundo claro. Os valores precisam ter as
 // classes DU_miniOpac<n> / DU_mapaOpac<n> correspondentes no estilo.css.
@@ -324,12 +290,12 @@ var SECOES_CFG = [
     { grupo: "cfg.g.modulos" },
     { id: "abaLoja", tipo: "liga" },
     { id: "faixaTab", tipo: "liga" },
-    { id: "itensTab", tipo: "numero", min: 2, max: 8, passo: 1, mostrarSe: ehLigado("faixaTab") },
+    { id: "buildRecomendada", tipo: "liga" },
     { id: "avisoPerigo", tipo: "liga" },
     { id: "avisoSeg", tipo: "numero", min: 3, max: 15, passo: 1, unidade: " s", mostrarSe: ehLigado("avisoPerigo") },
     { id: "avisoSom", tipo: "liga", mostrarSe: ehLigado("avisoPerigo") },
   ] },
-  { id: "mira", icone: "icons/properties/gun.vsvg", tema: "teal", previa: "mira", itens: [
+  { id: "mira", modulo: "mira", icone: "icons/properties/gun.vsvg", tema: "teal", previa: "mira", itens: [
     { grupo: "cfg.g.mira" },
     { id: "mira", tipo: "liga" },
     { tipo: "acoes", nome: "cfg.miraPresets", desc: "cfg.miraPresets.desc", acoes: [
@@ -356,7 +322,7 @@ var SECOES_CFG = [
     { grupo: "cfg.g.miraJogo" },
     { id: "miraEsconderJogo", tipo: "liga", mostrarSe: ehLigado("mira") },
   ] },
-  { id: "vida", icone: "icons/properties/health.vsvg", tema: "vitalidade", previa: "vida", itens: [
+  { id: "vida", modulo: "vida", icone: "icons/properties/health.vsvg", tema: "vitalidade", previa: "vida", itens: [
     { grupo: "cfg.g.vidaBarra" },
     { id: "vidaModo", tipo: "opcoes", opcoes: [["jogo", "cfg.vidaModo.jogo"], ["faixas", "cfg.vidaModo.faixas"], ["gradiente", "cfg.vidaModo.gradiente"], ["fixa", "cfg.vidaModo.fixa"]] },
     { id: "vidaCorFixa", tipo: "cor", mostrarSe: function () { return ajustes.vidaModo === "fixa"; } },
@@ -374,7 +340,7 @@ var SECOES_CFG = [
     { id: "vidaMiraTexto", tipo: "opcoes", mostrarSe: ehLigado("vidaMira"), opcoes: [["nada", "cfg.vidaMiraTexto.nada"], ["numero", "cfg.vidaMiraTexto.numero"], ["pct", "cfg.vidaMiraTexto.pct"]] },
     { id: "vidaMiraAte", tipo: "opcoes", mostrarSe: ehLigado("vidaMira"), opcoes: [[100, "cfg.vidaMiraAte.sempre"], [75, "cfg.vidaMiraAte.75"], [50, "cfg.vidaMiraAte.50"], [30, "cfg.vidaMiraAte.30"]] },
   ] },
-  { id: "timers", icone: "icons/icon_watch.vsvg", tema: "arma", itens: [
+  { id: "timers", modulo: "timers", icone: "icons/icon_watch.vsvg", tema: "arma", itens: [
     { grupo: "cfg.g.topoTimers" },
     { id: "tUrna", tipo: "liga" },
     { id: "tPonte", tipo: "liga" },
@@ -394,7 +360,7 @@ var SECOES_CFG = [
     { id: "urnaInicio", tipo: "numero", min: 0, max: 1800, passo: 30, fmt: "relogio" },
     { id: "urnaIntervalo", tipo: "numero", min: 60, max: 900, passo: 30, fmt: "relogio" },
   ] },
-  { id: "mapa", icone: "icons/icon_lanes.vsvg", tema: "teal", itens: [
+  { id: "mapa", modulo: "mapa", icone: "icons/icon_lanes.vsvg", tema: "teal", itens: [
     { grupo: "cfg.g.transparencia" },
     { id: "mapaOpac", tipo: "opcoes", cruParcial: true, opcoes: OPACIDADES_MAPA },
     { id: "miniOpac", tipo: "opcoes", cruParcial: true, opcoes: OPACIDADES_MAPA },
@@ -408,16 +374,16 @@ var SECOES_CFG = [
     { grupo: "aj.minimapa" },
     { id: "miniEscala", tipo: "opcoes", nome: "aj.tamMini", desc: "aj.tamMini.desc", cruParcial: true, opcoes: [[100, "aj.normal"], [115, "+15%"], [130, "+30%"], [150, "+50%"]] },
     { id: "miniEu", tipo: "opcoes", nome: "aj.miniEu", desc: "aj.miniEu.desc", opcoes: [["6%", "aj.pequeno"], ["9%", "aj.medio"], ["12%", "aj.grande"], ["15%", "aj.doJogo"]] },
-    { id: "miniPontos", tipo: "opcoes", nome: "aj.miniPontos", desc: "aj.miniPontos.desc", opcoes: [[0, "aj.desligado"], [1, "aj.pequenos"], [2, "aj.medios"], [3, "aj.grandes"]] },
   ] },
-  { id: "pontos", icone: "icons/icon_grid.vsvg", tema: "vitalidade", itens: [
+  { id: "pontos", modulo: "pontos", icone: "icons/icon_grid.vsvg", tema: "vitalidade", itens: [
     { grupo: "aj.pontos" },
+    { id: "miniPontos", tipo: "opcoes", nome: "aj.miniPontos", desc: "aj.miniPontos.desc", opcoes: [[0, "aj.desligado"], [1, "aj.pequenos"], [2, "aj.medios"], [3, "aj.grandes"]] },
     { tipo: "pontos", nome: "cfg.pontosLista", desc: "aj.pontos.sub" },
-    { tipo: "acoes", nome: "aj.pontosPadrao", desc: "cfg.pontosPadrao.desc", acoes: [["aj.pontosPadrao", restaurarPontos]] },
+    { tipo: "acoes", nome: "aj.pontosPadrao", desc: "cfg.pontosPadrao.desc", acoes: [["aj.pontosPadrao", function () { restaurarPontos(); }]] },
   ] },
   { id: "atalhos", icone: "icons/keyboard.vsvg", tema: "arma", itens: [
     { grupo: "aj.atalhos" },
-    { id: "teclas.mapa", tipo: "tecla", nome: "aj.tecla.mapa" },
+    { id: "teclas.mapa", tipo: "tecla", nome: "aj.tecla.mapa", modulo: "mapa" },
     { id: "teclas.tracker", tipo: "tecla", nome: "aj.tecla.tracker" },
     { id: "teclas.central", tipo: "tecla", nome: "cfg.tecla.central" },
     { id: "teclas.desligar", tipo: "tecla", nome: "aj.tecla.desligar" },
@@ -434,14 +400,8 @@ var SECOES_CFG = [
     { tipo: "sobre", nome: "cfg.sobre" },
   ] },
 ];
-function secaoCfg(id) { return SECOES_CFG.filter(function (s) { return s.id === id; })[0] || SECOES_CFG[0]; }
+// Seções e linhas que existem nesta versão (o addon do QOL não tem mira, vida, timers nem mapa).
+function cfgExiste(x) { return !x.modulo || temModulo(x.modulo); }
+function secoesCfg() { return SECOES_CFG.filter(cfgExiste); }
+function secaoCfg(id) { var lista = secoesCfg(); return lista.filter(function (s) { return s.id === id; })[0] || lista[0]; }
 
-function restaurarPontos() {
-  pontos.filtros = filtrosPadrao(); pontos.manual = {};
-  pontos.filtrosMini = filtrosMiniPadrao();
-  if (CONFIG.urlPonte) ponteSalvar("du_mini_filtros", JSON.stringify(pontos.filtrosMini));
-  filtrosDoHeroi(ultimaLeitura ? ultimaLeitura.eu : null);
-  aplicarFiltros();
-  if (CONFIG.urlPonte) ponteSalvar("du_mapa_filtros", JSON.stringify(pontos.filtros));
-  atualizarCentral();
-}

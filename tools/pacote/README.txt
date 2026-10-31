@@ -34,8 +34,8 @@ LANGUAGE
 
 HOW TO USE
   Right Shift or ESC menu          settings: crosshair, health bar, timers, map, hotkeys, backup
-  Shop (B) > Deadlock Utils tab     your hero's build, counters to the enemy team, dangerous items
-  Hold Tab                          recommended items above the investments (click to buy)
+  Shop (B) > Deadlock Utils tab     counters to the enemy team (+ recommended build, if turned on)
+  Hold Tab                          counters and the next items of your guide (shop Builds tab), click to buy
   In the scoreboard                urn, bridge buffs and soul lead next to the Rejuvenator
   M                                 big map with timers, points of interest and filters
   F6 or ESC menu                    tracker (player ranks and history)
@@ -45,6 +45,7 @@ HOW TO USE
 
 NOTES
   - The mod replaces the game HUD (hud.xml): another mod that does the same will not work with it.
+    Using QOL Lock? Install Deadlock Utils - QOL Addon instead (the DeadlockUtils-QOL-Addon zip).
   - Valve has not published rules about mods. HUD mods have not led to bans so far, but use it at
     your own risk.
   - The tracker and saved settings use the project's GitHub Pages page and the public
@@ -83,8 +84,8 @@ IDIOMA
 
 COMO USAR
   Shift direito ou menu ESC        configurações: mira, barra de vida, timers, mapa, teclas, backup
-  Loja (B) > aba Deadlock Utils    build do seu herói, counters do time inimigo, itens perigosos
-  Segurar Tab                       itens recomendados acima dos investimentos (clique compra)
+  Loja (B) > aba Deadlock Utils    counters contra o time inimigo (+ build recomendada, se ligar)
+  Segurar Tab                       counters e os próximos itens do seu guia (aba Builds da loja), clique compra
   No placar                         urna, buffs da ponte e vantagem de almas ao lado do Rejuvenator
   M                                 mapa grande com timers, pontos de interesse e filtros
   F6 ou menu ESC                    tracker (rank e histórico dos jogadores)
@@ -95,6 +96,7 @@ COMO USAR
 
 AVISOS
   - O mod substitui o HUD do jogo (hud.xml): outro mod que também faça isso não funciona junto.
+    Usa o QOL Lock? Instale o Deadlock Utils - QOL Addon no lugar (o zip DeadlockUtils-QOL-Addon).
   - A Valve não publicou regras sobre mods. Mods de HUD não tiveram banimentos até hoje, mas use por
     sua conta e risco.
   - O tracker e o salvamento das configurações usam uma página do GitHub Pages do projeto e a API

@@ -58,3 +58,11 @@ function restaurarTopo() {
   topo.cartoes.forEach(function (p) { if (valido(p)) CLASSES_NIVEL.forEach(function (c) { p.RemoveClass(c); }); });
   topo.cartoes = [];
 }
+
+// Ganchos (00-base.js).
+registrarModulo("topo", {
+  rapido: vigiarTopo,
+  esconder: restaurarTopo,
+  novaPartida: function () { topo.confirmado = false; },
+  aplicar: function () { topo.em = 0; },
+});

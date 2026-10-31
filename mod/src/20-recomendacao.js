@@ -8,8 +8,8 @@ var ouvintesResultado = [];       // módulos de UI que redesenham quando o resu
 
 function aoMudarResultado(fn) { ouvintesResultado.push(fn); }
 
-function calcular(leitura) {
-  var estado = {
+function estadoDaLeitura(leitura) {
+  return {
     meuHeroi: leitura.eu,
     aliados: leitura.aliados,
     inimigos: leitura.inimigos.map(function (j) { return { heroi: j.heroi, itens: j.itens }; }),
@@ -20,22 +20,30 @@ function calcular(leitura) {
     fase: DeadlockEngine.faseDoTempo(leitura.segundos),
     overrides: overrides,
   };
-  var estadoPagina = {};
-  for (var k in estado) estadoPagina[k] = estado[k];
-  estadoPagina.meusItens = [];
-  return { estado: estado, r: DeadlockEngine.recomendar(dados, estado), rPagina: DeadlockEngine.recomendar(dados, estadoPagina) };
+}
+// O que muda a recomendação durante a partida. Counters editados e idioma ficam de fora: quem muda um deles
+// (editor, importação, configurações, ponte) já recalcula com forcar.
+function assinaturaDoEstado(e) {
+  return [e.meuHeroi, e.aliados.join(","), e.inimigos.map(function (j) { return j.heroi + ":" + j.itens.join("."); }).join(","),
+    e.meusItens.join(","), e.fase].join("|");
 }
 
+// O motor (duas passadas: o Tab e a página da loja) só roda quando a assinatura muda; antes ele rodava a
+// cada segundo para só depois descobrir que nada tinha mudado.
 var assinaturaAnterior = "";
 function atualizarRecomendacoes(leitura, forcar) {
   ultimaLeitura = leitura;
-  var c = calcular(leitura);
-  var assinatura = JSON.stringify(c.estado);
+  var estado = estadoDaLeitura(leitura);
+  var assinatura = assinaturaDoEstado(estado);
   if (!forcar && assinatura === assinaturaAnterior) return false;
   assinaturaAnterior = assinatura;
-  ultimoResultado = c.r;
-  ultimoResultadoPagina = c.rPagina;
-  ouvintesResultado.forEach(function (fn) { try { fn(c.r, leitura); } catch (e) { log("erro ao desenhar: " + e + (e.stack ? "\n" + e.stack : "")); } });
+  var estadoPagina = {};
+  for (var k in estado) estadoPagina[k] = estado[k];
+  estadoPagina.meusItens = [];
+  var r = DeadlockEngine.recomendar(dados, estado);
+  ultimoResultado = r;
+  ultimoResultadoPagina = DeadlockEngine.recomendar(dados, estadoPagina);
+  ouvintesResultado.forEach(function (fn) { try { fn(r, leitura); } catch (e) { log("erro ao desenhar: " + e + (e.stack ? "\n" + e.stack : "")); } });
   return true;
 }
 
@@ -67,6 +75,17 @@ function lerCodigo(codigo) {
     });
   });
   return saida;
+}
+
+// Importa um código DU1 (editor da loja e aba do QOL): grava, salva e recalcula. Devolve os heróis importados.
+function importarCodigoCounters(codigo) {
+  var novos = lerCodigo(codigo);
+  var nomes = Object.keys(novos);
+  if (!nomes.length) throw new Error(T("ed.erro.vazio"));
+  nomes.forEach(function (n) { overrides.herois[n] = novos[n]; });
+  salvarOverrides();
+  atualizarRecomendacoes(ultimaLeitura || lerPartida(), true);
+  return nomes;
 }
 
 function salvarOverrides() {

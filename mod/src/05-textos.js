@@ -9,6 +9,8 @@ var IDIOMA = idiomaDoMod();
 
 // function (não var): 00-base.js precisa do idioma antes deste arquivo rodar, por isso nada de variáveis aqui.
 function idiomaDoMod() {
+  // Addon do QOL Lock: o idioma escolhido no QOL, quando é um dos nossos (02-compat.js; antes de rodar, compat não existe).
+  if (typeof compat !== "undefined" && compat && compat.qolIdioma) return compat.qolIdioma;
   var i = String(typeof DU_IDIOMA !== "undefined" ? DU_IDIOMA : "").toLowerCase();
   return ["en", "pt", "es", "ru"].indexOf(i) >= 0 ? i : "en";
 }

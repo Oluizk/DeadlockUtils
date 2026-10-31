@@ -204,12 +204,7 @@ function desenharCompartilhar(d) {
   var linha2 = criar("Panel", caixa, "", "DUEditorAcoes");
   botao(linha2, "DUBotaoPrimario", T("ed.importar"), function () {
     try {
-      var novos = lerCodigo(textoDe(editor.campoCodigo));
-      var nomes = Object.keys(novos);
-      if (!nomes.length) throw new Error(T("ed.erro.vazio"));
-      nomes.forEach(function (n) { overrides.herois[n] = novos[n]; });
-      salvarOverrides();
-      atualizarRecomendacoes(ultimaLeitura || lerPartida(), true);
+      var nomes = importarCodigoCounters(textoDe(editor.campoCodigo));
       editor.rascunho = null;
       mensagemEditor(T("ed.importado", nomes.join(", ")));
       redesenharEditor();

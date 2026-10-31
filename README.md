@@ -6,17 +6,27 @@ Mod de HUD para o **Deadlock** (Valve), feito em Panorama (a UI do próprio jogo
 
 | Função | Como usar |
 |---|---|
-| **Aba "Deadlock Utils" na loja** | Abra a loja (B): nova aba na barra lateral. Mostra itens perigosos dos inimigos, a **build do seu herói** para a fase atual (dados de popularidade do próprio jogo) e os **counters** contra o time inimigo, nos cartões da loja. Passe o mouse para ver o porquê. |
+| **Aba "Deadlock Utils" na loja** | Abra a loja (B): nova aba na barra lateral com os **counters** contra o time inimigo, nos cartões da própria loja (tooltip do jogo e clique para comprar). Passe o mouse para ver o porquê. A **Build Recomendada** do seu herói para a fase atual (dados de popularidade do próprio jogo) é opcional: ligue em Configurações > Geral. A aba se lembra: feche a loja nela e ela continua lá quando a loja abrir de novo. |
 | **Editor de counters** | Na aba, botão **Editar counters**: escolha o herói inimigo, adicione/remova itens, peso 1 a 4 e motivo. **Copiar código** gera um código curto `DU1:...` (de um herói ou de tudo que você editou) para colar no grupo; quem recebe cola no campo e clica **Importar**. |
-| **Itens no Tab** | Segurando Tab, acima dos três círculos de investimento: duas seções, **Counters** (com o retrato de contra quem) e **Recomendados** (build do seu herói). Item que você já tem some; os que não dá para comprar agora (sem almas ou longe da loja) ficam meio transparentes. Hover mostra o porquê; clique compra (perto da loja). |
+| **Itens no Tab** | Segurando Tab, acima dos três círculos de investimento, duas fileiras de cartas no formato da loja (papel do tier, ícone, nome, preço, marca "Ativo"): **Counters** (com o retrato de contra quem) e **Seu guia**, os próximos itens da build que você escolheu na aba **Builds** da loja (ou a Build Recomendada, se estiver ligada). O estado de cada carta (dá para comprar, sem almas, longe da loja) é relido da loja a cada 0,1 s; item comprado sai da fileira na hora. Hover mostra o porquê; clique compra (perto da loja). |
 | **Central de configurações** | Tecla **Shift direito**, botão **Deadlock Utils** no menu ESC ou **Configurações** na aba da loja. Janela própria com seções (Geral, Mira, Vida, Placar, Mapa, Pontos no mapa, Atalhos, Tracker, Backup), **pesquisa** em todas as opções, **prévia ao vivo** da mira e da barra de vida, valor padrão em cada opção e **código de backup** `DUC1:...` para passar a configuração inteira a um amigo ou outro PC. |
 | **Mira personalizada** | Central > Mira. 8 estilos (cruz, cruz + ponto, ponto, círculo, círculo + ponto, T, X, seta), cor (paleta ou `#RRGGBB`), comprimento, espessura, espaço no centro, tamanho do ponto, raio, opacidade e contorno. 5 predefinições prontas. Esconde só o retículo do jogo: hitmarker, munição e recarga continuam do jogo, e a mira some junto com a do jogo (morto, outra câmera). |
 | **Barra de vida** | Central > Vida. Cores por **faixas** (75%, 50%, 25%), **gradiente** ou **cor fixa**, pulso com vida crítica, número da vida colorido, **vida instantânea** (a barra muda na hora, sem a animação do jogo que enche/esvazia aos poucos) e uma **barrinha de vida perto da mira** (embaixo/esquerda/direita, número ou %, só abaixo de X%). |
 | **Timers no placar** | Dentro do placar do topo, do lado do timer do Rejuvenator e com o mesmo visual dele: **urna** (acende quando está disponível, borda verde ou vermelha quando o seu time ou o inimigo está levando, senão o tempo até a próxima) e **buffs da ponte** (detectados no minimapa, com o ícone do tipo de buff; senão o tempo até os próximos). A **vantagem de almas** aparece ao lado do número de almas do time que está na frente (+12%, verde se for o seu). Segurando Tab ou no mapa M, o tempo dos buffs aparece em cima de cada ponte no minimapa. O tempo acende quando falta pouco (com som, se quiser). Fora da partida (hideout, contagem inicial, fim) nada disso aparece. |
 | **Placar do topo** | No próprio placar do jogo: nível de cada herói sempre visível, com cor comparada ao seu (azul abaixo, vermelho acima), e retrato apagado dos inimigos que o seu time não está vendo. |
 | **Mapa em tela cheia** | Tecla **M**: o minimapa do jogo fica grande no centro, com o placar aberto: clique para sinalizar, cursor livre, o herói continua andando. Mostra todos os timers (relógio, ponte, Rejuvenator, urna, fenda, almas; clique num deles para avisar o time no chat), e **pontos de interesse com filtros**: lanches de cura, estátuas douradas, caixas (normais e resistentes), buffs da ponte, véus cósmicos, sinos, fendas, plataformas de salto, dutos de vapor, cordas, teleportes, lojas, urna, sentinelas, acampamentos (T1/T2/T3/cofres) e os **túneis do Rem** (caminho pontilhado + entradas, tirados do próprio mapa do jogo). Passe o mouse num ícone para ver o que é; **clique para marcar** o local: a marca continua no minimapa pequeno por 60 s depois de fechar (só para você: o jogo não permite que mods mandem ping ao time). Dados: `data/mapa.json` (`tools\atualizar-mapa.ps1`). Abrir a loja ou ESC fecha o mapa. |
-| **Tracker** | Tecla **F6** ou botão **Tracker** no menu ESC. Para cada jogador: rank, heróis mais jogados, desempenho com o herói atual e se você já jogou **com/contra** ele (e o resultado). Dados do [deadlock-api.com](https://deadlock-api.com). |
+| **Tracker** | Tecla **F6** ou botão **Tracker** no menu ESC. Para cada jogador: rank com a insígnia do próprio jogo, barra de vitórias, heróis mais jogados, desempenho com o herói atual e o seu histórico **com e contra** ele. Dados do [deadlock-api.com](https://deadlock-api.com). |
 | **Aviso de item perigoso** | Quando um inimigo compra Knockdown, Cursed Relic, Refresher etc., aparece um aviso no topo da tela com o retrato do inimigo e o ícone do item. |
+
+## Usa o QOL Lock? Deadlock Utils - QOL Addon
+
+O [QOL Lock](https://gamebanana.com/mods/650634) (de civo) substitui os mesmos arquivos do HUD que o Deadlock Utils, então a versão normal não roda junto com ele. O **Deadlock Utils - QOL Addon** (`DeadlockUtils-QOL-Addon-vX.Y.Z.zip`, arquivo `pak43_dir.vpk`) roda junto com o QOL Lock sem substituir nenhum arquivo dele: carrega pelo `hud_playerintents.xml`, que o QOL Lock não traz.
+
+- O QOL Lock continua com o HUD, o menu, a barra de vida, o placar e o minimapa dele.
+- O addon acrescenta a aba da loja com os counters e o editor de counters, a fileira do Tab, a mira personalizada, os pontos de cura e de salto no minimapa (os outros pontos são opcionais), o tracker e o aviso de item perigoso.
+- Todas as configurações dele ficam numa aba **Deadlock Utils** dentro da janela do QOL Lock (ESC > QOL LOCK, grupo "Addons"), com o visual do QOL; não existe a central separada. Ele segue o idioma do QOL Lock quando é um dos quatro do mod.
+- Deixe o QOL Lock em primeiro na ordem dos mods. Não instale a versão normal junto: se as duas estiverem rodando, o addon se desliga sozinho e a versão normal avisa.
+- Por dentro: o mesmo código, compilado com `tools\build-mod.ps1 -Alvo qol` (`build\qol\pak43_dir.vpk`), sem os módulos de mapa grande, vida, timers e placar (`mod/src/02-compat.js` explica a detecção do QOL, `78-qolaba.js` a aba dentro da janela dele).
 
 ## Instalar / remover
 
@@ -31,7 +41,7 @@ O mod é um único arquivo, `pak42_dir.vpk`.
 
 **Tracker:** informe seu código de amigo da Steam em **Shift direito > Tracker**.
 
-**A partir do código** (para quem mexe no mod): o **`install.bat`** da raiz compila e instala (habilita os addons no `gameinfo.gi` com backup e pergunta o idioma padrão); o **`uninstall.bat`** remove. Para gerar o pacote de publicação: `powershell -ExecutionPolicy Bypass -File tools\empacotar.ps1` (cria `dist\DeadlockUtils-vX.Y.Z.zip` com o `.vpk` e o `README.txt`, sem a sua conta Steam gravada).
+**A partir do código** (para quem mexe no mod): o **`install.bat`** da raiz compila e instala (habilita os addons no `gameinfo.gi` com backup e pergunta o idioma padrão); o **`uninstall.bat`** remove. Para gerar os pacotes de publicação: `powershell -ExecutionPolicy Bypass -File tools\empacotar.ps1` (cria `dist\DeadlockUtils-vX.Y.Z.zip` e `dist\DeadlockUtils-QOL-Addon-vX.Y.Z.zip`, cada um com o seu `.vpk` e `README.txt`, sem a sua conta Steam gravada).
 
 > **Depois de cada atualização do Deadlock** a Steam pode restaurar o `gameinfo.gi`: o gerenciador de mods refaz sozinho; na mão, refaça a edição. Se o patch mexer no HUD, recompile com `powershell -ExecutionPolicy Bypass -File tools\build-mod.ps1 -AtualizarHud`.
 
@@ -51,11 +61,11 @@ As teclas do mod podem ser trocadas no jogo: **Shift direito > Atalhos**.
 
 Central de configurações (**Shift direito**):
 
-- **Geral**: idioma; liga/desliga a aba da loja, os itens no Tab (e quantos), o aviso de item perigoso (duração e som).
+- **Geral**: idioma; liga/desliga a aba da loja, os itens no Tab, a **Build Recomendada** (loja e Tab) e o aviso de item perigoso (duração e som).
 - **Mira**: liga a mira personalizada, predefinições, estilo, cor, comprimento, espessura, espaço no centro, raio, ponto, opacidade, contorno (espessura e cor) e se esconde o retículo do jogo. Prévia em fundo escuro e claro.
 - **Vida**: cores da barra (do jogo, faixas, gradiente, fixa) e as 4 cores das faixas, pulso, número colorido, **vida instantânea**, vida perto da mira (posição, largura, texto, quando mostrar).
 - **Placar**: urna, buffs da ponte e vantagem de almas no placar, timer da ponte no minimapa, nível dos heróis (com cor) e inimigos fora de visão apagados, alerta antes (15 s, 30 s, 1 min) com som e clique para avisar no chat (mapa M). Em **Tempos (avançado)**: primeiro buff da ponte, intervalo, primeira urna e intervalo (se um patch mudar).
-- **Mapa**: mapa grande (tamanho, ícones dos heróis e o seu, painel lateral, recorte do placar, tempo da marca, **transparência**) e minimapa (tamanho +15/+30/+50%, seu ícone, tamanho dos pontos, **transparência**). Na transparência (85% a 40%) o mapa some e os heróis e o seu indicador continuam nítidos por cima; os ícones de objetivos somem junto com o mapa.
+- **Mapa**: mapa grande (tamanho, ícones dos heróis e o seu, painel lateral, recorte do placar, tempo da marca, **transparência**) e minimapa (tamanho +15/+30/+50%, seu ícone, tamanho dos pontos, **transparência**). Na transparência (85% a 40%) os ícones dos heróis e dos objetivos ficam transparentes junto com o mapa.
 - **Pontos no mapa**: liga e desliga cada tipo de ponto, separado para o mapa grande (Mapa) e para o minimapa (Mini).
 - **Atalhos**: teclas do mapa, do tracker, da central e de ligar/desligar o mod.
 - **Tracker**: seu código de amigo da Steam.
@@ -81,11 +91,11 @@ O `data/config.json` já aponta para esse endereço (`"urlPonte"`). Num fork, tr
 - `urlPonte`: endereço **HTTPS** onde `mod/pagina/ponte.html` está publicado (ex.: GitHub Pages do repositório). O navegador embutido do jogo só abre páginas HTTPS (build de out/2026); sem isso o tracker e o salvamento dos counters editados ficam desligados (o resto funciona).
 - `accountId`: seu id Steam (SteamID3). Se ficar `null`, o build detecta pela pasta `Steam\userdata`. O tracker usa isso para achar sua partida ao vivo e o histórico com cada jogador.
 - `idioma`: idioma padrão do build local (`"en"`, `"pt"`, `"es"` ou `"ru"`; vazio = inglês). O jogador troca em Configurações > Idioma; o `install.bat` da raiz também grava um idioma padrão no `.vpk` instalado.
-- `itensPorSecao` (itens em cada seção do Tab), `segundosMarcaMapa` (quanto tempo a marca do mapa fica no minimapa), `buffPonteInicio`/`buffPonteIntervalo` e `urnaInicio`/`urnaIntervalo` (segundos; padrões das opções em Shift direito > Placar > Tempos), `segundosAviso`.
+- `segundosMarcaMapa` (quanto tempo a marca do mapa fica no minimapa), `buffPonteInicio`/`buffPonteIntervalo` e `urnaInicio`/`urnaIntervalo` (segundos; padrões das opções em Shift direito > Placar > Tempos), `segundosAviso`.
 
 ### Avisos
 
-- O mod substitui estes layouts do HUD do jogo: `hud.xml`, `citadel_hud_top_bar.xml`, `citadel_hud_top_bar_player.xml` e `hud_health.xml`. Cada um é o original da mesma versão do jogo com os acréscimos do mod, refeito no build. **Outro mod que substitua um deles não funciona junto** (vale o que vier antes na ordem dos VPKs). Se os acréscimos do placar ou da barra de vida não estiverem lá, o mod desliga só essas partes e escreve o motivo no console.
+- A versão normal substitui estes layouts do HUD do jogo: `hud.xml`, `citadel_hud_top_bar.xml`, `citadel_hud_top_bar_player.xml` e `hud_health.xml`. O QOL Addon substitui só o `hud_playerintents.xml`. Cada um é o original da mesma versão do jogo com os acréscimos do mod, refeito no build. **Outro mod que substitua um deles não funciona junto** (vale o que vier antes na ordem dos VPKs). Se os acréscimos do placar ou da barra de vida não estiverem lá, o mod desliga só essas partes e escreve o motivo no console.
 - A Valve não publicou regras sobre mods. Mods de HUD não tiveram banimentos até hoje; mas **timers e trackers são justamente o tipo de mod que a comunidade aponta como mais arriscado** (desde mar/2026 o matchmaking bloqueia mudanças de ConVars no `gameinfo.gi`; este mod mexe só nas SearchPaths). **Use por sua conta e risco.**
 - **Privacidade:** com `urlPonte` configurado, o mod abre essa página no navegador embutido do jogo (para o tracker e para salvar os counters editados), e o tracker envia ao `api.deadlock-api.com` os ids/nome Steam dos jogadores da partida.
 - A mira, a barra de vida e o placar do topo do jogo são alterados só por estilo na tela (nada de ConVar ou arquivo do jogo); o F8 devolve tudo ao original. O aviso no chat (clique num timer) usa o comando `say_team` e só sai quando você clica.
@@ -136,7 +146,8 @@ Veja [CONTRIBUTING.md](CONTRIBUTING.md). Counters por herói também podem ser e
 ## Créditos
 
 - Formato dos recursos compilados e injeção no `hud.xml`: [deadlock-build-bubble](https://github.com/cheetohsum/deadlock-build-bubble) (Apache-2.0).
-- Transporte pelo navegador embutido: achados documentados em [Predi-i/Deadlock-UI-Mods](https://github.com/Predi-i/Deadlock-UI-Mods).
+- Sistema de salvar/carregar (transporte pelo navegador embutido): pesquisa de **Predi_i, Hanturaya e BubbleGumXD**, documentada em [Predi-i/Deadlock-UI-Mods](https://github.com/Predi-i/Deadlock-UI-Mods).
+- O QOL Addon é feito para complementar o [QOL Lock](https://gamebanana.com/mods/650634), de civo ([QOLLOCK](https://github.com/civo7/QOLLOCK), Apache-2.0); a aba e o tracker dele usam o visual do QOL.
 - Leitura dos arquivos do jogo (entidades do mapa, ícones, CSS do minimapa): [Source2Viewer / ValveResourceFormat](https://github.com/ValveResourceFormat/ValveResourceFormat) (MIT).
 - Dados descompilados: [GameTracking-Deadlock](https://github.com/SteamTracking/GameTracking-Deadlock). Dados de jogadores: [deadlock-api.com](https://deadlock-api.com).
 - Projeto de fã, sem vínculo com a Valve.

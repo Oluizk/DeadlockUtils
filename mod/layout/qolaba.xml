@@ -1,0 +1,246 @@
+<root>
+	<!-- Conteúdo da aba "Deadlock Utils" dentro da janela do QOL Lock (78-qolaba.js liga os botões e os
+	     valores pelos ids). Mesma estrutura das linhas do QOL (controls.js dele) para pegar o visual dele:
+	     título de seção, SettingRow, interruptor (SettingToggleBtn > SwitchButton > #handle), botões
+	     (SettingButtonGroup > SegmentBtn) e ações (SettingActionGroup > SettingActionBtn). -->
+	<styles>
+		<include src="s2r://panorama/styles/citadel_base_styles.vcss" />
+		<include src="s2r://panorama/styles/ql_settings.vcss_c" />
+		<include src="s2r://panorama/styles/deadlock_utils.vcss_c" />
+	</styles>
+	<Panel class="SettingsListContentHost DUQolConteudo Hidden">
+
+		<!-- ======== Geral ======== -->
+		<Panel class="SectionTitleRow"><Panel class="SectionTitleInlineHead"><Label class="SectionTitle SectionTitleInlineLabel" text="@cfg.sec.geral" /></Panel></Panel>
+		<Panel id="DUQolLinha_idioma" class="SettingRow RowTypeButtonGroup">
+			<Panel class="LabelContainer"><Label class="SettingLabel" text="@aj.idioma.nome" /></Panel>
+			<Panel class="SettingButtonGroup SettingControlRoot CompactSegmentGroup">
+				<Button id="DUQol_idioma_0" class="SegmentBtn"><Label text="@qol.idiomaQol" /></Button>
+				<Button id="DUQol_idioma_1" class="SegmentBtn"><Label text="EN" /></Button>
+				<Button id="DUQol_idioma_2" class="SegmentBtn"><Label text="PT" /></Button>
+				<Button id="DUQol_idioma_3" class="SegmentBtn"><Label text="ES" /></Button>
+				<Button id="DUQol_idioma_4" class="SegmentBtn"><Label text="RU" /></Button>
+			</Panel>
+		</Panel>
+		<Panel id="DUQolLinha_modLigado" class="SettingRow RowTypeToggle">
+			<Panel class="LabelContainer"><Label class="SettingLabel" text="@qol.modLigado" /></Panel>
+			<Panel id="DUQol_modLigado" class="SettingToggleBtn SettingControlRoot ToggleOff">
+				<Button class="SwitchButton"><Panel id="handle" class="SettingToggleHandle" /></Button>
+			</Panel>
+		</Panel>
+		<Panel id="DUQolLinha_teclaDesligar" class="SettingRow RowTypeButtonGroup">
+			<Panel class="LabelContainer"><Label class="SettingLabel" text="@aj.tecla.desligar" /></Panel>
+			<Panel class="SettingButtonGroup SettingControlRoot CompactSegmentGroup">
+				<Button id="DUQol_teclaDesligar_0" class="SegmentBtn"><Label text="F8" /></Button>
+				<Button id="DUQol_teclaDesligar_1" class="SegmentBtn"><Label text="F9" /></Button>
+				<Button id="DUQol_teclaDesligar_2" class="SegmentBtn"><Label text="F10" /></Button>
+				<Button id="DUQol_teclaDesligar_3" class="SegmentBtn"><Label text="F11" /></Button>
+				<Button id="DUQol_teclaDesligar_4" class="SegmentBtn"><Label text="@aj.nenhuma" /></Button>
+			</Panel>
+		</Panel>
+
+		<!-- ======== Loja e Tab ======== -->
+		<Panel class="SectionTitleRow"><Panel class="SectionTitleInlineHead"><Label class="SectionTitle SectionTitleInlineLabel" text="@qol.sec.loja" /></Panel></Panel>
+		<Panel id="DUQolLinha_abaLoja" class="SettingRow RowTypeToggle">
+			<Panel class="LabelContainer"><Label class="SettingLabel" text="@cfg.abaLoja" /></Panel>
+			<Panel id="DUQol_abaLoja" class="SettingToggleBtn SettingControlRoot ToggleOff">
+				<Button class="SwitchButton"><Panel id="handle" class="SettingToggleHandle" /></Button>
+			</Panel>
+		</Panel>
+		<Panel id="DUQolLinha_faixaTab" class="SettingRow RowTypeToggle">
+			<Panel class="LabelContainer"><Label class="SettingLabel" text="@cfg.faixaTab" /></Panel>
+			<Panel id="DUQol_faixaTab" class="SettingToggleBtn SettingControlRoot ToggleOff">
+				<Button class="SwitchButton"><Panel id="handle" class="SettingToggleHandle" /></Button>
+			</Panel>
+		</Panel>
+		<Panel id="DUQolLinha_buildRecomendada" class="SettingRow RowTypeToggle">
+			<Panel class="LabelContainer"><Label class="SettingLabel" text="@cfg.buildRecomendada" /></Panel>
+			<Panel id="DUQol_buildRecomendada" class="SettingToggleBtn SettingControlRoot ToggleOff">
+				<Button class="SwitchButton"><Panel id="handle" class="SettingToggleHandle" /></Button>
+			</Panel>
+		</Panel>
+
+		<!-- ======== Counters ======== -->
+		<Panel class="SectionTitleRow"><Panel class="SectionTitleInlineHead"><Label class="SectionTitle SectionTitleInlineLabel" text="@qol.sec.counters" /></Panel></Panel>
+		<Panel class="SettingRow DUQolInfo">
+			<Label class="DUQolTexto" text="@qol.counters.onde" />
+		</Panel>
+		<Panel id="DUQolLinha_counters" class="SettingRow RowTypeAction">
+			<Panel class="LabelContainer"><Label class="SettingLabel" text="@qol.counters.codigo" /></Panel>
+			<Panel class="SettingActionGroup SettingControlRoot DUQolAcoes">
+				<Button id="DUQolCopiarCounters" class="SettingActionBtn"><Panel class="SettingActionBtnInner"><Label class="SettingActionBtnLabel" text="@qol.copiar" /></Panel></Button>
+				<TextEntry id="DUQolCampoCounters" class="ValueInput DUQolCampo" maxchars="6000" />
+				<Button id="DUQolImportarCounters" class="SettingActionBtn"><Panel class="SettingActionBtnInner"><Label class="SettingActionBtnLabel" text="@cfg.codigo.importar" /></Panel></Button>
+			</Panel>
+		</Panel>
+		<Panel class="SettingRow DUQolInfo">
+			<Label id="DUQolMsgCounters" class="DUQolTexto DUQolMsg" text=" " />
+		</Panel>
+
+		<!-- ======== Mira (o QOL não tem): linhas com muitos botões são montadas pelo script em .DUQolChips ======== -->
+		<Panel class="SectionTitleRow"><Panel class="SectionTitleInlineHead"><Label class="SectionTitle SectionTitleInlineLabel" text="@cfg.sec.mira" /></Panel></Panel>
+		<Panel id="DUQolLinha_mira" class="SettingRow RowTypeToggle">
+			<Panel class="LabelContainer"><Label class="SettingLabel" text="@cfg.mira" /></Panel>
+			<Panel id="DUQol_mira" class="SettingToggleBtn SettingControlRoot ToggleOff">
+				<Button class="SwitchButton"><Panel id="handle" class="SettingToggleHandle" /></Button>
+			</Panel>
+		</Panel>
+		<Panel id="DUQolLinha_miraPresets" class="SettingRow DUQolAlta">
+			<Panel class="LabelContainer"><Label class="SettingLabel" text="@cfg.miraPresets" /></Panel>
+			<Panel id="DUQolCtl_miraPresets" class="DUQolChips" />
+		</Panel>
+		<Panel id="DUQolLinha_miraEstilo" class="SettingRow DUQolAlta">
+			<Panel class="LabelContainer"><Label class="SettingLabel" text="@cfg.miraEstilo" /></Panel>
+			<Panel id="DUQolCtl_miraEstilo" class="DUQolChips" />
+		</Panel>
+		<Panel id="DUQolLinha_miraCor" class="SettingRow DUQolAlta">
+			<Panel class="LabelContainer"><Label class="SettingLabel" text="@cfg.miraCor" /></Panel>
+			<Panel id="DUQolCtl_miraCor" class="DUQolChips" />
+		</Panel>
+		<Panel id="DUQolLinha_miraTam" class="SettingRow DUQolAlta">
+			<Panel class="LabelContainer"><Label class="SettingLabel" text="@cfg.miraTam" /></Panel>
+			<Panel id="DUQolCtl_miraTam" class="DUQolChips" />
+		</Panel>
+		<Panel id="DUQolLinha_miraEsp" class="SettingRow DUQolAlta">
+			<Panel class="LabelContainer"><Label class="SettingLabel" text="@cfg.miraEsp" /></Panel>
+			<Panel id="DUQolCtl_miraEsp" class="DUQolChips" />
+		</Panel>
+		<Panel id="DUQolLinha_miraGap" class="SettingRow DUQolAlta">
+			<Panel class="LabelContainer"><Label class="SettingLabel" text="@cfg.miraGap" /></Panel>
+			<Panel id="DUQolCtl_miraGap" class="DUQolChips" />
+		</Panel>
+		<Panel id="DUQolLinha_miraRaio" class="SettingRow DUQolAlta">
+			<Panel class="LabelContainer"><Label class="SettingLabel" text="@cfg.miraRaio" /></Panel>
+			<Panel id="DUQolCtl_miraRaio" class="DUQolChips" />
+		</Panel>
+		<Panel id="DUQolLinha_miraPonto" class="SettingRow DUQolAlta">
+			<Panel class="LabelContainer"><Label class="SettingLabel" text="@cfg.miraPonto" /></Panel>
+			<Panel id="DUQolCtl_miraPonto" class="DUQolChips" />
+		</Panel>
+		<Panel id="DUQolLinha_miraOpac" class="SettingRow DUQolAlta">
+			<Panel class="LabelContainer"><Label class="SettingLabel" text="@cfg.miraOpac" /></Panel>
+			<Panel id="DUQolCtl_miraOpac" class="DUQolChips" />
+		</Panel>
+		<Panel id="DUQolLinha_miraContorno" class="SettingRow RowTypeToggle">
+			<Panel class="LabelContainer"><Label class="SettingLabel" text="@cfg.miraContorno" /></Panel>
+			<Panel id="DUQol_miraContorno" class="SettingToggleBtn SettingControlRoot ToggleOff">
+				<Button class="SwitchButton"><Panel id="handle" class="SettingToggleHandle" /></Button>
+			</Panel>
+		</Panel>
+		<Panel id="DUQolLinha_miraContornoEsp" class="SettingRow DUQolAlta">
+			<Panel class="LabelContainer"><Label class="SettingLabel" text="@cfg.miraContornoEsp" /></Panel>
+			<Panel id="DUQolCtl_miraContornoEsp" class="DUQolChips" />
+		</Panel>
+		<Panel id="DUQolLinha_miraContornoCor" class="SettingRow DUQolAlta">
+			<Panel class="LabelContainer"><Label class="SettingLabel" text="@cfg.miraContornoCor" /></Panel>
+			<Panel id="DUQolCtl_miraContornoCor" class="DUQolChips" />
+		</Panel>
+		<Panel id="DUQolLinha_miraEsconderJogo" class="SettingRow RowTypeToggle">
+			<Panel class="LabelContainer"><Label class="SettingLabel" text="@cfg.miraEsconderJogo" /></Panel>
+			<Panel id="DUQol_miraEsconderJogo" class="SettingToggleBtn SettingControlRoot ToggleOff">
+				<Button class="SwitchButton"><Panel id="handle" class="SettingToggleHandle" /></Button>
+			</Panel>
+		</Panel>
+		<!-- prévia ao vivo (desenharMira de 80-mira.js, com o nosso CSS: os painéis são do script) -->
+		<Panel id="DUQolLinha_miraPrevia" class="SettingRow DUQolAlta">
+			<Panel class="LabelContainer"><Label class="SettingLabel" text="@cfg.previa" /></Panel>
+			<Panel id="DUQolPreviaMira" class="DUQolPrevia" />
+		</Panel>
+
+		<!-- ======== Pontos no minimapa (o QOL não tem cura nem saltos) ======== -->
+		<Panel class="SectionTitleRow"><Panel class="SectionTitleInlineHead"><Label class="SectionTitle SectionTitleInlineLabel" text="@cfg.sec.pontos" /></Panel></Panel>
+		<Panel id="DUQolLinha_miniPontos" class="SettingRow DUQolAlta">
+			<Panel class="LabelContainer"><Label class="SettingLabel" text="@aj.miniPontos" /></Panel>
+			<Panel id="DUQolCtl_miniPontos" class="DUQolChips" />
+		</Panel>
+		<Panel id="DUQolLinha_camadas" class="SettingRow DUQolAlta">
+			<Panel class="LabelContainer"><Label class="SettingLabel" text="@cfg.pontosLista" /></Panel>
+			<Panel id="DUQolCtl_camadas" class="DUQolChips" />
+		</Panel>
+		<Panel id="DUQolLinha_pontosPadrao" class="SettingRow RowTypeAction">
+			<Panel class="LabelContainer"><Label class="SettingLabel" text="@aj.pontosPadrao" /></Panel>
+			<Panel class="SettingActionGroup SettingControlRoot">
+				<Button id="DUQolPontosPadrao" class="SettingActionBtn"><Panel class="SettingActionBtnInner"><Label class="SettingActionBtnLabel" text="@qol.restaurar" /></Panel></Button>
+			</Panel>
+		</Panel>
+
+		<!-- ======== Itens perigosos ======== -->
+		<Panel class="SectionTitleRow"><Panel class="SectionTitleInlineHead"><Label class="SectionTitle SectionTitleInlineLabel" text="@qol.sec.aviso" /></Panel></Panel>
+		<Panel id="DUQolLinha_avisoPerigo" class="SettingRow RowTypeToggle">
+			<Panel class="LabelContainer"><Label class="SettingLabel" text="@cfg.avisoPerigo" /></Panel>
+			<Panel id="DUQol_avisoPerigo" class="SettingToggleBtn SettingControlRoot ToggleOff">
+				<Button class="SwitchButton"><Panel id="handle" class="SettingToggleHandle" /></Button>
+			</Panel>
+		</Panel>
+		<Panel id="DUQolLinha_avisoSeg" class="SettingRow RowTypeButtonGroup">
+			<Panel class="LabelContainer"><Label class="SettingLabel" text="@cfg.avisoSeg" /></Panel>
+			<Panel class="SettingButtonGroup SettingControlRoot CompactSegmentGroup">
+				<Button id="DUQol_avisoSeg_0" class="SegmentBtn"><Label text="5 s" /></Button>
+				<Button id="DUQol_avisoSeg_1" class="SegmentBtn"><Label text="7 s" /></Button>
+				<Button id="DUQol_avisoSeg_2" class="SegmentBtn"><Label text="10 s" /></Button>
+				<Button id="DUQol_avisoSeg_3" class="SegmentBtn"><Label text="15 s" /></Button>
+			</Panel>
+		</Panel>
+		<Panel id="DUQolLinha_avisoSom" class="SettingRow RowTypeToggle">
+			<Panel class="LabelContainer"><Label class="SettingLabel" text="@cfg.avisoSom" /></Panel>
+			<Panel id="DUQol_avisoSom" class="SettingToggleBtn SettingControlRoot ToggleOff">
+				<Button class="SwitchButton"><Panel id="handle" class="SettingToggleHandle" /></Button>
+			</Panel>
+		</Panel>
+
+		<!-- ======== Tracker ======== -->
+		<Panel class="SectionTitleRow"><Panel class="SectionTitleInlineHead"><Label class="SectionTitle SectionTitleInlineLabel" text="@cfg.sec.tracker" /></Panel></Panel>
+		<Panel id="DUQolLinha_tracker" class="SettingRow RowTypeAction">
+			<Panel class="LabelContainer"><Label class="SettingLabel" text="@qol.tracker" /></Panel>
+			<Panel class="SettingActionGroup SettingControlRoot">
+				<Button id="DUQolAbrirTracker" class="SettingActionBtn"><Panel class="SettingActionBtnInner"><Label class="SettingActionBtnLabel" text="@qol.abrir" /></Panel></Button>
+			</Panel>
+		</Panel>
+		<Panel id="DUQolLinha_teclaTracker" class="SettingRow RowTypeButtonGroup">
+			<Panel class="LabelContainer"><Label class="SettingLabel" text="@aj.tecla.tracker" /></Panel>
+			<Panel class="SettingButtonGroup SettingControlRoot CompactSegmentGroup">
+				<Button id="DUQol_teclaTracker_0" class="SegmentBtn"><Label text="F5" /></Button>
+				<Button id="DUQol_teclaTracker_1" class="SegmentBtn"><Label text="F6" /></Button>
+				<Button id="DUQol_teclaTracker_2" class="SegmentBtn"><Label text="F9" /></Button>
+				<Button id="DUQol_teclaTracker_3" class="SegmentBtn"><Label text="F10" /></Button>
+				<Button id="DUQol_teclaTracker_4" class="SegmentBtn"><Label text="@aj.nenhuma" /></Button>
+			</Panel>
+		</Panel>
+		<Panel id="DUQolLinha_conta" class="SettingRow RowTypeAction">
+			<Panel class="LabelContainer"><Label class="SettingLabel" text="@aj.conta" /></Panel>
+			<Panel class="SettingActionGroup SettingControlRoot DUQolAcoes">
+				<TextEntry id="DUQolCampoConta" class="ValueInput DUQolCampo" maxchars="80" />
+				<Button id="DUQolSalvarConta" class="SettingActionBtn"><Panel class="SettingActionBtnInner"><Label class="SettingActionBtnLabel" text="@aj.conta.salvar" /></Panel></Button>
+			</Panel>
+		</Panel>
+		<Panel class="SettingRow DUQolInfo">
+			<Label id="DUQolEstadoConta" class="DUQolTexto DUQolMsg" text=" " />
+		</Panel>
+
+		<!-- ======== Backup ======== -->
+		<Panel class="SectionTitleRow"><Panel class="SectionTitleInlineHead"><Label class="SectionTitle SectionTitleInlineLabel" text="@cfg.sec.backup" /></Panel></Panel>
+		<Panel id="DUQolLinha_codigo" class="SettingRow RowTypeAction">
+			<Panel class="LabelContainer"><Label class="SettingLabel" text="@cfg.codigo" /></Panel>
+			<Panel class="SettingActionGroup SettingControlRoot DUQolAcoes">
+				<Button id="DUQolCopiarCodigo" class="SettingActionBtn"><Panel class="SettingActionBtnInner"><Label class="SettingActionBtnLabel" text="@qol.copiar" /></Panel></Button>
+				<TextEntry id="DUQolCampoCodigo" class="ValueInput DUQolCampo" maxchars="4000" />
+				<Button id="DUQolImportarCodigo" class="SettingActionBtn"><Panel class="SettingActionBtnInner"><Label class="SettingActionBtnLabel" text="@cfg.codigo.importar" /></Panel></Button>
+			</Panel>
+		</Panel>
+		<Panel class="SettingRow DUQolInfo">
+			<Label id="DUQolMsgCodigo" class="DUQolTexto DUQolMsg" text=" " />
+		</Panel>
+		<Panel id="DUQolLinha_restaurar" class="SettingRow RowTypeAction">
+			<Panel class="LabelContainer"><Label class="SettingLabel" text="@aj.restaurar" /></Panel>
+			<Panel class="SettingActionGroup SettingControlRoot">
+				<Button id="DUQolRestaurar" class="SettingActionBtn"><Panel class="SettingActionBtnInner"><Label class="SettingActionBtnLabel" text="@qol.restaurar" /></Panel></Button>
+			</Panel>
+		</Panel>
+
+		<!-- ======== Sobre (com o QOL, esta aba é o único lugar das configurações: sem a janela do mod) ======== -->
+		<Panel class="SectionTitleRow"><Panel class="SectionTitleInlineHead"><Label class="SectionTitle SectionTitleInlineLabel" text="@cfg.g.sobre" /></Panel></Panel>
+		<Panel class="SettingRow DUQolInfo">
+			<Label id="DUQolSobre" class="DUQolTexto" html="true" text=" " />
+		</Panel>
+	</Panel>
+</root>

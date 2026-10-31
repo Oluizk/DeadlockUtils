@@ -1,9 +1,13 @@
-// ===================== Tab: itens recomendados acima dos "investimentos" + avisos =====================
-// Ao segurar Tab (placar), aparece uma fileira com os itens mais recomendados agora (build do seu
-// herói + counters), logo acima dos três círculos de investimento (canto inferior esquerdo).
+// ===================== Tab: counters e próximos itens acima dos "investimentos" + avisos =====================
+// Ao segurar Tab (placar), aparecem duas fileiras de cartas no formato da loja, logo acima dos três círculos
+// de investimento (canto inferior esquerdo): os counters contra o time inimigo e os próximos itens do guia
+// que você escolheu na aba Builds da loja (ou da Build Recomendada, se ela estiver ligada).
+// As cartas ficam prontas antes do Tab; com ele segurado, o estado de cada uma (dá para comprar, sem almas,
+// longe da loja) é relido a cada 100 ms do painel nativo do item, como a loja faz.
 // Quando um inimigo compra um item perigoso, aparece um aviso no topo da tela.
 
-var faixa = { painel: null, falhou: false };
+var CARTAS_POR_FILEIRA = 5;
+var faixa = { painel: null, falhou: false, cartas: [], estadosEm: 0 };
 var aviso = { painel: null, fila: [], ate: 0, vistos: {} };
 var agoraSeg = 0;
 
@@ -15,6 +19,8 @@ function montarFaixa() {
   faixa.secBuild = achar(faixa.painel, "DUFaixaSecaoBuild");
   faixa.counters = achar(faixa.painel, "DUFaixaCounters");
   faixa.build = achar(faixa.painel, "DUFaixaBuild");
+  faixa.tituloBuild = achar(faixa.painel, "DUFaixaTituloBuild");
+  faixa.subBuild = achar(faixa.painel, "DUFaixaSubBuild");
   faixa.motivo = achar(faixa.painel, "DUFaixaMotivo");
   faixa.porque = achar(faixa.painel, "DUFaixaPorque");
   faixa.assinatura = "";
@@ -31,8 +37,8 @@ function temAlmas(it) {
 }
 // O jogo marca a loja com shopClosed/purchasingDisabled quando você está fora da área de compra.
 function longeDaLoja() {
-  var s = valido(loja.shop) ? loja.shop : achar(hud, "CitadelHudHeroShop");
-  if (!valido(s)) return false;
+  var s = valido(loja.shop) ? loja.shop : lojaDoJogo();
+  if (!s) return false;
   if (temClasse(s, "shopClosed") || temClasse(s, "purchasingDisabled")) return true;
   try { return s.BAscendantHasClass("shopClosed") || s.BAscendantHasClass("purchasingDisabled"); } catch (e) { return false; }
 }
@@ -49,105 +55,113 @@ function selecionar(lista, n, jaUsados) {
   }
   return out;
 }
+// Segunda fileira: a Build Recomendada (se ligada) ou os próximos itens do guia escolhido no jogo.
+function proximosDoGuia() {
+  return lerGuia().map(function (g) {
+    var it = dados.itensPorId[g.id];
+    return it ? { item: it, motivos: [{ tipo: "guia", texto: g.etapa ? T("faixa.etapaGuia", g.etapa) : T("faixa.doGuia") }] } : null;
+  }).filter(Boolean);
+}
+
+// Estado da carta, como na loja: comprando (pedido agora), longe da loja, sem almas ou disponível.
+// longe: longeDaLoja() já calculado (é o mesmo para todas as cartas de uma passada).
+function estadoCarta(it, longe) {
+  if (compraPendente(it.id)) return "DUComprando";
+  if (longe === undefined ? longeDaLoja() : longe) return "DULonge";
+  return temAlmas(it) ? "" : "DUSemAlmas";
+}
+var CLASSES_ESTADO_CARTA = ["DUComprando", "DULonge", "DUSemAlmas"];
+
+// Carta no formato do CitadelShopMod (fundo do tier, ícone, nome, preço, "Ativo"), menor.
+function cartaFaixa(alvo, rec, tipo) {
+  var it = rec.item;
+  var c = criar("Panel", alvo, "", "DUCartaTab DUCartaTab_" + it.categoria);
+  try { c.style.backgroundImage = fundoCartao(it); c.style.backgroundSize = "100% 100%"; } catch (e) {}
+  imagem(c, "DUCartaTabIcone", iconeItem(it));
+  rotulo(c, "DUCartaTabNome", esc(nomeItem(it)));
+  if (it.ativo) rotulo(c, "DUCartaTabAtivo", T("cartao.ativo"));
+  var preco = criar("Panel", c, "", "DUCartaTabPreco");
+  rotulo(preco, "DUCartaTabCusto", String(it.custo));
+  if (tipo === "counter") {
+    var alvos = alvosDoCounter(rec);
+    if (alvos.length) imagem(c, "DUCartaTabHeroi", imagemHeroi(alvos[0]));
+  }
+  evento(c, "onmouseover", function () { mostrarDica(rec, tipo, c); });
+  evento(c, "onmouseout", esconderDica);
+  aoClicar(c, function () {
+    // Sem almas ou longe da loja: nem pede (o jogo recusaria); só diz o motivo.
+    if (!compravelAgora(it)) {
+      var motivo = longeDaLoja() ? T("longeDaLoja") : T("compra.semAlmas");
+      if (dicaItem.item === it.id) mostrarDica(rec, tipo, c, motivo);
+      else mostrarPorque("<font color='#ffa1a1'>" + esc(motivo) + "</font>");
+      return;
+    }
+    comprarItem(it.id, function (ok, msg) {
+      if (ok) { esconderDica(); atualizarFaixa(true); return; } // comprado: sai da fileira na hora
+      if (dicaItem.item === it.id) mostrarDica(rec, tipo, c, msg);
+      else mostrarPorque("<font color='#ffa1a1'>" + esc(msg) + "</font>");
+    });
+    atualizarEstadosFaixa(true);
+  });
+  faixa.cartas.push({ painel: c, item: it, estado: null });
+  return c;
+}
 
 function desenharLinha(alvo, recs, tipo) {
   alvo.RemoveAndDeleteChildren();
-  recs.forEach(function (rec) {
-    var it = rec.item;
-    var c = criar("Panel", alvo, "", "DUIcone DUIcone_" + it.categoria + (compravelAgora(it) ? "" : " DUIndisponivel"));
-    imagem(c, "DUIconeImagem", iconeItem(it));
-    if (tipo === "counter") {
-      var alvos = alvosDoCounter(rec);
-      if (alvos.length) imagem(c, "DUIconeHeroi", imagemHeroi(alvos[0]));
-    }
-    evento(c, "onmouseover", function () { mostrarDicaFaixa(rec, tipo, c); });
-    evento(c, "onmouseout", esconderDica);
-    aoClicar(c, function () {
-      // Sem almas ou longe da loja: nem pede (o jogo recusaria); só diz o motivo.
-      if (!compravelAgora(it)) {
-        var motivo = longeDaLoja() ? T("longeDaLoja") : T("compra.semAlmas");
-        if (dicaItem.item === it.id) mostrarDica(rec, tipo, c, motivo);
-        else mostrarPorque("<font color='#ffa1a1'>" + esc(motivo) + "</font>");
-        return;
-      }
-      c.AddClass("DUComprando");
-      comprarItem(it.id, function (ok, msg) {
-        c.RemoveClass("DUComprando");
-        if (ok) { esconderDica(); atualizarFaixa(true); }
-        else if (dicaItem.item === it.id) mostrarDica(rec, tipo, c, msg);
-        else if (tooltipNativo.ancora === c) mostrarPorque("<font color='#ffa1a1'>" + esc(msg) + "</font>");
-      });
-    });
-  });
+  recs.forEach(function (rec) { cartaFaixa(alvo, rec, tipo); });
 }
 
-// Tab: abre o tooltip DO JOGO (o mesmo da loja) e escreve na faixa por que o item foi recomendado.
-// Se o tooltip do jogo não aparecer na primeira vez, passa a usar o tooltip do mod.
-function mostrarDicaFaixa(rec, tipo, c) {
-  if (!abrirTooltipNativo(c, rec.item)) { mostrarDica(rec, tipo, c); return; }
-  var alvos = tipo === "counter" ? alvosDoCounter(rec) : [];
-  mostrarPorque((alvos.length ? "<font color='#ec9719'>Counter de <b>" + esc(alvos.join(", ")) + "</b></font> · " :
-    tipo === "build" ? "<font color='#99ffd6'>Build</font> · " : "") +
-    rec.motivos.slice(0, 2).map(function (m) { return esc(m.texto); }).join(" · "));
-  if (tooltipNativo.funciona !== null) return;
-  $.Schedule(0.25, function () {
-    if (tooltipNativo.funciona !== null || tooltipNativo.ancora !== c) return;
-    tooltipNativo.funciona = tooltipNativoVisivel();
-    log("tooltip nativo do jogo: " + (tooltipNativo.funciona ? "funciona" : "não apareceu, usando o tooltip do mod"));
-    if (!tooltipNativo.funciona) { fecharTooltipNativo(); mostrarPainel(faixa.porque, false); mostrarDica(rec, tipo, c); }
+// Com o Tab segurado (loop rápido): estado de cada carta na hora; um item comprado refaz a fileira.
+function atualizarEstadosFaixa(forcar) {
+  if (!forcar && Date.now() - faixa.estadosEm < 100) return;
+  faixa.estadosEm = Date.now();
+  var refazer = false, longe = longeDaLoja();
+  faixa.cartas.forEach(function (x) {
+    if (!valido(x.painel)) return;
+    if (jaTem(x.item.id)) { refazer = true; return; }
+    var e = estadoCarta(x.item, longe);
+    if (e === x.estado) return;
+    x.estado = e;
+    CLASSES_ESTADO_CARTA.forEach(function (k) { x.painel.SetHasClass(k, k === e); });
   });
+  if (refazer) atualizarFaixa(true);
 }
+
+// Motivo de não comprar, escrito na faixa (quando o tooltip do mod não está aberto nessa carta).
 function mostrarPorque(html) {
   if (!valido(faixa.porque)) return;
   faixa.porque.text = html;
   mostrarPainel(faixa.porque, true);
 }
 
-// Duas seções (Counters e Recomendados). Só redesenha se a lista mudou: o Tab aparece na hora
-// porque os ícones já estão prontos; o loop rápido só troca a visibilidade.
+// Duas fileiras (Counters e Guia/Build). Só refaz as cartas se os itens mudaram: o Tab aparece na hora
+// porque as cartas já estão prontas; o loop rápido só troca a visibilidade e o estado delas.
 function atualizarFaixa(forcar) {
   montarFaixa();
   if (!valido(faixa.painel) || !ultimoResultado) return;
-  var n = ajustes.itensTab || CONFIG.itensPorSecao || 4, usados = {};
-  var counters = selecionar(ultimoResultado.counters, n, usados);
-  var build = selecionar(ultimoResultado.build, n, usados);
-  var chave = function (x) { return x.item.id + (compravelAgora(x.item) ? "" : "~"); };
-  var assinatura = counters.map(chave).join(",") + "|" + build.map(chave).join(",");
+  var usados = {};
+  var counters = selecionar(ultimoResultado.counters, CARTAS_POR_FILEIRA, usados);
+  var doGuia = !ajustes.buildRecomendada;
+  var build = selecionar(doGuia ? proximosDoGuia() : ultimoResultado.build, CARTAS_POR_FILEIRA, usados);
+  var ids = function (lista) { return lista.map(function (x) { return x.item.id; }).join(","); };
+  var assinatura = ids(counters) + "|" + ids(build) + "|" + doGuia + "|" + IDIOMA;
   if (!forcar && assinatura === faixa.assinatura) return;
   faixa.assinatura = assinatura;
+  faixa.cartas = [];
   desenharLinha(faixa.counters, counters, "counter");
-  desenharLinha(faixa.build, build, "build");
+  desenharLinha(faixa.build, build, doGuia ? "guia" : "build");
+  if (valido(faixa.tituloBuild)) faixa.tituloBuild.text = esc(T(doGuia ? "faixa.guia" : "faixa.buildRecomendada"));
+  if (valido(faixa.subBuild)) faixa.subBuild.text = doGuia && !build.length ? esc(T("faixa.semGuia")) : "";
   mostrarPainel(faixa.secCounters, counters.length > 0);
-  mostrarPainel(faixa.secBuild, build.length > 0);
+  mostrarPainel(faixa.secBuild, build.length > 0 || doGuia);
+  atualizarEstadosFaixa(true);
 }
 aoMudarResultado(function (r) { varrerNativos(false); atualizarFaixa(false); checarNovasAmeacas(r); });
 
-// ---------- tooltip nativo do jogo ----------
-// CitadelShowModTooltip(painel, id): "Show the tooltip of an Ability by ID" (client.dll). O id é o hash
-// do nome da classe do item (DU_DATA.idsJogo, gerado no build; confere com o deadlock-api).
-var tooltipNativo = { funciona: null, ancora: null };
-function abrirTooltipNativo(ancora, it) {
-  var id = (DU_DATA.idsJogo || {})[it.id];
-  if (!id || tooltipNativo.funciona === false) return false;
-  try { $.DispatchEvent("CitadelShowModTooltip", ancora, id); } catch (e) { tooltipNativo.funciona = false; log("CitadelShowModTooltip: " + e); return false; }
-  tooltipNativo.ancora = ancora;
-  return true;
-}
-function fecharTooltipNativo() {
-  if (!tooltipNativo.ancora) return;
-  try { $.DispatchEvent("CitadelHideModTooltip", tooltipNativo.ancora); } catch (e) {}
-  tooltipNativo.ancora = null;
-}
-// O tooltip do jogo é um CitadelTooltipModDetails que ganha a classe TooltipVisible (tooltip_mod_details.css).
-function tooltipNativoVisivel() {
-  var raiz = hud;
-  try { while (raiz.GetParent()) raiz = raiz.GetParent(); } catch (e) {}
-  return porClasse(raiz, "TooltipVisible").some(function (p) {
-    try { return p.paneltype === "CitadelTooltipModDetails" || temClasse(p, "ModTooltip"); } catch (e) { return false; }
-  });
-}
-
 // ---------- tooltip do mod: mesma estrutura, texturas e medidas do tooltip de item do jogo ----------
+// O tooltip de item do jogo (CitadelShowModTooltip) só é tratado dentro das listas da loja (client.dll:
+// CCitadel_ShopModsTier::EventShowModTooltip): em painéis do mod ele não abre.
 var dicaItem = { painel: null, item: "" };
 function montarDica() {
   if (valido(dicaItem.painel)) return true;
@@ -211,18 +225,19 @@ function htmlDetalhes(it) {
     return cab + (s.txt ? s.txt + (stats ? "<br>" : "") : "") + stats;
   }).join("<br><br>");
 }
-function mostrarDicaDetalhe(it, ancora, rodape) {
+// status: texto no lugar do tier (aba da loja: já tem, sem almas, longe da loja).
+function mostrarDicaDetalhe(it, ancora, rodape, status) {
   if (!montarDica()) return;
   dicaItem.item = it.id;
   ["weapon", "vitality", "spirit"].forEach(function (c) { dicaItem.painel.SetHasClass("DUDica_" + c, it.categoria === c); });
   dicaItem.painel.RemoveClass("DUDica_mapa");
-  dicaItem.painel.RemoveClass("DUSemAlmas");
+  dicaItem.painel.SetHasClass("DUSemAlmas", !!status && podeComprar(it.id) === false);
   mostrarPainel(dicaItem.DUDicaIcone, true);
   mostrarPainel(dicaItem.DUDicaCustoLinha, true);
   try { dicaItem.DUDicaIcone.SetImage(iconeItem(it)); } catch (e) {}
   dicaItem.DUDicaNome.text = nomeItem(it);
   dicaItem.DUDicaCusto.text = String(it.custo);
-  dicaItem.DUDicaStatus.text = esc(T("ed.tier", it.tier));
+  dicaItem.DUDicaStatus.text = esc(status || T("ed.tier", it.tier));
   mostrarPainel(dicaItem.DUDicaStatus, true);
   mostrarPainel(dicaItem.DUDicaContra, false);
   var html = htmlDetalhes(it);
@@ -242,7 +257,6 @@ function mostrarDicaDetalhe(it, ancora, rodape) {
   mostrarPainel(dicaItem.painel, true);
 }
 function esconderDica() {
-  fecharTooltipNativo();
   if (valido(faixa.porque)) mostrarPainel(faixa.porque, false);
   dicaItem.item = "";
   if (valido(dicaItem.painel)) mostrarPainel(dicaItem.painel, false);
@@ -252,12 +266,12 @@ function atualizarVisibilidadeFaixa(leitura) {
   if (!valido(faixa.painel)) return;
   // Só com o Tab e na partida ativa: nunca junto com loja, mapa, tracker, central ou menu ESC.
   var visivel = ajustes.faixaTab && leitura.ativa && leitura.placarAberto && !leitura.lojaAberta && !leitura.escAberto &&
-    !mapa.aberto && !tracker.aberto && !central.aberto;
+    !algumModuloAberto() && !tracker.aberto && !central.aberto;
   if (visivel !== faixa.visivel) {
     faixa.visivel = visivel;
     mostrarPainel(faixa.painel, visivel);
     if (visivel) atualizarFaixa(false); else esconderDica();
-  }
+  } else if (visivel) atualizarEstadosFaixa(false);
 }
 
 // ---------- aviso de item perigoso ----------
@@ -290,8 +304,8 @@ function checarNovasAmeacas(r) {
   });
 }
 
-// Aviso com texto livre (usado pelo liga/desliga). "agora" ignora a fila.
-function mostrarAvisoTexto(titulo, texto, agora) {
+// Aviso com texto livre (liga/desliga, avisos de compatibilidade). "agora" ignora a fila; padrão 3 s na tela.
+function mostrarAvisoTexto(titulo, texto, agora, segundos) {
   montarAviso();
   if (!valido(aviso.painel)) return;
   if (agora) aviso.fila = [];
@@ -301,7 +315,7 @@ function mostrarAvisoTexto(titulo, texto, agora) {
   aviso.titulo.text = titulo;
   aviso.texto.text = esc(texto);
   mostrarPainel(aviso.painel, true);
-  aviso.ate = agoraSeg + 3;
+  aviso.ate = agoraSeg + (segundos || 3);
 }
 
 // Os avisos de item perigoso só saem com a partida ativa. Fora dela a fila é descartada: um item comprado

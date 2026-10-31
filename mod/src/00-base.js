@@ -4,7 +4,21 @@
 // a UI do jogo muda entre patches e um erro não pode derrubar o HUD.
 
 var PREFIXO = "[DeadlockUtils] ";
-var hud = $.GetContextPanel();
+// Duas versões do mesmo código (tools/build-mod.ps1 -Alvo): a normal roda no hud.xml do jogo; o addon do
+// QOL Lock roda no hud_playerintents.xml (o QOL substitui o hud.xml), um filho do HUD, e sobe até a raiz.
+var ADDON_QOL = typeof DU_ALVO !== "undefined" && DU_ALVO === "qol";
+var contexto = $.GetContextPanel();
+var hud = ADDON_QOL ? raizDoHud(contexto) : contexto;
+function raizDoHud(p) {
+  var topo = p;
+  try {
+    for (var q = p; q; q = q.GetParent()) {
+      if (q.paneltype === "CitadelHud" || q.id === "Hud" || q.BHasClass("WindowRoot")) return q;
+      topo = q;
+    }
+  } catch (e) {}
+  return topo;
+}
 var CONFIG = DU_DATA.config || {};
 // Regras com os textos em todos os idiomas: a troca de idioma no jogo (Configurações) traduz de novo a partir daqui.
 var REGRAS_BRUTAS = JSON.stringify({ regrasArquivos: DU_DATA.regrasArquivos, ameacas: DU_DATA.ameacas, countersHerois: DU_DATA.countersHerois });
@@ -128,6 +142,34 @@ function mostrarPainel(p, on) {
   try { p.visible = on; } catch (e) {}
 }
 
+// ---------- módulos opcionais ----------
+// Mapa, mira, vida, timers e placar do topo só entram na versão normal: o addon do QOL Lock é compilado
+// sem eles (o QOL cuida dessas partes). O resto do mod só fala com eles por estes ganchos:
+//   rapido(e)       loop de 50 ms              lento(l), lentoFim(l)  loop de 1 s (antes / depois do Tab)
+//   fechar()        fecha a janela do módulo   aberto()               a janela dele está aberta?
+//   esconder()      F8 desligou o mod          novaPartida()          aplicar() (configurações mudaram)
+//   idioma()        o idioma mudou             exportar(o), importar(o)  campos extras do código DUC1
+//   teclas { ação: fn }   controles { tipo: fn(ctl, def, l) }   previas { tipo: { montar(p), desenhar() } }
+// Os ganchos rodam na ordem de "ordem" (padrão 50) e, no empate, na ordem dos arquivos.
+var MODULOS = [];
+function registrarModulo(id, m) {
+  m.id = id;
+  m.ordem = m.ordem || 50;
+  var i = 0;
+  while (i < MODULOS.length && MODULOS[i].ordem <= m.ordem) i++;
+  MODULOS.splice(i, 0, m);
+}
+function temModulo(id) { return MODULOS.some(function (m) { return m.id === id; }); }
+function cadaModulo(gancho, a) {
+  MODULOS.forEach(function (m) { if (typeof m[gancho] === "function") m[gancho](a); });
+}
+function algumModuloAberto() { return MODULOS.some(function (m) { return typeof m.aberto === "function" && !!m.aberto(); }); }
+// Primeiro módulo que oferece teclas[nome] / controles[nome] / previas[nome].
+function doModulo(campo, nome) {
+  for (var i = 0; i < MODULOS.length; i++) { var c = MODULOS[i][campo]; if (c && c[nome]) return c[nome]; }
+  return null;
+}
+
 // ---------- console / eventos ----------
 function comando(cmd) {
   try { $.DispatchEvent("CitadelConCommand", cmd); return true; } catch (e) { log("comando falhou (" + cmd + "): " + e); return false; }
@@ -166,6 +208,7 @@ function cartaoItem(pai, it, opcoes) {
   rotulo(c, "DUCartaoNome", esc(nomeItem(it)));
   if (it.ativo) rotulo(c, "DUCartaoAtivo", T("cartao.ativo"));
   if (opcoes.selo) rotulo(c, "DUCartaoSelo DUSelo_" + opcoes.selo, T(opcoes.selo === "build" ? "cartao.build" : "cartao.counter"));
+  if (opcoes.preco) rotulo(criar("Panel", c, "", "DUCartaoPreco"), "DUCartaoCusto", String(it.custo));
   if (opcoes.aoPassar) evento(c, "onmouseover", opcoes.aoPassar);
   if (opcoes.aoClicar) aoClicar(c, opcoes.aoClicar);
   return c;

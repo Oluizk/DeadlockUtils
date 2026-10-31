@@ -16,8 +16,11 @@ var vida = { cont: null, barra: null, esquerda: null, numero: null, total: null,
 
 function paineisVida() {
   if (valido(vida.cont) && valido(vida.barra) && valido(vida.numero)) return true;
-  vida.cont = achar(hud, "health_and_abilities_container");
-  if (!valido(vida.cont)) return false;
+  // barra achada mas sem o número (outro layout de vida): procura de novo a cada 1 s, não a cada 50 ms
+  if (valido(vida.barra) && Date.now() - (vida.procuradoEm || 0) < 1000) return true;
+  vida.procuradoEm = Date.now();
+  vida.cont = painelDoJogo("health_and_abilities_container");
+  if (!vida.cont) return false;
   vida.barra = achar(vida.cont, "health_bar");
   vida.esquerda = porClasse(vida.barra, "ProgressBarLeft")[0] || null;
   vida.numero = porClasse(vida.cont, "currentHealthLabel")[0] || null;
@@ -154,3 +157,32 @@ function atualizarVidaMira(v) {
   mira.vidaTexto.text = texto;
   try { mira.vidaTexto.style.color = cor; } catch (e) {}
 }
+
+// Ganchos (00-base.js). A prévia é a da central de configurações (76-central.js).
+registrarModulo("vida", {
+  rapido: atualizarVida,
+  esconder: restaurarVida,
+  aplicar: function () { vida.cor = null; vida.corNumero = null; vida.chaveMira = ""; vida.chavePropria = ""; },
+  previas: {
+    vida: {
+      montar: function (p) {
+        central.previaBarras = [95, 70, 45, 15].map(function (pct) {
+          var linha = criar("Panel", p, "", "DUCfgPreviaVida");
+          rotulo(linha, "DUCfgPreviaPct", pct + "%");
+          var barra = criar("Panel", linha, "", "DUCfgPreviaBarra");
+          return { pct: pct, cheia: criar("Panel", barra, "", "DUCfgPreviaCheia") };
+        });
+        rotulo(p, "DUCfgPreviaDica", esc(T("cfg.previa.vida")));
+      },
+      // mesma textura da barra do jogo tingida com wash-color, como no HUD (cor de fundo ficaria por baixo dela)
+      desenhar: function () {
+        (central.previaBarras || []).forEach(function (x) {
+          try {
+            x.cheia.style.width = x.pct + "%";
+            x.cheia.style.washColor = corVida(x.pct) || null;
+          } catch (e) {}
+        });
+      },
+    },
+  },
+});
